@@ -8,10 +8,30 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses:   actions/checkout@v1
-    - name:   Setup .NET core
+    -
+      uses:   actions/checkout@v1
+      name:   Setup .NET core
+    -
       uses:   actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.300
-    - name:  Build with dotnet
+    - 
+      name:  Build with dotnet
       run:  dotnet build --configuration Release
+  publish_image:
+    name: Publish Image
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Check out the repo
+          uses: actions/checkout@v2
+        -
+          name: Build and Push
+          id: docker_build
+          uses: docker/build-push-action@v1
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+            tag_with_ref: true
+            repository: ${{ secrets.DOCKERHUB_USERNAME }}/chatting_app
+                        
