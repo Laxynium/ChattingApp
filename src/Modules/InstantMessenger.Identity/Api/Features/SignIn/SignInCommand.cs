@@ -1,0 +1,16 @@
+﻿using InstantMessenger.Shared.Commands;
+
+namespace InstantMessenger.Identity.Api.Features.SignIn
+{
+    public class SignInCommand : ICommand
+    {
+        public string Email { get; }
+        public string Password { get; }
+
+        public SignInCommand(string email, string password)
+        {
+            Email = email;
+            Password = password;
+        }
+    }
+}
