@@ -1,7 +1,7 @@
 ﻿using System;
 using InstantMessenger.Shared.Queries;
 
-namespace InstantMessenger.Profiles
+namespace InstantMessenger.Profiles.Api.Queries
 {
     public class GetProfile : IQuery<ProfileDto>
     {

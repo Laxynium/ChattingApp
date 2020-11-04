@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InstantMessenger.Profiles.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Profiles.Domain

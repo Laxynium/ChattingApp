@@ -2,7 +2,7 @@
 using InstantMessenger.Profiles.Domain;
 using InstantMessenger.Shared.Queries;
 
-namespace InstantMessenger.Profiles
+namespace InstantMessenger.Profiles.Api.Queries
 {
     public sealed class GetProfileHandler : IQueryHandler<GetProfile, ProfileDto>
     {
@@ -17,7 +17,8 @@ namespace InstantMessenger.Profiles
             var profile = await _profileRepository.GetAsync(query.ProfileId);
             if (profile is null)
                 return null;
-            return new ProfileDto(profile.Id, profile.Nickname?.Value, null);
+
+            return new ProfileDto(profile.Id, profile.Nickname?.Value, profile?.Avatar?.AsBase64String());
         }
     }
 }

@@ -20,7 +20,7 @@ namespace InstantMessenger.Profiles.Domain
             Nickname = nickname;
         }
 
-        public void ChangeAvatar(Avatar avatar)
+        public void Change(Avatar avatar)
         {
             Avatar = avatar;
         }

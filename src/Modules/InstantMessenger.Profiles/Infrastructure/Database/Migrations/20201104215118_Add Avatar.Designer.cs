@@ -4,14 +4,16 @@ using InstantMessenger.Profiles.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InstantMessenger.Profiles.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ProfilesContext))]
-    partial class ProfilesContextModelSnapshot : ModelSnapshot
+    [Migration("20201104215118_Add Avatar")]
+    partial class AddAvatar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

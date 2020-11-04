@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Api;
 using InstantMessenger.Identity.Infrastructure.Database;
-using InstantMessenger.Profiles;
+using InstantMessenger.Profiles.Infrastructure.Database;
 using InstantMessenger.Shared.MailKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -15,6 +15,11 @@ using Xunit;
 
 namespace InstantMessenger.IntegrationTests
 {
+    [CollectionDefinition("Server collection")]
+    public class ServerCollection : ICollectionFixture<ServerFixture>
+    {
+
+    }
     public class ServerFixture : IAsyncLifetime
     {
         private TestServer _testServer;

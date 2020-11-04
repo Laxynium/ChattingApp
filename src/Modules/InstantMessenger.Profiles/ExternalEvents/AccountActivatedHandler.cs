@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using InstantMessenger.Profiles.Api;
 using InstantMessenger.Profiles.Domain;
 using InstantMessenger.Shared.Events;
 

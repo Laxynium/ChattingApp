@@ -67,7 +67,7 @@ namespace InstantMessenger.Identity
                         o.UseSqlServer(connectionString, x=>x.MigrationsHistoryTable("__EFMigrationsHistory", "Identity"));
                     }
                 )
-                .AddSingleton<IUniqueEmailRule, UniqueEmailRule>()
+                .AddScoped<IUniqueEmailRule, UniqueEmailRule>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IVerificationLinkRepository, VerificationLinkRepository>()
                 .AddScoped<IUnitOfWork, UnitOfWork>()

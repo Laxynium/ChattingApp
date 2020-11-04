@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InstantMessenger.Profiles
+namespace InstantMessenger.Profiles.Api.Queries
 {
     public class ProfileDto
     {

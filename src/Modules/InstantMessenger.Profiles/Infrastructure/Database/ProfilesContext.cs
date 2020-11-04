@@ -1,7 +1,7 @@
 ﻿using InstantMessenger.Profiles.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstantMessenger.Profiles
+namespace InstantMessenger.Profiles.Infrastructure.Database
 {
     public class ProfilesContext : DbContext
     {
@@ -23,8 +23,13 @@ namespace InstantMessenger.Profiles
                 .ValueGeneratedNever()
                 .HasColumnName("ProfileId");
 
-            profile.Ignore(x => x.Avatar);
-
+            profile.OwnsOne(
+                p => p.Avatar,
+                b =>
+                {
+                    b.Property(x => x.Value).IsRequired().HasColumnName("Avatar");
+                }
+            );
             profile.OwnsOne(
                 p => p.Nickname,
                 b =>

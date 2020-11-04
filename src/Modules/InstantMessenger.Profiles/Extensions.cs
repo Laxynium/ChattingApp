@@ -1,4 +1,6 @@
-﻿using InstantMessenger.Profiles.Domain;
+﻿using InstantMessenger.Profiles.Api;
+using InstantMessenger.Profiles.Domain;
+using InstantMessenger.Profiles.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
 using InstantMessenger.Shared.Modules;

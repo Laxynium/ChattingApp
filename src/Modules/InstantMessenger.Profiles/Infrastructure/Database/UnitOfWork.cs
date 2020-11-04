@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using InstantMessenger.Profiles.Api;
 
-namespace InstantMessenger.Profiles
+namespace InstantMessenger.Profiles.Infrastructure.Database
 {
     internal sealed class UnitOfWork : IUnitOfWork
     {

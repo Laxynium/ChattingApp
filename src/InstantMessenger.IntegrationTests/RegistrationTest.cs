@@ -1,7 +1,5 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using FluentAssertions;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
@@ -11,6 +9,7 @@ using Xunit;
 
 namespace InstantMessenger.IntegrationTests
 {
+    [Collection("Server collection")]
     public class RegistrationTest : IClassFixture<ServerFixture>
     {
         private readonly ServerFixture _fixture;
@@ -35,7 +34,7 @@ namespace InstantMessenger.IntegrationTests
 
 
             var link = LinkExtractor.FromMail(mailService.Messages.First());
-            var (userId, token) = GetQueryParams(link);
+            var (userId, token) = LinkExtractor.GetQueryParams(link);
 
             var result2 = await sut.ActivateAccount(userId, token);
 
@@ -60,13 +59,6 @@ namespace InstantMessenger.IntegrationTests
             profileResult.Id.Should().Be(meResult.Id);
             profileResult.Nickname.Should().BeNull();
             profileResult.Avatar.Should().BeNull();
-        }
-
-
-        private (string userId, string token) GetQueryParams(string link)
-        {
-            var queryParams = HttpUtility.ParseQueryString(new UriBuilder(link).Query);
-            return (queryParams.Get("userId"), queryParams.Get("token"));
         }
     }
 }
