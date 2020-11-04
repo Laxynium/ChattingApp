@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Api.Queries;
-using Microsoft.AspNetCore.Mvc;
 using RestEase;
 
 namespace InstantMessenger.IntegrationTests.Identity

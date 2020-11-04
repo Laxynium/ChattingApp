@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Api;
 using InstantMessenger.Identity.Infrastructure.Database;
+using InstantMessenger.Profiles;
 using InstantMessenger.Shared.MailKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -35,7 +36,9 @@ namespace InstantMessenger.IntegrationTests
                 .UseStartup<Startup>();
             _testServer = new TestServer(webHostBuilder);
 
-            await InitDb();
+            await ResetCheckpoint();
+            await InitDb<IdentityContext>();
+            await InitDb<ProfilesContext>();
         }
 
         public Task DisposeAsync()
@@ -44,14 +47,27 @@ namespace InstantMessenger.IntegrationTests
             return Task.CompletedTask;
         }
 
-        private async Task InitDb()
+        private async Task InitDb<TDbContext>() where TDbContext : DbContext
         {
             using var scope = _testServer.Services.CreateScope();
-            var context = scope.ServiceProvider.GetService<IdentityContext>();
-            var checkpoint = new Checkpoint { DbAdapter = DbAdapter.SqlServer,TablesToIgnore = new []{ "__EFMigrationsHistory" }, WithReseed = true};
-            await context.Database.OpenConnectionAsync();
+            var context = scope.ServiceProvider.GetService<TDbContext>();
             await context.Database.MigrateAsync();
-            await checkpoint.Reset(context.Database.GetDbConnection());
+        }
+
+        private async Task ResetCheckpoint()
+        {
+            var checkpoint = new Checkpoint
+            {
+                DbAdapter = DbAdapter.SqlServer,
+                TablesToIgnore = new[]
+                {
+                    "__EFMigrationsHistory",
+                },
+                WithReseed = true
+            };
+            using var scope = _testServer.Services.CreateScope();
+            var connectionString = scope.ServiceProvider.GetService<IConfiguration>().GetConnectionString("InstantMessengerDb");
+            await checkpoint.Reset(connectionString);
         }
     }
 }

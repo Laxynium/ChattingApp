@@ -9,7 +9,7 @@ namespace InstantMessenger.Identity.Infrastructure.Database
         public DbSet<User> Users { get; set; }
         public DbSet<ActivationLink> VerificationLinks { get; set; }
 
-        public IdentityContext(DbContextOptions options):base(options)
+        public IdentityContext(DbContextOptions<IdentityContext> options):base(options)
         {
         }
 

@@ -10,8 +10,8 @@ namespace InstantMessenger.Shared.Modules
 {
     public static class Extensions
     {
-        private const string AppName = "Bootstrap";
-        public static IServiceCollection AddModuleRequest(this IServiceCollection services)
+        private const string AppName = "InstantMessenger";
+        public static IServiceCollection AddModuleRequests(this IServiceCollection services)
         {
             services.AddModuleRegistry();
             services.AddSingleton<IModuleSubscriber, ModuleSubscriber>();

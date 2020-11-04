@@ -7,6 +7,7 @@ using InstantMessenger.Identity.Domain.Rules;
 using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MailKit;
+using InstantMessenger.Shared.Modules;
 using InstantMessenger.Shared.Mvc;
 using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using IdentityOptions = InstantMessenger.Identity.IdentityOptions;
 
 namespace InstantMessenger.Identity
 {
@@ -54,6 +54,7 @@ namespace InstantMessenger.Identity
                 .AddCommandDispatcher()
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
+                .AddModuleRequests()
                 .AddMailKit()
                 .AddHttpContextAccessor()
                 .AddMemoryCache()
@@ -63,7 +64,7 @@ namespace InstantMessenger.Identity
                         using var provider = services.BuildServiceProvider();
                         using var scope = provider.CreateScope();
                         var connectionString = scope.ServiceProvider.GetService<IConfiguration>().GetConnectionString("InstantMessengerDb");
-                        o.UseSqlServer(connectionString);
+                        o.UseSqlServer(connectionString, x=>x.MigrationsHistoryTable("__EFMigrationsHistory", "Identity"));
                     }
                 )
                 .AddSingleton<IUniqueEmailRule, UniqueEmailRule>()
