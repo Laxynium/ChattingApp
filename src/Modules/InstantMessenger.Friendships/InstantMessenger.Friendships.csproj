@@ -4,4 +4,30 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="Infrastructure\Database\Migrations\20201106195745_Init Friendships.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201106195745_Init Friendships.Designer.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107110906_Add Invitation And Friendship.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107110906_Add Invitation And Friendship.Designer.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107111115_Add Invitation And Friendship.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107111115_Add Invitation And Friendship.Designer.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107112316_Init Friendships.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107112316_Init Friendships.Designer.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107112409_Init Friendships.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107112409_Init Friendships.Designer.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107113317_Init Friendships.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201107113317_Init Friendships.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+      <PackageReference Include="NodaTime" Version="3.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\InstantMessenger.Shared\InstantMessenger.Shared.csproj" />
+    </ItemGroup>
+
 </Project>

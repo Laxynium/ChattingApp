@@ -4,7 +4,7 @@ using System.Web;
 using HtmlAgilityPack;
 using MimeKit;
 
-namespace InstantMessenger.IntegrationTests
+namespace InstantMessenger.IntegrationTests.Common
 {
     public static class LinkExtractor
     {

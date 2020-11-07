@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.IntegrationTests.Identity;
+using InstantMessenger.IntegrationTests.Api;
+using InstantMessenger.IntegrationTests.Common;
 using Xunit;
 
-namespace InstantMessenger.IntegrationTests
+namespace InstantMessenger.IntegrationTests.Tests
 {
     [Collection("Server collection")]
     public class AvatarChangeTest : IClassFixture<ServerFixture>

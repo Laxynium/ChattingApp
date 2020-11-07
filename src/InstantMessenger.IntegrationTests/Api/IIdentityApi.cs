@@ -5,7 +5,7 @@ using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Api.Queries;
 using RestEase;
 
-namespace InstantMessenger.IntegrationTests.Identity
+namespace InstantMessenger.IntegrationTests.Api
 {
     [Header("User-Agent", "RestEase")]
     public interface IIdentityApi

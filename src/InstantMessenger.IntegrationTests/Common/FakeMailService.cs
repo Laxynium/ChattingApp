@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using InstantMessenger.Shared.MailKit;
 using MimeKit;
 
-namespace InstantMessenger.IntegrationTests
+namespace InstantMessenger.IntegrationTests.Common
 {
     public class FakeMailService : IMailService
     {

@@ -1,12 +1,10 @@
-﻿using System.IO;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using InstantMessenger.Profiles.Api.Features.NicknameChange;
 using InstantMessenger.Profiles.Api.Queries;
-using Microsoft.Net.Http.Headers;
 using RestEase;
 
-namespace InstantMessenger.IntegrationTests.Identity
+namespace InstantMessenger.IntegrationTests.Api
 {
     [Header("User-Agent", "RestEase")]
     public interface IProfilesApi

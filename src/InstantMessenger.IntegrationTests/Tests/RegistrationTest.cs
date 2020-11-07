@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
-using InstantMessenger.IntegrationTests.Identity;
+using InstantMessenger.IntegrationTests.Api;
+using InstantMessenger.IntegrationTests.Common;
 using InstantMessenger.Shared.MailKit;
 using Xunit;
 
-namespace InstantMessenger.IntegrationTests
+namespace InstantMessenger.IntegrationTests.Tests
 {
     [Collection("Server collection")]
     public class RegistrationTest : IClassFixture<ServerFixture>
@@ -29,7 +30,7 @@ namespace InstantMessenger.IntegrationTests
             result.IsSuccessStatusCode.Should().BeTrue();
             var mailService = (FakeMailService)_fixture.GetService<IMailService>();
             mailService.Messages.Should()
-                .HaveSingleMailWithProperReceiverAndSender(from: "appmailbox@test.com", to:command.Email).And
+                .HaveSingleMailWithProperReceiverAndSender(@from: "appmailbox@test.com", to:command.Email).And
                 .ContainProperLink();
 
 

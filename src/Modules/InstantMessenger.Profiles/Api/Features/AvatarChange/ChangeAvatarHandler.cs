@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using InstantMessenger.Profiles.Api.Features.NicknameChange;
 using InstantMessenger.Profiles.Domain;
 using InstantMessenger.Shared.Commands;
 
@@ -16,8 +17,7 @@ namespace InstantMessenger.Profiles.Api.Features.AvatarChange
         }
         public async Task HandleAsync(ChangeAvatarCommand command)
         {
-            var profile = await _profileRepository.GetAsync(command.ProfileId);
-
+            var profile = await _profileRepository.GetAsync(command.ProfileId) ?? throw new ProfileNotFoundException();
 
             var avatar = await Avatar.Create(command.Image);
             profile.Change(avatar);

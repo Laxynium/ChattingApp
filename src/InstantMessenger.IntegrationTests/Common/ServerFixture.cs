@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Api;
+using InstantMessenger.Friendships.Infrastructure.Database;
 using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.Profiles.Infrastructure.Database;
 using InstantMessenger.Shared.MailKit;
@@ -13,7 +14,7 @@ using Respawn;
 using RestEase;
 using Xunit;
 
-namespace InstantMessenger.IntegrationTests
+namespace InstantMessenger.IntegrationTests.Common
 {
     [CollectionDefinition("Server collection")]
     public class ServerCollection : ICollectionFixture<ServerFixture>
@@ -40,10 +41,10 @@ namespace InstantMessenger.IntegrationTests
                 .ConfigureTestServices(services => { services.AddSingleton<IMailService, FakeMailService>(); })
                 .UseStartup<Startup>();
             _testServer = new TestServer(webHostBuilder);
-
-            await ResetCheckpoint();
             await InitDb<IdentityContext>();
             await InitDb<ProfilesContext>();
+            await InitDb<FriendshipsContext>();
+            await ResetCheckpoint();
         }
 
         public Task DisposeAsync()

@@ -1,3 +1,4 @@
+using InstantMessenger.Friendships;
 using InstantMessenger.Identity;
 using InstantMessenger.Profiles;
 using InstantMessenger.Shared;
@@ -16,6 +17,7 @@ namespace InstantMessenger.Api
         {
             services.AddIdentityModule()
                 .AddProfilesModule()
+                .AddFriendshipsModule()
                 .AddSharedModule();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

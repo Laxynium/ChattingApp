@@ -2,7 +2,7 @@ using FluentAssertions;
 using FluentAssertions.Collections;
 using MimeKit;
 
-namespace InstantMessenger.IntegrationTests
+namespace InstantMessenger.IntegrationTests.Common
 {
     public static class MailMessagesExtensions
     {
