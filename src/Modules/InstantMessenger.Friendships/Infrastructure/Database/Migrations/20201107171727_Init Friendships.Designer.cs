@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstantMessenger.Friendships.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(FriendshipsContext))]
-    [Migration("20201107113542_Init Friendships")]
+    [Migration("20201107171727_Init Friendships")]
     partial class InitFriendships
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

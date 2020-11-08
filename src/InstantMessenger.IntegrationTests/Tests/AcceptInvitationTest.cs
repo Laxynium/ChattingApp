@@ -52,6 +52,15 @@ namespace InstantMessenger.IntegrationTests.Tests
                 x.Friend.Should().Be(Guid.Parse(userB.Subject));
                 x.CreatedAt.Should().NotBe(default);
             });
+
+            var privateMessagesApi = _fixture.GetClient<IPrivateMessagesApi>();
+            var conversations = await privateMessagesApi.GetConversations($"Bearer {userA.Token}");
+            conversations.Should().SatisfyRespectively(x =>
+            {
+                x.ConversationId.Should().NotBeEmpty();
+                x.FirstParticipant.Should().Be(Guid.Parse(userA.Subject));
+                x.SecondParticipant.Should().Be(Guid.Parse(userB.Subject));
+            });
         }
 
     }

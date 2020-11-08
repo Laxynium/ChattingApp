@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using InstantMessenger.Api;
 using InstantMessenger.Friendships.Infrastructure.Database;
 using InstantMessenger.Identity.Infrastructure.Database;
+using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using InstantMessenger.Profiles.Infrastructure.Database;
 using InstantMessenger.Shared.MailKit;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +45,7 @@ namespace InstantMessenger.IntegrationTests.Common
             await InitDb<IdentityContext>();
             await InitDb<ProfilesContext>();
             await InitDb<FriendshipsContext>();
+            await InitDb<PrivateMessagesContext>();
             await ResetCheckpoint();
         }
 
