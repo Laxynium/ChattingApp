@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstantMessenger.Groups", "src\Modules\InstantMessenger.Groups\InstantMessenger.Groups.csproj", "{4976948B-996C-47AD-87CC-0155F311F8D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{7E2D2D18-88B3-48CB-AB0D-C11F1EE4D9DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E2D2D18-88B3-48CB-AB0D-C11F1EE4D9DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E2D2D18-88B3-48CB-AB0D-C11F1EE4D9DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4976948B-996C-47AD-87CC-0155F311F8D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4976948B-996C-47AD-87CC-0155F311F8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4976948B-996C-47AD-87CC-0155F311F8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4976948B-996C-47AD-87CC-0155F311F8D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +83,7 @@ Global
 		{EF44F7A6-6517-48CB-B010-78B077B601D9} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
 		{5E322C12-86CF-4C69-A23C-562985C26BAE} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
 		{11C9482E-EB68-4A16-A011-63C2674C6BE8} = {3A575CD3-FD54-4677-8D3D-28FA2E685490}
+		{4976948B-996C-47AD-87CC-0155F311F8D2} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {81DBF4CE-988E-4AF6-A00B-E53B48C44C61}
