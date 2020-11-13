@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace InstantMessenger.PrivateMessages.Domain
 {
@@ -6,5 +7,6 @@ namespace InstantMessenger.PrivateMessages.Domain
     {
         Task AddAsync(Conversation conversation);
         Task<bool> ExistsAsync(Participant firstParticipant, Participant secondParticipant);
+        Task<Conversation> GetAsync(ConversationId id);
     }
 }

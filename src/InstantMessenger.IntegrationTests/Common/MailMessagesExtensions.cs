@@ -25,8 +25,16 @@ namespace InstantMessenger.IntegrationTests.Common
             => messages.SatisfyRespectively(
                 x =>
                 {
-                    var link = LinkExtractor.FromMail(x);
+                    var link = EmailContentExtractor.GetUrlFromActivationMail(x);
                     link.Should().NotBeNullOrWhiteSpace();
+                }
+            );
+        public static AndConstraint<GenericCollectionAssertions<MimeMessage>> ContainProperToken(this GenericCollectionAssertions<MimeMessage> messages) 
+            => messages.SatisfyRespectively(
+                x =>
+                {
+                    var token = EmailContentExtractor.GetTokenFromForgotPasswordEmail(x);
+                    token.Should().NotBeNullOrWhiteSpace();
                 }
             );
     }

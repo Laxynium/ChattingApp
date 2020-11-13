@@ -31,6 +31,7 @@ namespace InstantMessenger.PrivateMessages
                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", "PrivateMessages"));
                 })
                 .AddScoped<IConversationRepository, ConversationRepository>()
+                .AddScoped<IMessageRepository,MessageRepository>()
                 .AddScoped<IUnitOfWork,UnitOfWork>();
             return services;
         }

@@ -11,8 +11,8 @@ namespace InstantMessenger.Identity.Domain.Entities
     public sealed class User : Entity<Guid>
     {
         public Email Email { get; }
-        public string PasswordHash { get; }
-        
+        public string PasswordHash { get; private set; }
+
         public bool IsVerified { get; private set; }
 
         private User(){}
@@ -43,6 +43,12 @@ namespace InstantMessenger.Identity.Domain.Entities
             {
                 throw new InvalidVerificationTokenException();
             }
+        }
+
+        public void ChangePassword(Password password,IPasswordHasher<User> hasher)
+        {
+            var hash = hasher.HashPassword(null, password.Value);
+            PasswordHash = hash;
         }
     }
 }

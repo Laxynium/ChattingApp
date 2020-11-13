@@ -7,6 +7,8 @@
     <ItemGroup>
       <Compile Remove="Infrastructure\Database\Migrations\20201107171516_Init Friendships.cs" />
       <Compile Remove="Infrastructure\Database\Migrations\20201107171516_Init Friendships.Designer.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201111161153_Fix Messages.cs" />
+      <Compile Remove="Infrastructure\Database\Migrations\20201111161153_Fix Messages.Designer.cs" />
     </ItemGroup>
 
     <ItemGroup>

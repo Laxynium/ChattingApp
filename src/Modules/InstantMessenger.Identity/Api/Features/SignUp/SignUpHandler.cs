@@ -16,7 +16,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
     internal sealed class SignUpHandler : ICommandHandler<SignUpCommand>
     {
         private readonly IUserRepository _userRepository;
-        private readonly IVerificationLinkRepository _verificationLinkRepository;
+        private readonly IActivationLinkRepository _activationLinkRepository;
         private readonly IUniqueEmailRule _uniqueEmailRule;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly RandomStringGenerator _stringGenerator;
@@ -28,7 +28,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
 
         public SignUpHandler(
             IUserRepository userRepository,
-            IVerificationLinkRepository verificationLinkRepository,
+            IActivationLinkRepository activationLinkRepository,
             IUniqueEmailRule uniqueEmailRule, 
             IPasswordHasher<User> passwordHasher,
             RandomStringGenerator stringGenerator,
@@ -39,7 +39,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             MailOptions mailOptions)
         {
             _userRepository = userRepository;
-            _verificationLinkRepository = verificationLinkRepository;
+            _activationLinkRepository = activationLinkRepository;
             _uniqueEmailRule = uniqueEmailRule;
             _passwordHasher = passwordHasher;
             _stringGenerator = stringGenerator;
@@ -60,9 +60,9 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
 
             var url = _linkGenerator.GetUriByAction(_contextAccessor.HttpContext, "Activate", "Identity", new { userId = user.Id, token = randomString });
 
-            var verificationLink = ActivationLink.Create(user.Id, randomString);
+            var activationLink = ActivationLink.Create(user.Id, randomString);
 
-            await _verificationLinkRepository.AddAsync(verificationLink);
+            await _activationLinkRepository.AddAsync(activationLink);
 
 
             var message = BuildMessage(user, url);

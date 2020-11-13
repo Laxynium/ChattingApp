@@ -4,14 +4,16 @@ using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PrivateMessagesContext))]
-    partial class PrivateMessagesContextModelSnapshot : ModelSnapshot
+    [Migration("20201111161518_Fix Messages")]
+    partial class FixMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +39,6 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("ReadAt")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id")

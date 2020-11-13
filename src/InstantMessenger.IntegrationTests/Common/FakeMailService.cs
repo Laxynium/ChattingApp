@@ -14,5 +14,7 @@ namespace InstantMessenger.IntegrationTests.Common
             _messages.Add(message);
             return Task.CompletedTask;;
         }
+
+        public void Reset() => _messages.Clear();
     }
 }

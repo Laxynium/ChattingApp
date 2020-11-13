@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
 namespace InstantMessenger.Identity.Api.Features.SignIn
@@ -28,7 +29,6 @@ namespace InstantMessenger.Identity.Api.Features.SignIn
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_options.Key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
-
             var securityToken = handler.CreateToken(tokenDescriptor);
 
             var token = new AuthDto
@@ -41,6 +41,53 @@ namespace InstantMessenger.Identity.Api.Features.SignIn
             };
 
             return token;
+        }
+
+        public string Create(Guid userId, string secret)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _options.Issuer,
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, userId.ToString("N")),
+                    new Claim(ClaimTypes.Role, "user"),
+                }),
+                Expires = DateTime.UtcNow.AddDays(_options.ExpirationDays),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret)),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+            var securityToken = handler.CreateToken(tokenDescriptor);
+            return handler.WriteToken(securityToken);
+        }
+
+        public bool Verify(string token, string secret, out Guid userId)
+        {
+            userId = default;
+            var handler = new JwtSecurityTokenHandler();
+            try
+            {
+                var result = handler.ValidateToken(
+                    token,
+                    new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidIssuer = _options.Issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret))
+                    },
+                    out var validatedToken
+                );
+                userId = Guid.Parse(result.Identity.Name ?? string.Empty);
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

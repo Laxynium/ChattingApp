@@ -34,8 +34,8 @@ namespace InstantMessenger.IntegrationTests.Tests
                 .ContainProperLink();
 
 
-            var link = LinkExtractor.FromMail(mailService.Messages.First());
-            var (userId, token) = LinkExtractor.GetQueryParams(link);
+            var link = EmailContentExtractor.GetUrlFromActivationMail(mailService.Messages.First());
+            var (userId, token) = EmailContentExtractor.GetQueryParams(link);
 
             var result2 = await sut.ActivateAccount(userId, token);
 

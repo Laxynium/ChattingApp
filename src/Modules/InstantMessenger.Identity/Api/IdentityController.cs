@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InstantMessenger.Identity.Api.Features.PasswordReset;
+using InstantMessenger.Identity.Api.Features.SendPasswordReset;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Api.Features.VerifyUser;
@@ -50,6 +52,22 @@ namespace InstantMessenger.Identity.Api
             await _commandDispatcher.SendAsync(command);
             var dto = _cache.Get(command.Email);
             return Ok(dto);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> SendPasswordReset(SendPasswordResetCommand command)
+        {
+            await _commandDispatcher.SendAsync(command);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
+        {
+            await _commandDispatcher.SendAsync(command);
+            return Ok();
         }
 
         [HttpGet("me")]

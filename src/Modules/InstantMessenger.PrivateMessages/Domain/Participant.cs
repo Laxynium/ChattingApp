@@ -17,5 +17,8 @@ namespace InstantMessenger.PrivateMessages.Domain
         {
             yield return Id;
         }
+
+        public static implicit operator Guid(Participant participant) =>
+            participant.Id;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using InstantMessenger.Identity.Api.Features.PasswordReset;
+using InstantMessenger.Identity.Api.Features.SendPasswordReset;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Api.Queries;
@@ -22,5 +24,11 @@ namespace InstantMessenger.IntegrationTests.Api
 
         [Get("/api/identity/me")]
         Task<UserDto> Me([Header("Authorization")] string authorization);
+
+        [Post("/api/identity/forgot-password")]
+        Task<HttpResponseMessage> ForgotPassword([Body]SendPasswordResetCommand command);
+
+        [Post("/api/identity/reset-password")]
+        Task<HttpResponseMessage> ResetPassword([Body]ResetPasswordCommand command);
     }
 }

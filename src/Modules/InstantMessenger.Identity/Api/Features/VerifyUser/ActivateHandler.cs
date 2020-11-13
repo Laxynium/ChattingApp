@@ -10,20 +10,20 @@ namespace InstantMessenger.Identity.Api.Features.VerifyUser
     internal sealed class ActivateHandler : ICommandHandler<ActivateCommand>
     {
         private readonly IUserRepository _userRepository;
-        private readonly IVerificationLinkRepository _verificationLinkRepository;
+        private readonly IActivationLinkRepository _activationLinkRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMessageBroker _messageBroker;
 
-        public ActivateHandler(IUserRepository userRepository, IVerificationLinkRepository verificationLinkRepository, IUnitOfWork unitOfWork, IMessageBroker messageBroker)
+        public ActivateHandler(IUserRepository userRepository, IActivationLinkRepository activationLinkRepository, IUnitOfWork unitOfWork, IMessageBroker messageBroker)
         {
             _userRepository = userRepository;
-            _verificationLinkRepository = verificationLinkRepository;
+            _activationLinkRepository = activationLinkRepository;
             _unitOfWork = unitOfWork;
             _messageBroker = messageBroker;
         }
         public async Task HandleAsync(ActivateCommand command)
         {
-            var verificationLink = await _verificationLinkRepository.GetAsync(command.UserId) ?? throw new InvalidVerificationTokenException();
+            var verificationLink = await _activationLinkRepository.GetAsync(command.UserId) ?? throw new InvalidVerificationTokenException();
             var user = await _userRepository.GetAsync(verificationLink.UserId) ?? throw new InvalidVerificationTokenException();
 
             user.Activate(verificationLink, command.Token);

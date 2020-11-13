@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Identity.Infrastructure.Database
 {
-    internal sealed class VerificationLinkRepository : IVerificationLinkRepository
+    internal sealed class ActivationLinkRepository : IActivationLinkRepository
     {
         private readonly IdentityContext _context;
 
-        public VerificationLinkRepository(IdentityContext context)
+        public ActivationLinkRepository(IdentityContext context)
         {
             _context = context;
         }

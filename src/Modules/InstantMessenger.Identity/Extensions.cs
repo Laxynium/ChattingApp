@@ -69,7 +69,7 @@ namespace InstantMessenger.Identity
                 )
                 .AddScoped<IUniqueEmailRule, UniqueEmailRule>()
                 .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IVerificationLinkRepository, VerificationLinkRepository>()
+                .AddScoped<IActivationLinkRepository, ActivationLinkRepository>()
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddSingleton<RandomStringGenerator>()
                 .AddSingleton<IPasswordHasher<User>>(s => new PasswordHasher<User>())

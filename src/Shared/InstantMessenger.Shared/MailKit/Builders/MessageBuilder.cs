@@ -37,7 +37,7 @@ namespace InstantMessenger.Shared.MailKit.Builders
 
         IMessageBuilder IMessageBuilder.WithBody(string body)
         {
-            _message.Body = new TextPart("plain")
+            _message.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
                 Text = body
             };

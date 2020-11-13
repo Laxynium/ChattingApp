@@ -11,19 +11,23 @@ namespace InstantMessenger.PrivateMessages.Domain
         public DateTimeOffset CreatedAt { get; }
         public Participant From { get; }
         public Participant To { get; }
+        public DateTimeOffset? ReadAt { private set; get; }
         private Message(){}
+
         private Message(MessageId id,
             MessageBody body,
             ConversationId conversationId,
             Participant @from,
             Participant to,
-            DateTimeOffset createdAt) : base(id)
+            DateTimeOffset createdAt,
+            DateTimeOffset? readAt = null) : base(id)
         {
             Body = body;
             ConversationId = conversationId;
             CreatedAt = createdAt;
             To = to;
             From = @from;
+            ReadAt = readAt;
         }
 
         public static Message Create(MessageBody body, ConversationId conversationId, Participant @from, Participant to, IClock clock) =>
@@ -35,5 +39,15 @@ namespace InstantMessenger.PrivateMessages.Domain
                 clock.GetCurrentInstant()
                     .InUtc()
                     .ToDateTimeOffset());
+
+        public void MarkAsRead(Participant participant, IClock clock)
+        {
+            if (participant != To)
+            {
+                throw new InvalidParticipantException();
+            }
+
+            ReadAt = clock.GetCurrentInstant().InUtc().ToDateTimeOffset();
+        }
     }
 }

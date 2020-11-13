@@ -4,14 +4,16 @@ using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PrivateMessagesContext))]
-    partial class PrivateMessagesContextModelSnapshot : ModelSnapshot
+    [Migration("20201108224234_Fix mappings")]
+    partial class Fixmappings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,11 +38,17 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset?>("ReadAt")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<Guid>("From")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("To")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id")
                         .HasName("PK_Messages");
@@ -87,23 +95,6 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
 
             modelBuilder.Entity("InstantMessenger.PrivateMessages.Domain.Message", b =>
                 {
-                    b.OwnsOne("InstantMessenger.PrivateMessages.Domain.ConversationId", "ConversationId", b1 =>
-                        {
-                            b1.Property<Guid>("MessageId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("Value")
-                                .HasColumnName("ConversationId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("MessageId");
-
-                            b1.ToTable("Messages");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MessageId");
-                        });
-
                     b.OwnsOne("InstantMessenger.PrivateMessages.Domain.MessageBody", "Body", b1 =>
                         {
                             b1.Property<Guid>("MessageId")
@@ -113,40 +104,6 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
                                 .IsRequired()
                                 .HasColumnName("Body")
                                 .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("MessageId");
-
-                            b1.ToTable("Messages");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MessageId");
-                        });
-
-                    b.OwnsOne("InstantMessenger.PrivateMessages.Domain.Participant", "From", b1 =>
-                        {
-                            b1.Property<Guid>("MessageId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("Id")
-                                .HasColumnName("From")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("MessageId");
-
-                            b1.ToTable("Messages");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MessageId");
-                        });
-
-                    b.OwnsOne("InstantMessenger.PrivateMessages.Domain.Participant", "To", b1 =>
-                        {
-                            b1.Property<Guid>("MessageId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("Id")
-                                .HasColumnName("To")
-                                .HasColumnType("uniqueidentifier");
 
                             b1.HasKey("MessageId");
 

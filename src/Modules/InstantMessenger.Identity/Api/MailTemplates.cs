@@ -1,4 +1,4 @@
-namespace InstantMessenger.Identity.Api.Features.SignUp
+namespace InstantMessenger.Identity.Api
 {
     public static class MailTemplates
     {
@@ -7,6 +7,14 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             public static readonly string Subject = "Account verification";
             public static readonly string Body = @"Please use link below in order to verify your account.
 <a href='{0}'>Verify account</a>";
+        }
+
+        public static class ResetPassword
+        {
+            public static readonly string Subject = "Password Reset";
+            public static readonly string Body = @"Please use link below in order to reset your password.
+Token: [[{0}]]";
+
         }
     }
 }

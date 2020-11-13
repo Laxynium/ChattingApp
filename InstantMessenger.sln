@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Api", "src\InstantMessenger.Api\InstantMessenger.Api.csproj", "{D1492CBC-113D-42BE-BF63-D8955280625B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EF44F7A6-6517-48CB-B010-78B077B601D9} = {EF44F7A6-6517-48CB-B010-78B077B601D9}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Identity", "src\Modules\InstantMessenger.Identity\InstantMessenger.Identity.csproj", "{71DB59B0-F2AA-4B7E-A760-498811324DA3}"
 EndProject
@@ -26,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Shared", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.IntegrationTests", "src\InstantMessenger.IntegrationTests\InstantMessenger.IntegrationTests.csproj", "{7E2D2D18-88B3-48CB-AB0D-C11F1EE4D9DF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4B0B87E3-5E52-442F-8D6A-3C4BFD21B8F2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BAB017B0-92CF-4CD7-A966-00F6F5D838FE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
