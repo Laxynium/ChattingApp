@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace InstantMessenger.Shared.Events
@@ -7,13 +7,13 @@ namespace InstantMessenger.Shared.Events
     {
         public static IServiceCollection AddEventHandlers(this IServiceCollection services)
         {
-            services.Scan(
-                s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+            var callingAssembly = Assembly.GetCallingAssembly();
+            return services.Scan(
+                s => s.FromAssemblies(callingAssembly)
                     .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>)))
                     .AsImplementedInterfaces()
                     .WithTransientLifetime()
             );
-            return services;
         }
 
         public static IServiceCollection AddEventDispatcher(this IServiceCollection services)

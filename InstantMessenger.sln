@@ -25,10 +25,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Integratio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BAB017B0-92CF-4CD7-A966-00F6F5D838FE}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
+		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstantMessenger.Groups", "src\Modules\InstantMessenger.Groups\InstantMessenger.Groups.csproj", "{4976948B-996C-47AD-87CC-0155F311F8D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstantMessenger.UnitTests", "src\InstantMessenger.UnitTests\InstantMessenger.UnitTests.csproj", "{14C085AB-A1EA-457E-B8AA-9D351524C0DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +76,10 @@ Global
 		{4976948B-996C-47AD-87CC-0155F311F8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4976948B-996C-47AD-87CC-0155F311F8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4976948B-996C-47AD-87CC-0155F311F8D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14C085AB-A1EA-457E-B8AA-9D351524C0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14C085AB-A1EA-457E-B8AA-9D351524C0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14C085AB-A1EA-457E-B8AA-9D351524C0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14C085AB-A1EA-457E-B8AA-9D351524C0DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
