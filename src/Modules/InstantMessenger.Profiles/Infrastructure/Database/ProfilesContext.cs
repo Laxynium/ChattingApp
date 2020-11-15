@@ -30,13 +30,6 @@ namespace InstantMessenger.Profiles.Infrastructure.Database
                     b.Property(x => x.Value).IsRequired().HasColumnName("Avatar");
                 }
             );
-            profile.OwnsOne(
-                p => p.Nickname,
-                b =>
-                {
-                    b.Property(x => x.Value).IsRequired().HasColumnName("Nickname");
-                }
-            );
         }
     }
 }

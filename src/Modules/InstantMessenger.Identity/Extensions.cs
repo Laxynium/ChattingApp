@@ -1,6 +1,7 @@
 using InstantMessenger.Identity.Api;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
+using InstantMessenger.Identity.Api.Queries;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.Rules;
@@ -48,7 +49,6 @@ namespace InstantMessenger.Identity
                     };
                 }
             );
-
             services
                 .AddCommandHandlers()
                 .AddCommandDispatcher()
@@ -68,6 +68,7 @@ namespace InstantMessenger.Identity
                     }
                 )
                 .AddScoped<IUniqueEmailRule, UniqueEmailRule>()
+                .AddScoped<IUniqueNicknameRule, UniqueNicknameRule>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IActivationLinkRepository, ActivationLinkRepository>()
                 .AddScoped<IUnitOfWork, UnitOfWork>()
@@ -76,6 +77,7 @@ namespace InstantMessenger.Identity
                 .AddTransient<IAuthTokenService, AuthTokenService>()
                 .AddTransient<IAuthTokensCache, AuthTokensCache>()
                 .AddSingleton(options);
+
             return services;
         }
 
@@ -83,6 +85,8 @@ namespace InstantMessenger.Identity
         {
             app.UseAuthentication(); 
             app.UseAuthorization();
+            app.UseModuleRequests()
+                .Subscribe<MeQuery>("/identity/me", async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q));
             return app;
         }
     }

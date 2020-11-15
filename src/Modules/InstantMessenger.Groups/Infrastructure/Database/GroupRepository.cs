@@ -1,15 +1,8 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Infrastructure;
 
-namespace InstantMessenger.Groups.Api.Features.GroupCreation
+namespace InstantMessenger.Groups.Infrastructure.Database
 {
-    public interface IGroupRepository
-    {
-        Task AddAsync(Group group);
-        Task SaveAsync();
-    }
-
     internal sealed class GroupRepository : IGroupRepository
     {
         private readonly GroupsContext _context;
@@ -22,11 +15,6 @@ namespace InstantMessenger.Groups.Api.Features.GroupCreation
         public async Task AddAsync(Group @group)
         {
             await _context.AddAsync(group);
-        }
-
-        public async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }

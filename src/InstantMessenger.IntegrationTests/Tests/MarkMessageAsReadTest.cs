@@ -22,17 +22,17 @@ namespace InstantMessenger.IntegrationTests.Tests
         [Fact]
         public async Task Message_Is_Sent()
         {
-            var userA = await _fixture.LoginAsUser("test1@test.com");
-            var userB = await _fixture.LoginAsUser("test2@test.com");
+            var userA = await _fixture.LoginAsUser("test1@test.com","test1");
+            var userB = await _fixture.LoginAsUser("test2@test.com", "test2");
             var conversation = await _fixture.CreateConversation(userA, userB);
             var sut = _fixture.GetClient<IPrivateMessagesApi>();
-            await sut.SendMessage($"Bearer {userA.Token}", new SendMessageApiRequest(conversation.ConversationId, "test"));
-            var message = (await sut.GetMessages($"Bearer {userB.Token}", conversation.ConversationId)).Last();
+            await sut.SendMessage(userA.BearerToken(), new SendMessageApiRequest(conversation.ConversationId, "test"));
+            var message = (await sut.GetMessages(userB.BearerToken(), conversation.ConversationId)).Last();
 
-            var result = await sut.MarkMessageAsRead($"Bearer {userB.Token}", new MarkMessageAsReadApiRequest(message.MessageId));
+            var result = await sut.MarkMessageAsRead(userB.BearerToken(), new MarkMessageAsReadApiRequest(message.MessageId));
 
             result.IsSuccessStatusCode.Should().BeTrue();
-            var afterRead = (await sut.GetMessages($"Bearer {userA.Token}", conversation.ConversationId)).Last();
+            var afterRead = (await sut.GetMessages(userA.BearerToken(), conversation.ConversationId)).Last();
             afterRead.ReadAt.Should().NotBeNull();
         }
     }

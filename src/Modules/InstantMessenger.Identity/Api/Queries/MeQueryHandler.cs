@@ -15,7 +15,7 @@ namespace InstantMessenger.Identity.Api.Queries
         public async Task<UserDto> HandleAsync(MeQuery query)
         {
             var user = await _userRepository.GetAsync(query.UserId);
-            return new UserDto(user.Id, user.Email);
+            return new UserDto(user.Id, user.Email, user.Nickname);
         }
     }
 }

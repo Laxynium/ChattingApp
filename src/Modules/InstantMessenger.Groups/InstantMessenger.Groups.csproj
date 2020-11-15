@@ -10,10 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.SmartEnum" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.9" />
+    <PackageReference Include="NodaTime" Version="3.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,7 +23,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Database\Migrations\" />
+    <Folder Include="Api\Features\Group\Delete\" />
+    <Folder Include="Api\Features\Group\ChangeName\" />
+    <Folder Include="Api\Features\Group\ChangeAvatar\" />
+    <Folder Include="Api\Features\Members\Kick\" />
+    <Folder Include="Api\Features\Members\Ban\" />
+    <Folder Include="Api\Features\Members\Invite\" />
+    <Folder Include="Api\Features\Members\ChangeOwnNickname\" />
+    <Folder Include="Api\Features\Members\ChangeOthersNicknames\" />
+    <Folder Include="Api\Features\Messages\AttachFile\" />
+    <Folder Include="Api\Features\Messages\Mention\" />
+    <Folder Include="Api\Features\Messages\AddReaction\" />
+    <Folder Include="Api\Features\Roles\EditRole\" />
+    <Folder Include="Api\Features\Channel\AddChannel\" />
+    <Folder Include="Api\Features\Channel\EditChannel\" />
+    <Folder Include="Api\Features\Channel\" />
+    <Folder Include="Api\Features\Channel\RemoveChannel\" />
+    <Folder Include="Api\Features\Messages\EmbedLink\" />
+    <Folder Include="Api\Features\Roles\RemoveRole\" />
+    <Folder Include="Api\Features\Messages\SendMessage\" />
   </ItemGroup>
 
 </Project>

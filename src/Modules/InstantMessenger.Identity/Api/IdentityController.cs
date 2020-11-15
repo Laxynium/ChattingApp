@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using InstantMessenger.Identity.Api.Features.ChangeNickname;
 using InstantMessenger.Identity.Api.Features.PasswordReset;
 using InstantMessenger.Identity.Api.Features.SendPasswordReset;
 using InstantMessenger.Identity.Api.Features.SignIn;
@@ -7,6 +7,7 @@ using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Api.Features.VerifyUser;
 using InstantMessenger.Identity.Api.Queries;
 using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Mvc;
 using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,10 +39,10 @@ namespace InstantMessenger.Identity.Api
         }
 
         [AllowAnonymous]
-        [HttpGet("activate")]
-        public async Task<IActionResult> Activate([FromQuery] Guid userId, [FromQuery] string token)
+        [HttpPost("activate")]
+        public async Task<IActionResult> Activate([FromBody] ActivateCommand command)
         {
-            await _commandDispatcher.SendAsync(new ActivateCommand(userId, token));
+            await _commandDispatcher.SendAsync(command);
             return Ok();
         }
 
@@ -67,6 +68,13 @@ namespace InstantMessenger.Identity.Api
         public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
         {
             await _commandDispatcher.SendAsync(command);
+            return Ok();
+        }
+
+        [HttpPut("nickname")]
+        public async Task<IActionResult> ChangeNickname(ChangeNicknameApiRequest request)
+        {
+            await _commandDispatcher.SendAsync(new ChangeNicknameCommand(User.GetUserId(), request.Nickname));
             return Ok();
         }
 

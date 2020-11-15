@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Profiles.Api.Features.AvatarChange;
-using InstantMessenger.Profiles.Api.Features.NicknameChange;
 using InstantMessenger.Profiles.Api.Queries;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Mvc;
@@ -29,13 +28,6 @@ namespace InstantMessenger.Profiles.Api
         {
             var result = await _queryDispatcher.QueryAsync(new GetProfile(User.GetUserId()));
             return result is null ? (IActionResult)NotFound() : Ok(result);
-        }
-
-        [HttpPut("nickname")]
-        public async Task<IActionResult> Patch([FromBody]ChangeNicknameApiRequest request)
-        {
-            await _commandDispatcher.SendAsync(new ChangeNicknameCommand(User.GetUserId(), request.Nickname));
-            return Ok();
         }
 
         [HttpPost("avatar")]

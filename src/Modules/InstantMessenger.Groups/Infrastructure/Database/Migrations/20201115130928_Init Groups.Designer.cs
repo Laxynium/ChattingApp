@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(GroupsContext))]
-    [Migration("20201114131359_Init Groups")]
+    [Migration("20201115130928_Init Groups")]
     partial class InitGroups
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,10 +28,34 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                         .HasColumnName("GroupId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.HasKey("Id")
                         .HasName("PK_Groups");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("InstantMessenger.Groups.Domain.Group", b =>
+                {
+                    b.OwnsOne("InstantMessenger.Groups.Domain.GroupName", "Name", b1 =>
+                        {
+                            b1.Property<Guid>("GroupId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnName("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("GroupId");
+
+                            b1.ToTable("Groups");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GroupId");
+                        });
                 });
 #pragma warning restore 612, 618
         }

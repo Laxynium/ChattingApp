@@ -1,4 +1,4 @@
-﻿namespace InstantMessenger.Profiles.Api.Features.NicknameChange
+﻿namespace InstantMessenger.Identity.Api.Features.ChangeNickname
 {
     public class ChangeNicknameApiRequest
     {

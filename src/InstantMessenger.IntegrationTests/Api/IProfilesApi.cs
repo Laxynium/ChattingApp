@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using InstantMessenger.Profiles.Api.Features.NicknameChange;
 using InstantMessenger.Profiles.Api.Queries;
 using RestEase;
 
@@ -11,9 +10,6 @@ namespace InstantMessenger.IntegrationTests.Api
     {
         [Get("/api/profiles")]
         Task<ProfileDto> Get([Header("Authorization")] string token);
-
-        [Put("/api/profiles/nickname")]
-        Task<HttpResponseMessage> ChangeNickname([Header("Authorization")] string token, [Body]ChangeNicknameApiRequest request);
 
         [Post("/api/profiles/avatar")]
         Task<HttpResponseMessage> ChangeAvatar([Header("Authorization")] string token,

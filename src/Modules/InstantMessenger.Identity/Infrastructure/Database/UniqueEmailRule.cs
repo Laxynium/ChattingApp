@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Identity.Infrastructure.Database
 {
-    public class UniqueEmailRule : IUniqueEmailRule
+    internal sealed class UniqueEmailRule : IUniqueEmailRule
     {
         private readonly IdentityContext _context;
 

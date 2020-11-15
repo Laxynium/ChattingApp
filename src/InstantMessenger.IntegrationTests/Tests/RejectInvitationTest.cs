@@ -25,14 +25,14 @@ namespace InstantMessenger.IntegrationTests.Tests
         [Fact]
         public async Task Reject_Invitation()
         {
-            var userA = await _fixture.LoginAsUser("test1@test.com");
-            var userB = await _fixture.LoginAsUser("test2@test.com");
+            var userA = await _fixture.LoginAsUser("test1@test.com", "test1");
+            var userB = await _fixture.LoginAsUser("test2@test.com", "test2");
 
             var sut = _fixture.GetClient<IFriendshipsApi>();
 
-            await sut.SendFriendshipInvitation($"Bearer {userA.Token}", new SendFriendshipInvitationApiRequest(Guid.Parse(userB.Subject)));
+            await sut.SendFriendshipInvitation(userA.BearerToken(), new SendFriendshipInvitationApiRequest(Guid.Parse(userB.Subject)));
 
-            var pendingInvitation = await sut.GetPendingInvitations($"Bearer {userB.Token}");
+            var pendingInvitation = await sut.GetPendingInvitations(userB.BearerToken());
             pendingInvitation.Should().SatisfyRespectively(x =>
             {
                 x.InvitationId.Should().NotBeEmpty();
@@ -42,9 +42,9 @@ namespace InstantMessenger.IntegrationTests.Tests
                 x.CreatedAt.Should().NotBe(default);
             });
 
-            await sut.RejectInvitation($"Bearer {userB.Token}", new RejectFriendshipInvitationApiRequest(pendingInvitation.First().InvitationId));
+            await sut.RejectInvitation(userB.BearerToken(), new RejectFriendshipInvitationApiRequest(pendingInvitation.First().InvitationId));
 
-            var friends = await sut.GetFriendships($"Bearer {userA.Token}");
+            var friends = await sut.GetFriendships(userA.BearerToken());
             friends.Should().BeEmpty();
         }
 

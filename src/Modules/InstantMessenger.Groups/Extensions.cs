@@ -1,5 +1,6 @@
-﻿using InstantMessenger.Groups.Api.Features.GroupCreation;
-using InstantMessenger.Groups.Infrastructure;
+﻿using InstantMessenger.Groups.Api;
+using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
 using InstantMessenger.Shared.Modules;
@@ -7,6 +8,7 @@ using InstantMessenger.Shared.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 
 namespace InstantMessenger.Groups
 {
@@ -35,7 +37,9 @@ namespace InstantMessenger.Groups
                     }
                 )
                 .AddTransient<GroupsModuleFacade>()
-                .AddScoped<IGroupRepository, GroupRepository>();
+                .AddScoped<IGroupRepository, GroupRepository>()
+                .AddScoped<IUnitOfWork,UnitOfWork>()
+                .AddSingleton<IClock>(x => SystemClock.Instance); ;
             return services;
         }
     }

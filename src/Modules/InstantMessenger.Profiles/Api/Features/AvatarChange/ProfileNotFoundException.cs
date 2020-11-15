@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InstantMessenger.Profiles.Api.Features.NicknameChange
+namespace InstantMessenger.Profiles.Api.Features.AvatarChange
 {
     internal class ProfileNotFoundException : Exception
     {

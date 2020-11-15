@@ -15,7 +15,9 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                 schema: "Groups",
                 columns: table => new
                 {
-                    GroupId = table.Column<Guid>(nullable: false)
+                    GroupId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {

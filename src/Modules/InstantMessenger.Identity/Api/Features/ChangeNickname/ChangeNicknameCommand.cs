@@ -1,16 +1,16 @@
 ﻿using System;
 using InstantMessenger.Shared.Commands;
 
-namespace InstantMessenger.Profiles.Api.Features.NicknameChange
+namespace InstantMessenger.Identity.Api.Features.ChangeNickname
 {
     internal sealed class ChangeNicknameCommand : ICommand
     {
-        public Guid ProfileId { get; }
+        public Guid UserId { get; }
         public string Nickname { get; }
 
-        public ChangeNicknameCommand(Guid profileId, string nickname)
+        public ChangeNicknameCommand(Guid userId, string nickname)
         {
-            ProfileId = profileId;
+            UserId = userId;
             Nickname = nickname;
         }
     }

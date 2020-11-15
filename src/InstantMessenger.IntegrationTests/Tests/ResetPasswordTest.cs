@@ -28,7 +28,7 @@ namespace InstantMessenger.IntegrationTests.Tests
         public async Task HappyPath()
         {
             var email = "test@test.com";
-            var user = await _fixture.LoginAsUser(email);
+            var user = await _fixture.LoginAsUser(email,"test");
             _mailService.Reset();
             var sut = _fixture.GetClient<IIdentityApi>();
 

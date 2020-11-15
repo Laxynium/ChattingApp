@@ -51,24 +51,6 @@ namespace InstantMessenger.Profiles.Infrastructure.Database.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ProfileId");
                         });
-
-                    b.OwnsOne("InstantMessenger.Profiles.Domain.Nickname", "Nickname", b1 =>
-                        {
-                            b1.Property<Guid>("ProfileId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnName("Nickname")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ProfileId");
-
-                            b1.ToTable("Profiles");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProfileId");
-                        });
                 });
 #pragma warning restore 612, 618
         }

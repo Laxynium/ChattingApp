@@ -53,6 +53,9 @@ namespace InstantMessenger.Identity.Infrastructure.Database
             builder
                 .Property(x => x.PasswordHash).IsRequired();
             builder.Property(x => x.IsVerified).IsRequired();
+            builder.Property(x => x.Nickname)
+                .HasConversion(x => x.Value, x => Nickname.Create(x))
+                .IsRequired(false);
             builder.ToTable("Users");
         }
     }

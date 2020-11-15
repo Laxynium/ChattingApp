@@ -1,6 +1,7 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System;
+using CSharpFunctionalExtensions;
 
-namespace InstantMessenger.Profiles.Domain
+namespace InstantMessenger.Identity.Domain.Entities
 {
     public class Nickname : SimpleValueObject<string>
     {
@@ -14,7 +15,7 @@ namespace InstantMessenger.Profiles.Domain
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new InvalidNicknameException();
+                throw new ArgumentException("Nickname cannot be null or whitespace");
             }
             return new Nickname(value);
         }

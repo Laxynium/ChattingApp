@@ -1,8 +1,10 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
+using InstantMessenger.Identity.Api.Features.VerifyUser;
 using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
 using InstantMessenger.Shared.MailKit;
@@ -37,17 +39,17 @@ namespace InstantMessenger.IntegrationTests.Tests
             var link = EmailContentExtractor.GetUrlFromActivationMail(mailService.Messages.First());
             var (userId, token) = EmailContentExtractor.GetQueryParams(link);
 
-            var result2 = await sut.ActivateAccount(userId, token);
+            var result2 = await sut.ActivateAccount(new ActivateCommand(Guid.Parse(userId), token,"test_nickname"));
 
             result2.IsSuccessStatusCode.Should().BeTrue();
 
 
-            var signInResult = await sut.SignIn(new SignInCommand(command.Email, command.Password));
+            var user = await sut.SignIn(new SignInCommand(command.Email, command.Password));
 
-            signInResult.Token.Should().NotBeEmpty();
+            user.Token.Should().NotBeEmpty();
             
 
-            var meResult = await sut.Me($"Bearer {signInResult.Token}");
+            var meResult = await sut.Me(user.BearerToken());
 
             meResult.Id.Should().NotBeEmpty();
             meResult.Email.Should().Be(command.Email);
@@ -55,10 +57,9 @@ namespace InstantMessenger.IntegrationTests.Tests
 
             var profileApi = _fixture.GetClient<IProfilesApi>();
 
-            var profileResult = await profileApi.Get($"Bearer {signInResult.Token}");
+            var profileResult = await profileApi.Get(user.BearerToken());
 
             profileResult.Id.Should().Be(meResult.Id);
-            profileResult.Nickname.Should().BeNull();
             profileResult.Avatar.Should().BeNull();
         }
     }

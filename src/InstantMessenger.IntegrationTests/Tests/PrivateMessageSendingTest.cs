@@ -21,16 +21,16 @@ namespace InstantMessenger.IntegrationTests.Tests
         [Fact]
         public async Task Message_Is_Sent()
         {
-            var userA = await _fixture.LoginAsUser("test1@test.com");
-            var userB = await _fixture.LoginAsUser("test2@test.com");
+            var userA = await _fixture.LoginAsUser("test1@test.com", "test1");
+            var userB = await _fixture.LoginAsUser("test2@test.com", "test2");
             var conversation = await _fixture.CreateConversation(userA, userB);
 
             var sut = _fixture.GetClient<IPrivateMessagesApi>();
 
-            var result = await sut.SendMessage($"Bearer {userA.Token}", new SendMessageApiRequest(conversation.ConversationId, "test"));
+            var result = await sut.SendMessage(userA.BearerToken(), new SendMessageApiRequest(conversation.ConversationId, "test"));
             result.EnsureSuccessStatusCode();
 
-            var messages = await sut.GetMessages($"Bearer {userB.Token}", conversation.ConversationId);
+            var messages = await sut.GetMessages(userB.BearerToken(), conversation.ConversationId);
             messages.Should().SatisfyRespectively(
                 x =>
                 {

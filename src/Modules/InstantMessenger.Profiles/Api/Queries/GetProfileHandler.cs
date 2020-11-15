@@ -18,7 +18,7 @@ namespace InstantMessenger.Profiles.Api.Queries
             if (profile is null)
                 return null;
 
-            return new ProfileDto(profile.Id, profile.Nickname?.Value, profile?.Avatar?.AsBase64String());
+            return new ProfileDto(profile.Id, profile?.Avatar?.AsBase64String());
         }
     }
 }

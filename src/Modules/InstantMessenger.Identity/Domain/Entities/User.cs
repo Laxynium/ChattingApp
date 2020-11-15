@@ -15,6 +15,8 @@ namespace InstantMessenger.Identity.Domain.Entities
 
         public bool IsVerified { get; private set; }
 
+        public Nickname Nickname { get; private set; }
+
         private User(){}
         private User(Guid id, Email email, string passwordHash, bool isVerified)
         {
@@ -22,6 +24,7 @@ namespace InstantMessenger.Identity.Domain.Entities
             Email = email;
             PasswordHash = passwordHash;
             IsVerified = isVerified;
+            Nickname = null;
         }
 
         public static async Task<User> Create(Email email, Password password, IUniqueEmailRule rule, IPasswordHasher<User> hasher)
@@ -33,22 +36,36 @@ namespace InstantMessenger.Identity.Domain.Entities
             return new User(Guid.NewGuid(), email, hash, false);
         }
 
-        public void Activate(ActivationLink link, string token)
+        public async Task Activate(ActivationLink link, string token, Nickname nickname, IUniqueNicknameRule rule)
         {
-            if (link.Verify(token))
-            {
-                IsVerified = true;
-            }
-            else
+            if (!link.Verify(token))
             {
                 throw new InvalidVerificationTokenException();
             }
+
+            if (!await rule.IsMeet(nickname))
+            {
+                throw new NicknameInUseException();
+            }
+
+            IsVerified = true;
+            Nickname = nickname;
         }
 
         public void ChangePassword(Password password,IPasswordHasher<User> hasher)
         {
             var hash = hasher.HashPassword(null, password.Value);
             PasswordHash = hash;
+        }
+
+        public async Task Change(Nickname nickname, IUniqueNicknameRule rule)
+        {
+            if (!await rule.IsMeet(nickname))
+            {
+                throw new NicknameInUseException();
+            }
+
+            Nickname = nickname;
         }
     }
 }

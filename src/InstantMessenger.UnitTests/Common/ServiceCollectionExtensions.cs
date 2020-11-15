@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace InstantMessenger.UnitTests
+namespace InstantMessenger.UnitTests.Common
 {
     public static class ServiceCollectionExtensions
     {

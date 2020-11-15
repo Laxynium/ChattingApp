@@ -7,11 +7,13 @@ namespace InstantMessenger.Identity.Api.Events
     {
         public Guid UserId { get; }
         public string Email { get;}
+        public string Nickname { get; }
 
-        public AccountActivatedEvent(Guid userId, string email)
+        public AccountActivatedEvent(Guid userId, string userEmail, string userNickname)
         {
             UserId = userId;
-            Email = email;
+            Email = userEmail;
+            Nickname = userNickname;
         }
     }
 }

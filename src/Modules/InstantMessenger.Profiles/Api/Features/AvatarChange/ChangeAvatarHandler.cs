@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using InstantMessenger.Profiles.Api.Features.NicknameChange;
 using InstantMessenger.Profiles.Domain;
 using InstantMessenger.Shared.Commands;
 

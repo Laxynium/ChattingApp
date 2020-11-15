@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Api;
 using InstantMessenger.Friendships.Infrastructure.Database;
+using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using InstantMessenger.Profiles.Infrastructure.Database;
@@ -46,6 +47,7 @@ namespace InstantMessenger.IntegrationTests.Common
             await InitDb<ProfilesContext>();
             await InitDb<FriendshipsContext>();
             await InitDb<PrivateMessagesContext>();
+            await InitDb<GroupsContext>();
             await ResetCheckpoint();
         }
 
