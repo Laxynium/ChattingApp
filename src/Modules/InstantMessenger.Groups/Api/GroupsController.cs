@@ -24,7 +24,7 @@ namespace InstantMessenger.Groups.Api
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]CreateGroupApiRequest request)
         {
-            await _facade.SendAsync(new CreateGroupCommand(User.GetUserId(),request.GroupId, request.OwnerId, request.GroupName));
+            await _facade.SendAsync(new CreateGroupCommand(User.GetUserId(),request.GroupId, request.GroupName));
             return Ok();
         }
 

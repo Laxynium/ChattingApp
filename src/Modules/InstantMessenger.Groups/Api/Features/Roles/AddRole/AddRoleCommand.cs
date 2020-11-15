@@ -1,35 +1,44 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Roles.AddRole
 {
     public class AddRoleCommand : ICommand
     {
-        public Guid RoleId { get; }
-        public Guid MemberId { get; }
+        public Guid UserId { get; }
+        public Guid GroupId { get; }
         public string Name { get; }
 
-        public AddRoleCommand(Guid roleId, Guid memberId, string name)
+        public AddRoleCommand(Guid userId, Guid groupId, string name)
         {
-            RoleId = roleId;
-            MemberId = memberId;
+            UserId = userId;
             Name = name;
+            GroupId = groupId;
         }
     }
 
     internal sealed class AddRoleHandler : ICommandHandler<AddRoleCommand>
     {
-        public AddRoleHandler()
+        private readonly IGroupRepository _groupRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public AddRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
         {
-            
+            _groupRepository = groupRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(AddRoleCommand command)
         {
-            var roleName = RoleName.Create(command.Name);
-            //I need to verify if given member can perform this command
-            //I want to place this role as the last one
+            var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException();
+
+            //TODO check if user can perform this action
+            group.AddRole(UserId.From(command.UserId),RoleName.Create(command.Name));
+
+            await _unitOfWork.Commit();
         }
     }
 }

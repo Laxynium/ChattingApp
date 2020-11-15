@@ -1,4 +1,6 @@
-﻿using InstantMessenger.Groups.Domain;
+﻿using System;
+using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 namespace InstantMessenger.Groups.Infrastructure.Database
 {
@@ -37,7 +39,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                 {
                     m.ToTable("Members");
                     m.HasKey(x => x.Id)
-                        .HasName("FK_Members");
+                        .HasName("PK_Members");
                     m.Property(x => x.Id)
                         .HasConversion(x=>x.Value,x=>MemberId.From(x))
                         .ValueGeneratedNever()
@@ -51,6 +53,41 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                         .HasConversion(x => x.Value, x => MemberName.Create(x))
                         .IsRequired();
                     m.Property(x => x.CreatedAt).IsRequired();
+                    m.OwnsMany(
+                        x => x.Roles,
+                        r =>
+                        {
+                            r.UsePropertyAccessMode(PropertyAccessMode.Field);
+                            r.ToTable("MemberRoles");
+                            r.HasKey("Value","MemberId");
+                            r.Property(x => x.Value)
+                                .ValueGeneratedNever()
+                                .HasColumnName("RoleId")
+                                .IsRequired();
+                        }
+                    );
+                });
+
+            group.Metadata.FindNavigation(nameof(Group.Roles)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            group.OwnsMany(x => x.Roles,
+                r =>
+                {
+                    r.ToTable("Roles");
+                    r.HasKey(x => x.Id)
+                        .HasName("PK_Roles");
+                    r.Property(x => x.Id)
+                        .HasConversion(x => x.Value, x => RoleId.From(x))
+                        .ValueGeneratedNever()
+                        .IsRequired();
+                    r.Property(x => x.Priority)
+                        .HasConversion(x => x.Value, x => RolePriority.Create(x))
+                        .IsRequired();
+                    r.Property(x => x.Name)
+                        .HasConversion(x => x.Value, x => RoleName.Create(x))
+                        .IsRequired();
+                    r.Property(x => x.Permissions)
+                        .HasConversion(x => x.Value, x => Permissions.From(x))
+                        .IsRequired();
                 });
         }
     }

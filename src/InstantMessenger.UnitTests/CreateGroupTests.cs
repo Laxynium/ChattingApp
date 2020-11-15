@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Group.Create;
-using InstantMessenger.Groups.Api.Features.Group.Create.ExternalQueries;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Shared.Modules;
 using InstantMessenger.UnitTests.Common;
@@ -15,7 +14,7 @@ namespace InstantMessenger.UnitTests
     {
         public CreateGroupTests() => Configure(sc => sc
             .Remove<IModuleClient>()
-            .AddSingleton<IModuleClient>(x => new FakeModuleClient())
+            .AddSingleton<IModuleClient>(x => new FakeModuleClient("test_user"))
         );
 
         [Theory]
@@ -25,7 +24,7 @@ namespace InstantMessenger.UnitTests
         [InlineData("   ")]
         public async Task Fails_when_group_name_is_invalid(string groupName) => await Run(async sut =>
         {
-            var command = new CreateGroupCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), groupName);
+            var command = new CreateGroupCommand(Guid.NewGuid(), Guid.NewGuid(), groupName);
 
             Func<Task> action = async () => await sut.SendAsync(command);
 
@@ -35,7 +34,7 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Creates_group_when_name_is_correct() => await Run(async sut =>
         {
-            var command = new CreateGroupCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "group_name");
+            var command = new CreateGroupCommand(Guid.NewGuid(), Guid.NewGuid(), "group_name");
 
             await sut.SendAsync(command);
 
@@ -53,28 +52,11 @@ namespace InstantMessenger.UnitTests
                 x =>
                 {
                     x.UserId.Should().Be(command.UserId);
-                    x.MemberId.Should().Be(command.OwnerId);
+                    x.MemberId.Should().NotBeEmpty();
+                    x.IsOwner.Should().BeTrue();
                     x.Name.Should().Be("test_user");
                     x.CreatedAt.Should().NotBe(default);
-                    x.IsOwner.Should().BeTrue();
                 });
         });
-    }
-
-    internal sealed class FakeModuleClient : IModuleClient
-    {
-        public Task<TResult> GetAsync<TResult>(string path, object moduleRequest) where TResult : class
-        {
-            var result = moduleRequest switch
-            {
-                MeQuery q => new UserDto(q.UserId, "test_user")
-            };
-            return Task.FromResult((TResult) System.Convert.ChangeType(result, typeof(TResult)));
-        }
-
-        public Task PublishAsync(object moduleBroadcast)
-        {
-            return Task.CompletedTask;
-        }
     }
 }

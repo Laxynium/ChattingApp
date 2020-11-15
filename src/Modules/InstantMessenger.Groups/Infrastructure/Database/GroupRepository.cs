@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Infrastructure.Database
 {
@@ -12,9 +15,12 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             _context = context;
         }
 
-        public async Task AddAsync(Group @group)
+        public async Task AddAsync(Group group)
         {
             await _context.AddAsync(group);
         }
+
+        public async Task<Group> GetAsync(GroupId id) 
+            => await _context.Groups.FirstOrDefaultAsync(x=>x.Id == id);
     }
 }
