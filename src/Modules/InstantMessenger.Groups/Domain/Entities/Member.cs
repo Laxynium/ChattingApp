@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ardalis.SmartEnum;
 using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using NodaTime;
@@ -47,8 +48,8 @@ namespace InstantMessenger.Groups.Domain.Entities
     public class Role : Entity<RoleId>
     {
         public RoleName Name { get; }
-        public RolePriority Priority { get; }
-        public Permissions Permissions { get; }
+        public RolePriority Priority { get; private set; }
+        public Permissions Permissions { get; private set; }
 
         public Role(RoleId id, RoleName name, RolePriority priority, Permissions permissions):base(id)
         {
@@ -62,9 +63,26 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             return new Role(id, name, priority, Permissions.Empty());
         }
+
+        public void AddPermission(Permission permission)
+        {
+            Permissions = Permissions.Add(permission);
+        }
+
+        public void RemovePermission(Permission permission)
+        {
+            Permissions = Permissions.Remove(permission);
+        }
+
+        public void IncrementPriority()
+        {
+            if (this.Name == RoleName.EveryOneRole)
+                return;
+            Priority = Priority.Increased();
+        }
     }
 
-    public class Permission : ValueObject
+    public class Permission : SmartEnum<Permission,int>
     {
         public static readonly Permission Administrator = new Permission(nameof(Administrator), 0x1);
         public static readonly Permission ManageGroup = new Permission(nameof(ManageGroup), 0x2);
@@ -79,17 +97,9 @@ namespace InstantMessenger.Groups.Domain.Entities
         public static readonly Permission EmbedLinks = new Permission(nameof(EmbedLinks), 0x400);
         public static readonly Permission AddReactions = new Permission(nameof(AddReactions), 0x800);
         public static readonly Permission MentionRoles = new Permission(nameof(MentionRoles), 0x1000);
-        public string Name { get; }
-        public int Value { get; }
 
-        private Permission(string name, int value)
+        private Permission(string name, int value):base(name,value)
         {
-            Name = name;
-            Value = value;
-        }
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
         }
     }
 
@@ -127,6 +137,9 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         public bool Has(params Permission[] permissions) 
             => permissions.Aggregate(false, (current, permission) => current | (Value & permission.Value) == permission.Value);
+
+        public IEnumerable<Permission> ToListOfPermissions() 
+            => Permission.List.Where(p => this.Has(p)).ToArray();
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

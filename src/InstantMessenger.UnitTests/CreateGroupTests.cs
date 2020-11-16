@@ -36,10 +36,12 @@ namespace InstantMessenger.UnitTests
         {
             var command = new CreateGroupCommand(Guid.NewGuid(), Guid.NewGuid(), "group_name");
 
+            //when
             await sut.SendAsync(command);
 
-            var groupDtos = await sut.QueryAsync(new GetGroupsQuery(command.GroupId));
-            groupDtos.Should().SatisfyRespectively(
+            //then group with correct name is created
+            var groups = await sut.QueryAsync(new GetGroupsQuery(command.GroupId));
+            groups.Should().SatisfyRespectively(
                 x =>
                 {
                     x.GroupId.Should().Be(command.GroupId);
@@ -47,6 +49,17 @@ namespace InstantMessenger.UnitTests
                     x.CreatedAt.Should().NotBe(default);
                 }
             );
+            //then everyone role is created
+            var roles = await sut.QueryAsync(new GetRolesQuery(command.UserId, command.GroupId));
+            roles.Should().SatisfyRespectively(
+                x =>
+                {
+                    x.RoleId.Should().NotBeEmpty();
+                    x.Name.Should().Be("@everyone");
+                    x.Priority.Should().Be(-1);
+                }
+            );
+            //then owner member is created
             var members = await sut.QueryAsync(new GetMembersQuery(command.GroupId));
             members.Should().SatisfyRespectively(
                 x =>
@@ -56,6 +69,15 @@ namespace InstantMessenger.UnitTests
                     x.IsOwner.Should().BeTrue();
                     x.Name.Should().Be("test_user");
                     x.CreatedAt.Should().NotBe(default);
+                });
+            //then owner has role @everyone
+            var ownerRoles = await sut.QueryAsync(new GetMemberRolesQuery(command.UserId, command.GroupId, command.UserId));
+            ownerRoles.Should().SatisfyRespectively(
+                x =>
+                {
+                    x.RoleId.Should().NotBeEmpty();
+                    x.Name.Should().Be("@everyone");
+                    x.Priority.Should().Be(-1);
                 });
         });
     }

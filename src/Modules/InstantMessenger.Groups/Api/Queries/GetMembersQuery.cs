@@ -24,11 +24,13 @@ namespace InstantMessenger.Groups.Api.Queries
     {
         public Guid GroupId { get; }
         public bool IsOwner { get; }
+        public Guid? UserIdOfMember { get; }
 
-        public GetMembersQuery( Guid groupId, bool isOwner = false)
+        public GetMembersQuery( Guid groupId, bool isOwner = false, Guid? userIdOfMember = null)
         {
             GroupId = groupId;
             IsOwner = isOwner;
+            UserIdOfMember = userIdOfMember;
         }
     }
 
@@ -48,6 +50,11 @@ namespace InstantMessenger.Groups.Api.Queries
             if (query.IsOwner)
             {
                 members = members.Where(x => x.IsOwner);
+            }
+
+            if (query.UserIdOfMember.HasValue)
+            {
+                members = members.Where(x => x.UserId == UserId.From(query.UserIdOfMember.Value));
             }
             return await members
                 .Select(

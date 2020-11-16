@@ -38,7 +38,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             return group;
         }
 
-        public void AddRole(UserId userId, RoleName roleName)
+        public void AddRole(UserId userId, RoleId roleId, RoleName roleName)
         {
             if(!CanAddRole(userId))
                 throw new InvalidOperationException("Given user cannot perform add role operation");
@@ -46,43 +46,54 @@ namespace InstantMessenger.Groups.Domain.Entities
             if(roleName == RoleName.EveryOneRole)
                 throw new ArgumentException("Role cannot be same named as @everyone role");
 
-            var role = Role.Create(RoleId.Create(), roleName, GetPriority());
+            var role = Role.Create(roleId, roleName, GetPriority());
             if (_roles.Contains(role))
             {
                 throw new InvalidOperationException("Role cannot be added twice");
             }
 
+            foreach (var role1 in _roles)
+            {
+                role1.IncrementPriority();
+            }
             _roles.Add(role);
+
         }
 
-        public void AddMember(UserId userId, UserId newMemberUserId, MemberName memberName, IClock clock)
+        public void AddMember(UserId newMemberUserId, MemberName memberName, IClock clock)
         {
-            if(!CanAddMember(userId))
-                throw new InvalidOperationException("Given user cannot perform add member operation");
-
             if(Exists(newMemberUserId))
-                throw new InvalidComObjectException("There is already user with given userId in group");
+                throw new InvalidComObjectException("There is already user with given newMemberUserId in group");
 
             var everyoneRole = GetEverOneRole();
             var newMember = Member.Create(newMemberUserId, memberName, everyoneRole, clock);
             _members.Add(newMember);
         }
 
-        public void AssignRole(UserId executingUserId, UserId userId, RoleId roleId)
+        public void AssignRole(UserId userId, UserId userIdOfMember, RoleId roleId)
         {
-            var executingMember = GetMember(executingUserId);
-            if(!CanAssignRole(executingUserId, userId))
+            if(!CanAssignRole(userId, roleId))
                 throw new InvalidOperationException("Given user cannot perform assign role operation");
 
-            var member = GetMember(executingUserId);
+            var member = GetMember(userIdOfMember);
             var role = GetRole(roleId);
-            if(role is null) 
-                throw new AggregateException("Role with given id doesn't exists");
             member.AddRole(role);
         }
 
+        public void AddPermissionToRole(RoleId roleId, Permission permission)
+        {
+            var role = GetRole(roleId);
+            role.AddPermission(permission);
+        }
+
+        public void RemovePermissionFromRole(RoleId roleId, Permission permission)
+        {
+            var role = GetRole(roleId);
+            role.RemovePermission(permission);
+        }
+
         private Role GetRole(RoleId roleId) 
-            => _roles.FirstOrDefault(x => x.Id == roleId);
+            => _roles.FirstOrDefault(x => x.Id == roleId) ??  throw new ArgumentException("Role with given id doesn't exists");
 
         private bool Exists(UserId userId)
         {
@@ -99,19 +110,20 @@ namespace InstantMessenger.Groups.Domain.Entities
             return _roles.First(x => x.Name == RoleName.EveryOneRole);
         }
 
-        private bool CanAssignRole(UserId userId, UserId userToAssign)
+        private bool CanAssignRole(UserId asUserId, RoleId roleId)
         {
-            var member = GetMember(userId);
-            if (member.IsOwner)
+            var asMember = GetMember(asUserId);
+            if (asMember.IsOwner)
                 return true;
-            var permissions = GetMemberPermissions(member);
+            var permissions = GetMemberPermissions(asMember);
             if(!permissions.Has(Permission.Administrator, Permission.ManageRoles))
                 return false;
 
-            var memberRoles = GetRoles(member);
-            var memberToAssignRoles = GetRoles(GetMember(userToAssign));
-            var highestRole = memberRoles.Where(x=>x.Permissions.Has(Permission.Administrator, Permission.ManageRoles)).OrderBy(x => x.Priority).First();
-            return false;
+            var asMemberRoles = GetRoles(asMember);
+            var highestRole = asMemberRoles.OrderByDescending(x => x.Priority).First();
+            var role = GetRole(roleId);
+            return highestRole.Priority > role.Priority;
+
         }
 
         private bool CanAddRole(UserId userId)
@@ -121,15 +133,6 @@ namespace InstantMessenger.Groups.Domain.Entities
                 return true;
             var memberPermissions = GetMemberPermissions(member);
             return memberPermissions.Has(Permission.Administrator, Permission.ManageRoles);
-        }
-
-        private bool CanAddMember(UserId userId)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return true;
-            var memberPermissions = GetMemberPermissions(member);
-            return memberPermissions.Has(Permission.Administrator, Permission.ManageGroup);
         }
 
         private Permissions GetMemberPermissions(Member member)
@@ -147,7 +150,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         private RolePriority GetPriority()
         {
             var maybeRole = _roles.OrderBy(r => r.Priority).TakeWhile(x=>x.Priority != RolePriority.Lowest).TryFirst();
-            return maybeRole.Map(x => x.Priority.Decreased())
+            return maybeRole.Map(x => x.Priority.Increased())
                 .Unwrap(RolePriority.CreateFirst());
         }
 

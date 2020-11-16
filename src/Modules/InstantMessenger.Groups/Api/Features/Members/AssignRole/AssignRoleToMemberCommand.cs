@@ -1,43 +1,43 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
-namespace InstantMessenger.Groups.Api.Features.Roles.AddRole
+namespace InstantMessenger.Groups.Api.Features.Members.AssignRole
 {
-    public class AddRoleCommand : ICommand
+    public class AssignRoleToMemberCommand : ICommand
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
+        public Guid UserIdOfMember { get; }
         public Guid RoleId { get; }
-        public string Name { get; }
 
-        public AddRoleCommand(Guid userId, Guid groupId, Guid roleId, string name)
+        public AssignRoleToMemberCommand(Guid userId, Guid groupId, Guid userIdOfMember, Guid roleId)
         {
             UserId = userId;
             GroupId = groupId;
+            UserIdOfMember = userIdOfMember;
             RoleId = roleId;
-            Name = name;
         }
     }
 
-    internal sealed class AddRoleHandler : ICommandHandler<AddRoleCommand>
+    internal sealed class AssignRoleToMemberHandler : ICommandHandler<AssignRoleToMemberCommand>
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public AssignRoleToMemberHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
         {
             _groupRepository = groupRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task HandleAsync(AddRoleCommand command)
+        public async Task HandleAsync(AssignRoleToMemberCommand command)
         {
             var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException();
 
-            group.AddRole(UserId.From(command.UserId),RoleId.From(command.RoleId),RoleName.Create(command.Name));
+            group.AssignRole(UserId.From(command.UserId), UserId.From(command.UserIdOfMember), RoleId.From(command.RoleId));
 
             await _unitOfWork.Commit();
         }
