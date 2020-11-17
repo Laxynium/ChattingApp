@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Modules\InstantMessenger.Groups\InstantMessenger.Groups.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Groups\" />
-  </ItemGroup>
-
 </Project>

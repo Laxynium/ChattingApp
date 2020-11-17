@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.Create.ExternalQueries;
 using InstantMessenger.Shared.Modules;
 
-namespace InstantMessenger.UnitTests
+namespace InstantMessenger.UnitTests.Common
 {
     internal sealed class FakeModuleClient : IModuleClient
     {

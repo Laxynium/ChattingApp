@@ -1,9 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Groups.Api.Features.Group.Create;
-using InstantMessenger.Groups.Api.Features.Members.Add;
-using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.UnitTests.Common;
@@ -30,11 +27,10 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Fails_when_member_do_not_have_correct_permission() => await Run(async sut =>
         {
-            var (userId, groupId,newMemberUserId) = (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
-            await sut.SendAsync(new CreateGroupCommand(userId, groupId, "groupName"));
-            await sut.SendAsync(new AddGroupMember(groupId, newMemberUserId));
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner().CreateMember().Build().Build().Build();
 
-            Func<Task> action = async () => await sut.SendAsync(new AddRoleCommand(newMemberUserId, groupId, Guid.NewGuid(), "roleName"));
+            Func<Task> action = async () => await sut.SendAsync(new AddRoleCommand(group.Member(1).UserId, group.GroupId, Guid.NewGuid(), "role1"));
 
             await action.Should().ThrowAsync<Exception>();
         });
@@ -42,18 +38,17 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Owner_can_add_new_role() => await Run(async sut =>
         {
-            var (userId, groupId) = (Guid.NewGuid(), Guid.NewGuid());
-            await sut.SendAsync(new CreateGroupCommand(userId, groupId, "groupName"));
+            var group = await GroupBuilder.For(sut).CreateGroup("group1").Build();
 
-            await sut.SendAsync(new AddRoleCommand(userId, groupId, Guid.NewGuid(), "roleName"));
+            await sut.SendAsync(new AddRoleCommand(group.OwnerId, group.GroupId, Guid.NewGuid(), "role1"));
 
-            var roles = await sut.QueryAsync(new GetRolesQuery(userId, groupId));
+            var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
                 x =>
                 {
                     x.RoleId.Should().NotBeEmpty();
                     x.Priority.Should().Be(0);
-                    x.Name.Should().Be("roleName");
+                    x.Name.Should().Be("role1");
                 },
                 x =>
                 {
@@ -67,29 +62,28 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Member_with_administrator_permission_can_add_new_role() => await Run(async sut =>
         {
-            var (userId, groupId,userIdOfMember,roleId,newRoleId) = 
-                (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
-            await sut.SendAsync(new CreateGroupCommand(userId, groupId, "groupName"));
-            await sut.SendAsync(new AddRoleCommand(userId, groupId, roleId, "roleName"));
-            await sut.SendAsync(new AddPermissionToRoleCommand(userId, groupId, roleId,"Administrator"));
-            await sut.SendAsync(new AddGroupMember(groupId, userIdOfMember));
-            await sut.AssignRole(userId, groupId, userIdOfMember, roleId);
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                    .CreateRole("role1").AddPermission("Administrator").Build()
+                    .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+            var role2Id = Guid.NewGuid();
 
-            await sut.SendAsync(new AddRoleCommand(userIdOfMember, groupId, newRoleId, "newRole"));
+            await sut.SendAsync(new AddRoleCommand(group.Member(1).UserId, group.GroupId, role2Id, "role2"));
 
-            var roles = await sut.QueryAsync(new GetRolesQuery(userId, groupId));
+            var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
                 x =>
                 {
-                    x.RoleId.Should().Be(roleId);
+                    x.RoleId.Should().Be(group.Role(1).RoleId);
                     x.Priority.Should().Be(1);
-                    x.Name.Should().Be("roleName");
+                    x.Name.Should().Be("role1");
                 },
                 x =>
                 {
-                    x.RoleId.Should().Be(newRoleId);
+                    x.RoleId.Should().Be(role2Id);
                     x.Priority.Should().Be(0);
-                    x.Name.Should().Be("newRole");
+                    x.Name.Should().Be("role2");
                 },
                 x =>
                 {
@@ -103,29 +97,28 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Member_with_manage_roles_permission_can_add_new_role() => await Run(async sut =>
         {
-            var (userId, groupId,userIdOfMember,roleId,newRoleId) = 
-                (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
-            await sut.SendAsync(new CreateGroupCommand(userId, groupId, "groupName"));
-            await sut.SendAsync(new AddRoleCommand(userId, groupId, roleId, "roleName"));
-            await sut.SendAsync(new AddPermissionToRoleCommand(userId, groupId, roleId,"ManageRoles"));
-            await sut.SendAsync(new AddGroupMember(groupId, userIdOfMember));
-            await sut.AssignRole(userId, groupId, userIdOfMember, roleId);
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("ManageRoles").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+            var role2Id = Guid.NewGuid();
 
-            await sut.SendAsync(new AddRoleCommand(userIdOfMember, groupId, newRoleId, "newRole"));
+            await sut.SendAsync(new AddRoleCommand(group.Member(1).UserId, group.GroupId, role2Id, "role2"));
 
-            var roles = await sut.QueryAsync(new GetRolesQuery(userId, groupId));
+            var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
                 x =>
                 {
-                    x.RoleId.Should().Be(roleId);
+                    x.RoleId.Should().Be(group.Role(1).RoleId);
                     x.Priority.Should().Be(1);
-                    x.Name.Should().Be("roleName");
+                    x.Name.Should().Be("role1");
                 },
                 x =>
                 {
-                    x.RoleId.Should().Be(newRoleId);
+                    x.RoleId.Should().Be(role2Id);
                     x.Priority.Should().Be(0);
-                    x.Name.Should().Be("newRole");
+                    x.Name.Should().Be("role2");
                 },
                 x =>
                 {
@@ -139,29 +132,28 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Added_role_has_the_lowest_priority_after_the_everyone_role() => await Run(async sut =>
         {
-            var (userId, groupId) = (Guid.NewGuid(), Guid.NewGuid());
-            await sut.SendAsync(new CreateGroupCommand(userId, groupId, "groupName"));
-            var addRole1 = new AddRoleCommand(userId, groupId, Guid.NewGuid(), "roleName1");
-            var addRole2 = new AddRoleCommand(userId, groupId, Guid.NewGuid(), "roleName2");
-            var addRole3 = new AddRoleCommand(userId, groupId, Guid.NewGuid(), "roleName3");
-            await sut.SendAsync(addRole1);
-            await sut.SendAsync(addRole2);
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                    .CreateRole("role1").Build()
+                    .CreateRole("role2").Build()
+                .Build().Build();
+            var addRole3 = new AddRoleCommand(group.OwnerId, group.GroupId, Guid.NewGuid(), "role3");
 
             await sut.SendAsync(addRole3);
 
-            var roles = await sut.QueryAsync(new GetRolesQuery(userId, groupId));
+            var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
                 x =>
                 {
-                    x.RoleId.Should().Be(addRole1.RoleId);
+                    x.RoleId.Should().Be(group.Role(1).RoleId);
                     x.Priority.Should().Be(2);
-                    x.Name.Should().Be(addRole1.Name);
+                    x.Name.Should().Be(group.Role(1).Name);
                 },
                 x =>
                 {
-                    x.RoleId.Should().Be(addRole2.RoleId);
+                    x.RoleId.Should().Be(group.Role(2).RoleId);
                     x.Priority.Should().Be(1);
-                    x.Name.Should().Be(addRole2.Name);
+                    x.Name.Should().Be(group.Role(2).Name);
                 },
                 x =>
                 {
