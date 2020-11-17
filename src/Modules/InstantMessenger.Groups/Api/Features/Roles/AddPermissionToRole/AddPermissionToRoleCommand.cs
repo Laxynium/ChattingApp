@@ -37,7 +37,7 @@ namespace InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole
         {
             var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException();
             
-            group.AddPermissionToRole(RoleId.From(command.RoleId), Permission.FromName(command.PermissionName));
+            group.AddPermissionToRole(UserId.From(command.UserId), RoleId.From(command.RoleId), Permission.FromName(command.PermissionName));
 
             await _unitOfWork.Commit();
         }

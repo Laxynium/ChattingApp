@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using NodaTime;
@@ -80,8 +79,11 @@ namespace InstantMessenger.Groups.Domain.Entities
             member.AddRole(role);
         }
 
-        public void AddPermissionToRole(RoleId roleId, Permission permission)
+        public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission)
         {
+            if(!CanAddPermission(userId, roleId, permission))
+                throw new InvalidOperationException("Given user cannot perform add permission to role operation");
+
             var role = GetRole(roleId);
             role.AddPermission(permission);
         }
@@ -119,8 +121,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             if(!permissions.Has(Permission.Administrator, Permission.ManageRoles))
                 return false;
 
-            var asMemberRoles = GetRoles(asMember);
-            var highestRole = asMemberRoles.OrderByDescending(x => x.Priority).First();
+            var highestRole = GetRoleWithHighestPriority(asMember);
             var role = GetRole(roleId);
             return highestRole.Priority > role.Priority;
 
@@ -133,6 +134,34 @@ namespace InstantMessenger.Groups.Domain.Entities
                 return true;
             var memberPermissions = GetMemberPermissions(member);
             return memberPermissions.Has(Permission.Administrator, Permission.ManageRoles);
+        }
+
+        private bool CanAddPermission(UserId userId, RoleId roleId, Permission permission)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return true;
+
+            var permissions = GetMemberPermissions(member);
+            if (!permissions.Has(Permission.Administrator, Permission.ManageRoles))
+                return false;
+
+            var memberHighestRole = GetRoleWithHighestPriority(member);
+            var role = GetRole(roleId);
+            if (role.Priority >= memberHighestRole.Priority) 
+                return false;
+
+            if(!permissions.Has(Permission.Administrator) && !permissions.Has(permission))
+                return false;
+
+            return true;
+        }
+
+        private Role GetRoleWithHighestPriority(Member member)
+        {
+            var asMemberRoles = GetRoles(member);
+            var highestRole = asMemberRoles.OrderByDescending(x => x.Priority).First();
+            return highestRole;
         }
 
         private Permissions GetMemberPermissions(Member member)
