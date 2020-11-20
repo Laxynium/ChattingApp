@@ -20,6 +20,17 @@ namespace InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy
             RoleId = roleId;
         }
     }
+    public class MoveUpRoleApiRequest : ICommand
+    {
+        public Guid GroupId { get; }
+        public Guid RoleId { get; }
+
+        public MoveUpRoleApiRequest(Guid groupId, Guid roleId)
+        {
+            GroupId = groupId;
+            RoleId = roleId;
+        }
+    }
 
     internal sealed class MoveUpRoleInHierarchyHandler : ICommandHandler<MoveUpRoleInHierarchyCommand>
     {

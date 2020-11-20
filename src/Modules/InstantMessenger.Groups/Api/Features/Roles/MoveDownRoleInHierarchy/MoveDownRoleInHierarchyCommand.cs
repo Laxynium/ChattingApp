@@ -7,13 +7,13 @@ using InstantMessenger.Shared.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy
 {
-    public class MoveRoleDownInHierarchyCommand : ICommand
+    public class MoveDownRoleInHierarchyCommand : ICommand
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
         public Guid RoleId { get; }
 
-        public MoveRoleDownInHierarchyCommand(Guid userId, Guid groupId, Guid roleId)
+        public MoveDownRoleInHierarchyCommand(Guid userId, Guid groupId, Guid roleId)
         {
             UserId = userId;
             GroupId = groupId;
@@ -21,17 +21,17 @@ namespace InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy
         }
     }
 
-    internal sealed class MoveRoleDownInHierarchyHandler : ICommandHandler<MoveRoleDownInHierarchyCommand>
+    internal sealed class MoveDownRoleInHierarchyHandler : ICommandHandler<MoveDownRoleInHierarchyCommand>
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MoveRoleDownInHierarchyHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public MoveDownRoleInHierarchyHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
         {
             _groupRepository = groupRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task HandleAsync(MoveRoleDownInHierarchyCommand command)
+        public async Task HandleAsync(MoveDownRoleInHierarchyCommand command)
         {
             var groupId = GroupId.From(command.GroupId);
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);

@@ -2,6 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.Create;
+using InstantMessenger.Groups.Api.Features.Members.AssignRole;
+using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
+using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
+using InstantMessenger.Groups.Api.Features.Roles.AddRole;
+using InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy;
+using InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy;
+using InstantMessenger.Groups.Api.Features.Roles.RemovePermissionFromRole;
+using InstantMessenger.Groups.Api.Features.Roles.RemoveRole;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -28,17 +36,75 @@ namespace InstantMessenger.Groups.Api
             return Ok();
         }
 
+
+        [HttpPost("{groupId}/roles")]
+        public async Task<IActionResult> Post(AddRoleApiRequest request)
+        {
+            await _facade.SendAsync(new AddRoleCommand(User.GetUserId(), request.GroupId, request.RoleId, request.Name));
+            return Ok();
+        }
+
+        [HttpDelete("{groupId}/roles/{roleId}")]
+        public async Task<IActionResult> Post(RemoveRoleApiRequest request)
+        {
+            await _facade.SendAsync(new RemoveRoleCommand(User.GetUserId(), request.GroupId, request.RoleId));
+            return Ok();
+        }
+
+        [HttpPut("{groupId}/roles/move-up")]
+        public async Task<IActionResult> MoveUpRole(MoveUpRoleApiRequest request)
+        {
+            await _facade.SendAsync(new MoveUpRoleInHierarchyCommand(User.GetUserId(), request.GroupId, request.RoleId));
+            return Ok();
+        }
+
+        [HttpPut("{groupId}/roles/move-down")]
+        public async Task<IActionResult> MoveDownRole(MoveDownRoleApiRequest request)
+        {
+            await _facade.SendAsync(new MoveDownRoleInHierarchyCommand(User.GetUserId(), request.GroupId, request.RoleId));
+            return Ok();
+        }
+
+        [HttpPost("{groupId}/roles/{roleId}/permissions")]
+        public async Task<IActionResult> Post(AddPermissionToRoleApiRequest request)
+        {
+            await _facade.SendAsync(new AddPermissionToRoleCommand(User.GetUserId(), request.GroupId, request.RoleId,request.PermissionName));
+            return Ok();
+        }
+
+        [HttpDelete("{groupId}/roles/{roleId}/permissions/{permissionName}")]
+        public async Task<IActionResult> Delete(RemovePermissionFromRoleApiRequest request)
+        {
+            await _facade.SendAsync(new RemoveRoleCommand(User.GetUserId(), request.GroupId, request.RoleId));
+            return Ok();
+        }
+
+        [HttpPost("{groupId}/members/{memberUserId}/roles")]
+        public async Task<IActionResult> Post(AssignRoleToMemberApiRequest request)
+        {
+            await _facade.SendAsync(new AssignRoleToMemberCommand(User.GetUserId(), request.GroupId, request.MemberUserId, request.RoleId));
+            return Ok();
+        }
+
+        [HttpDelete("{groupId}/members/{memberUserId}/roles/{roleId}")]
+        public async Task<IActionResult> Post(RemoveRoleFromMemberApiRequest request)
+        {
+            await _facade.SendAsync(new RemoveRoleFromMemberCommand(User.GetUserId(), request.GroupId, request.MemberUserId, request.RoleId));
+            return Ok();
+        }
+
+
         [HttpGet("{groupId}")]
-        public async Task<IActionResult> GetGroup([FromRoute]Guid groupId)
+        public async Task<IActionResult> GetGroup([FromRoute] Guid groupId)
         {
             var result = await _facade.QueryAsync(new GetGroupsQuery(groupId));
             return Ok(result.FirstOrDefault());
         }
 
         [HttpGet("{groupId}/owner")]
-        public async Task<IActionResult> GetOwner([FromRoute]Guid groupId)
+        public async Task<IActionResult> GetOwner([FromRoute] Guid groupId)
         {
-            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,true));
+            var result = await _facade.QueryAsync(new GetMembersQuery(groupId, true));
             return Ok(result.FirstOrDefault());
         }
     }

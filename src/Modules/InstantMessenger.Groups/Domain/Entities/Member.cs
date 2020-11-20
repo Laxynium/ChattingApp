@@ -38,5 +38,12 @@ namespace InstantMessenger.Groups.Domain.Entities
                 return;
             _roles.Add(role.Id);
         }
+
+        public void RemoveRole(Role role)
+        {
+            if (!_roles.Contains(role.Id))
+                return;
+            _roles.Remove(role.Id);
+        }
     }
 }

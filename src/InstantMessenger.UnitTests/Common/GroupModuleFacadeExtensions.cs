@@ -5,6 +5,7 @@ using InstantMessenger.Groups;
 using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Features.Members.Add;
 using InstantMessenger.Groups.Api.Features.Members.AssignRole;
+using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 
@@ -210,6 +211,13 @@ namespace InstantMessenger.UnitTests.Common
             Guid roleId
         )
             => await facade.SendAsync(new AssignRoleToMemberCommand(userId, groupId, userIdOfMember, roleId));
+        internal static async Task RemoveRoleFromMember(this GroupsModuleFacade facade,
+            Guid userId,
+            Guid groupId,
+            Guid userIdOfMember,
+            Guid roleId
+        )
+            => await facade.SendAsync(new RemoveRoleFromMemberCommand(userId, groupId, userIdOfMember, roleId));
 
         internal static async Task AddPermission(this GroupsModuleFacade facade,
             Guid userId,

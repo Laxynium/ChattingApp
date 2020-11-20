@@ -83,12 +83,22 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         public void AssignRole(UserId userId, UserId userIdOfMember, RoleId roleId)
         {
-            if(!CanAssignRole(userId, roleId))
+            if(!CanAssignOrRemoveRoleFromMember(userId, roleId))
                 throw new InsufficientPermissionsException(userId);
 
             var member = GetMember(userIdOfMember);
             var role = GetRole(roleId);
             member.AddRole(role);
+        }
+
+        public void RemoveRoleFromMember(UserId userId, UserId userIdOfMember, RoleId roleId)
+        {
+            if (!CanAssignOrRemoveRoleFromMember(userId, roleId))
+                throw new InsufficientPermissionsException(userId);
+
+            var member = GetMember(userIdOfMember);
+            var role = GetRole(roleId);
+            member.RemoveRole(role);
         }
 
         public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission)
@@ -167,7 +177,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         private Role GetEverOneRole() 
             => _roles.First(x => x.Name == RoleName.EveryOneRole);
 
-        private bool CanAssignRole(UserId asUserId, RoleId roleId)
+        private bool CanAssignOrRemoveRoleFromMember(UserId asUserId, RoleId roleId)
         {
             var asMember = GetMember(asUserId);
             if (asMember.IsOwner)

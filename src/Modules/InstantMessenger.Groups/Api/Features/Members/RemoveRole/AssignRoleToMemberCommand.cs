@@ -5,40 +5,40 @@ using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
-namespace InstantMessenger.Groups.Api.Features.Roles.AddRole
+namespace InstantMessenger.Groups.Api.Features.Members.RemoveRole
 {
-    public class AddRoleCommand : ICommand
+    public class RemoveRoleFromMemberCommand : ICommand
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
+        public Guid UserIdOfMember { get; }
         public Guid RoleId { get; }
-        public string Name { get; }
 
-        public AddRoleCommand(Guid userId, Guid groupId, Guid roleId, string name)
+        public RemoveRoleFromMemberCommand(Guid userId, Guid groupId, Guid userIdOfMember, Guid roleId)
         {
             UserId = userId;
             GroupId = groupId;
+            UserIdOfMember = userIdOfMember;
             RoleId = roleId;
-            Name = name;
         }
     }
 
-    internal sealed class AddRoleHandler : ICommandHandler<AddRoleCommand>
+    internal sealed class RemoveRoleFromMemberHandler : ICommandHandler<RemoveRoleFromMemberCommand>
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public RemoveRoleFromMemberHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
         {
             _groupRepository = groupRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task HandleAsync(AddRoleCommand command)
+        public async Task HandleAsync(RemoveRoleFromMemberCommand command)
         {
             var groupId = GroupId.From(command.GroupId);
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
-            group.AddRole(UserId.From(command.UserId),RoleId.From(command.RoleId),RoleName.Create(command.Name));
+            group.RemoveRoleFromMember(UserId.From(command.UserId), UserId.From(command.UserIdOfMember), RoleId.From(command.RoleId));
 
             await _unitOfWork.Commit();
         }

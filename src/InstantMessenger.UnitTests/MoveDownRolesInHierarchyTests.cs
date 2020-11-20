@@ -15,7 +15,7 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Fails_when_group_is_missing() => await Run(async sut =>
         {
-            var command = new MoveRoleDownInHierarchyCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var command = new MoveDownRoleInHierarchyCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             Func<Task> action = async () => await sut.SendAsync(command);
 
@@ -28,7 +28,7 @@ namespace InstantMessenger.UnitTests
             var group = await GroupBuilder.For(sut)
                 .CreateGroup("group1").AsOwner().Build().Build();
 
-            var command = new MoveRoleDownInHierarchyCommand(group.OwnerId, group.GroupId, Guid.NewGuid());
+            var command = new MoveDownRoleInHierarchyCommand(group.OwnerId, group.GroupId, Guid.NewGuid());
 
             Func<Task> action = async () => await sut.SendAsync(command);
 
@@ -42,7 +42,7 @@ namespace InstantMessenger.UnitTests
                 .AsOwner().Build().Build();
             var everyoneRole = (await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId))).First();
 
-            await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.OwnerId, group.GroupId, everyoneRole.RoleId));
+            await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.OwnerId, group.GroupId, everyoneRole.RoleId));
 
             var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
@@ -62,7 +62,7 @@ namespace InstantMessenger.UnitTests
                 .AsOwner()
                 .CreateRole("role1").Build().Build().Build();
 
-            await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId));
+            await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId));
 
             var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
@@ -91,7 +91,7 @@ namespace InstantMessenger.UnitTests
                 .CreateMember().Build()
                 .Build().Build();
 
-            Func<Task> action = async () => await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
+            Func<Task> action = async () => await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
             await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
@@ -106,7 +106,7 @@ namespace InstantMessenger.UnitTests
                 .CreateRole("role3").Build()
                 .Build().Build();
 
-            await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId));
+            await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId));
 
             var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
@@ -150,7 +150,7 @@ namespace InstantMessenger.UnitTests
                 .CreateMember().AssignRole(2).Build()
                 .Build().Build();
 
-           Func<Task> action = async()=> await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
+           Func<Task> action = async()=> await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
@@ -167,7 +167,7 @@ namespace InstantMessenger.UnitTests
                 .CreateMember().AssignRole(1).Build()
                 .Build().Build();
 
-           Func<Task> action = async()=> await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
+           Func<Task> action = async()=> await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
@@ -185,7 +185,7 @@ namespace InstantMessenger.UnitTests
                 .CreateMember().AssignRole(1).Build()
                 .Build().Build();
 
-            await sut.SendAsync(new MoveRoleDownInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId));
+            await sut.SendAsync(new MoveDownRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId));
 
             var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
             roles.Should().SatisfyRespectively(
