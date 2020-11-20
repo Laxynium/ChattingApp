@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
@@ -22,17 +23,18 @@ namespace InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy
 
     internal sealed class MoveRoleDownInHierarchyHandler : ICommandHandler<MoveRoleDownInHierarchyCommand>
     {
-        private readonly IGroupRepository _repository;
+        private readonly IGroupRepository _groupRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MoveRoleDownInHierarchyHandler(IGroupRepository repository, IUnitOfWork unitOfWork)
+        public MoveRoleDownInHierarchyHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _groupRepository = groupRepository;
             _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(MoveRoleDownInHierarchyCommand command)
         {
-            var group = await _repository.GetAsync(GroupId.From(command.GroupId));
+            var groupId = GroupId.From(command.GroupId);
+            var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.MoveDownRole(UserId.From(command.UserId), RoleId.From(command.RoleId));
 

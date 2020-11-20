@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
@@ -33,7 +33,8 @@ namespace InstantMessenger.Groups.Api.Features.Roles.RemoveRole
         }
         public async Task HandleAsync(RemoveRoleCommand command)
         {
-            var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException();
+            var groupId = GroupId.From(command.GroupId);
+            var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.RemoveRole(UserId.From(command.UserId), RoleId.From(command.RoleId));
 

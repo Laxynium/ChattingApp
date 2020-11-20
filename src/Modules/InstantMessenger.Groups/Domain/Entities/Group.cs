@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using NodaTime;
 
@@ -39,16 +40,16 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         public void AddRole(UserId userId, RoleId roleId, RoleName roleName)
         {
-            if(!CanAddRole(userId))
-                throw new InvalidOperationException("Given user cannot perform add role operation");
+            if (!CanAddRole(userId))
+                throw new InsufficientPermissionsException(userId);
 
             if(roleName == RoleName.EveryOneRole)
-                throw new ArgumentException("Role cannot be same named as @everyone role");
+                throw new InvalidRoleNameException(roleName);
 
             var role = Role.Create(roleId, roleName, GetPriority());
             if (_roles.Contains(role))
             {
-                throw new InvalidOperationException("Role cannot be added twice");
+                throw new RoleAlreadyExistsException(roleId);
             }
 
             foreach (var role1 in _roles)
@@ -56,14 +57,13 @@ namespace InstantMessenger.Groups.Domain.Entities
                 role1.IncrementPriority();
             }
             _roles.Add(role);
-
         }
 
         public void RemoveRole(UserId userId, RoleId roleId)
         {
             if (!CanRemoveRole(userId, roleId))
             {
-                throw new InvalidOperationException("Given user cannot perform remove role operation");
+                throw new InsufficientPermissionsException(userId);
             }
 
             var role = GetRole(roleId);
@@ -71,20 +71,20 @@ namespace InstantMessenger.Groups.Domain.Entities
             _roles.Remove(role);
         }
 
-        public void AddMember(UserId newMemberUserId, MemberName memberName, IClock clock)
+        public void AddMember(UserId userIdOfMember, MemberName memberName, IClock clock)
         {
-            if(Exists(newMemberUserId))
-                throw new InvalidComObjectException("There is already user with given newMemberUserId in group");
+            if(Exists(userIdOfMember))
+                throw new MemberAlreadyExistsException(userIdOfMember);
 
             var everyoneRole = GetEverOneRole();
-            var newMember = Member.Create(newMemberUserId, memberName, everyoneRole, clock);
+            var newMember = Member.Create(userIdOfMember, memberName, everyoneRole, clock);
             _members.Add(newMember);
         }
 
         public void AssignRole(UserId userId, UserId userIdOfMember, RoleId roleId)
         {
             if(!CanAssignRole(userId, roleId))
-                throw new InvalidOperationException("Given user cannot perform assign role operation");
+                throw new InsufficientPermissionsException(userId);
 
             var member = GetMember(userIdOfMember);
             var role = GetRole(roleId);
@@ -94,7 +94,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission)
         {
             if(!CanManagePermissions(userId, roleId, permission))
-                throw new InvalidOperationException("Given user cannot perform add permission to role operation");
+                throw new InsufficientPermissionsException(userId);
 
             var role = GetRole(roleId);
             role.AddPermission(permission);
@@ -103,7 +103,8 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void RemovePermissionFromRole(UserId userId, RoleId roleId, Permission permission)
         {
             if(!CanManagePermissions(userId, roleId, permission))
-                throw new InvalidOperationException("Given user cannot perform remove permission from role operation");
+                throw new InsufficientPermissionsException(userId);
+
             var role = GetRole(roleId);
             role.RemovePermission(permission);
         }
@@ -129,7 +130,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         private void MoveRole(UserId userId, RoleId roleId, Action<Role> action)
         {
             if (!CanMoveRole(userId, roleId))
-                throw new InvalidOperationException("Given user cannot perform move role down operation");
+                throw new InsufficientPermissionsException(userId);
 
             var role = GetRole(roleId);
             action(role);
@@ -154,23 +155,17 @@ namespace InstantMessenger.Groups.Domain.Entities
             .OrderByDescending(x => x.Priority)
             .ToList();
 
-        private Role GetRole(RoleId roleId) 
-            => _roles.FirstOrDefault(x => x.Id == roleId) ??  throw new ArgumentException("Role with given id doesn't exists");
+        private Role GetRole(RoleId roleId)
+            => _roles.FirstOrDefault(x => x.Id == roleId) ?? throw new RoleNotFoundException(roleId);
 
-        private bool Exists(UserId userId)
-        {
-            return _members.Any(x => x.UserId == userId);
-        }
+        private bool Exists(UserId userId) 
+            => _members.Any(x => x.UserId == userId);
 
-        private Member GetMember(UserId userId)
-        {
-            return _members.FirstOrDefault(x => x.UserId == userId) ?? throw new ArgumentException("There is no member with given userId");
-        }
+        private Member GetMember(UserId userId) 
+            => _members.FirstOrDefault(x => x.UserId == userId) ?? throw new MemberNotFoundException(userId);
 
-        private Role GetEverOneRole()
-        {
-            return _roles.First(x => x.Name == RoleName.EveryOneRole);
-        }
+        private Role GetEverOneRole() 
+            => _roles.First(x => x.Name == RoleName.EveryOneRole);
 
         private bool CanAssignRole(UserId asUserId, RoleId roleId)
         {

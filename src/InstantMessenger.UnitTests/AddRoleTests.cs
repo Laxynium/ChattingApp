@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Xunit;
 
@@ -10,6 +11,16 @@ namespace InstantMessenger.UnitTests
 {
     public class AddRoleTests : GroupsModuleUnitTestBase
     {
+        [Fact]
+        public async Task Fails_when_group_is_missing() => await Run(async sut =>
+        {
+            var command = new AddRoleCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "role1");
+
+            Func<Task> action = async () => await sut.SendAsync(command);
+
+            await action.Should().ThrowAsync<GroupNotFoundException>();
+        });
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -17,11 +28,14 @@ namespace InstantMessenger.UnitTests
         [InlineData("   ")]
         public async Task Fails_when_role_name_is_invalid(string roleName) => await Run(async sut =>
         {
-            var command = new AddRoleCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), roleName);
+            var group = await GroupBuilder.For(sut)
+                .CreateGroup("group1").AsOwner().CreateRole("role1").Build().Build().Build();
+
+            var command = new AddRoleCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId, roleName);
 
             Func<Task> action = async () => await sut.SendAsync(command);
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InvalidRoleNameException>();
         });
 
         [Fact]
@@ -32,7 +46,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddRoleCommand(group.Member(1).UserId, group.GroupId, Guid.NewGuid(), "role1"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]

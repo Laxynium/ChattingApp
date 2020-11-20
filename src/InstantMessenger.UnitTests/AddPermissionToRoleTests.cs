@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Xunit;
 
@@ -17,7 +18,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(userId, groupId, roleId, "Administrator"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<GroupNotFoundException>();
         });
 
         [Fact]
@@ -27,7 +28,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.OwnerId, group.GroupId, Guid.NewGuid(), "Administrator"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<RoleNotFoundException>();
         });
 
         [Fact]
@@ -37,7 +38,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId, "SomeMissingPermission"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<PermissionNotFoundException>();
         });
 
         [Fact]
@@ -54,7 +55,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "Administrator"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -88,7 +89,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "ManageRoles"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -102,7 +103,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "ManageRoles"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -138,7 +139,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "ManageRoles"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -150,7 +151,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "ManageRoles"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -164,7 +165,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageGroup"));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]

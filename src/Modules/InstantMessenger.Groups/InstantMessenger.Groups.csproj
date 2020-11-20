@@ -34,7 +34,6 @@
     <Folder Include="Api\Features\Messages\AttachFile\" />
     <Folder Include="Api\Features\Messages\Mention\" />
     <Folder Include="Api\Features\Messages\AddReaction\" />
-    <Folder Include="Api\Features\Roles\EditRole\" />
     <Folder Include="Api\Features\Channel\AddChannel\" />
     <Folder Include="Api\Features\Channel\EditChannel\" />
     <Folder Include="Api\Features\Channel\" />

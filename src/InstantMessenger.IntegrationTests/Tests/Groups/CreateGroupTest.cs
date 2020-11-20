@@ -6,7 +6,7 @@ using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
 using Xunit;
 
-namespace InstantMessenger.IntegrationTests.Tests
+namespace InstantMessenger.IntegrationTests.Tests.Groups
 {
     [Collection("Server collection")]
     public class CreateGroupTest : IClassFixture<ServerFixture>
@@ -37,7 +37,7 @@ namespace InstantMessenger.IntegrationTests.Tests
             owner.CreatedAt.Should().NotBe(default);
             owner.IsOwner.Should().BeTrue();
             owner.UserId.Should().Be(Guid.Parse(user.Subject));
-            owner.MemberId.Should().Be(command.OwnerId);
+            owner.MemberId.Should().NotBeEmpty();
             owner.Name.Should().Be("user");
         }
     }

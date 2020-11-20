@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Exceptions;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
@@ -35,7 +36,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         public static RolePriority Create(int value)
         {
             if (value < 0)
-                throw new ArgumentException($"User defined role priority must be greater or equal 0");
+                throw new InvalidRolePriorityException(value);
             return new RolePriority(value);
         }
     }

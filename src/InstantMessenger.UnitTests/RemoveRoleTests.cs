@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Roles.RemoveRole;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Xunit;
 
@@ -11,6 +12,16 @@ namespace InstantMessenger.UnitTests
     public class RemoveRoleTests : GroupsModuleUnitTestBase
     {
         [Fact]
+        public async Task Fails_when_group_do_not_exists() => await Run(async sut =>
+        {
+            var command = new RemoveRoleCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+
+            Func<Task> action = async () => await sut.SendAsync(command);
+
+            await action.Should().ThrowAsync<GroupNotFoundException>();
+        });
+
+        [Fact]
         public async Task Fails_when_role_do_not_exists() => await Run(async sut =>
         {
             var group = await GroupBuilder.For(sut).CreateGroup("group1").Build();
@@ -18,7 +29,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(command);
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<RoleNotFoundException>();
         });
 
         [Fact]
@@ -30,7 +41,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new RemoveRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -67,7 +78,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new RemoveRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Theory]
@@ -83,7 +94,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new RemoveRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Exceptions;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
@@ -13,7 +14,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         public static GroupName Create(string value)
         {
             if(string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException($"Group name cannot be null or whitespace");
+                throw new InvalidGroupNameException(value);
             return new GroupName(value);
         }
     }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
@@ -35,7 +36,8 @@ namespace InstantMessenger.Groups.Api.Features.Roles.AddRole
         }
         public async Task HandleAsync(AddRoleCommand command)
         {
-            var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException();
+            var groupId = GroupId.From(command.GroupId);
+            var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.AddRole(UserId.From(command.UserId),RoleId.From(command.RoleId),RoleName.Create(command.Name));
 

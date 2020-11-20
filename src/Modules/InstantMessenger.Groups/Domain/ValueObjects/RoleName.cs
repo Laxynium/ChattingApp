@@ -1,5 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.Exceptions;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
@@ -14,7 +16,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         public static RoleName Create(string value)
         {
             if(string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException($"Role name cannot be null or whitespace");
+                throw new InvalidRoleNameException($"Role name cannot be null or whitespace");
             return new RoleName(value);
         }
     }

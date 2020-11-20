@@ -22,5 +22,8 @@ namespace InstantMessenger.Groups.Infrastructure.Database
 
         public async Task<Group> GetAsync(GroupId id) 
             => await _context.Groups.FirstOrDefaultAsync(x=>x.Id == id);
+
+        public async Task<bool> ExistsAsync(GroupId id) 
+            => await _context.Groups.AnyAsync(x => x.Id == id);
     }
 }

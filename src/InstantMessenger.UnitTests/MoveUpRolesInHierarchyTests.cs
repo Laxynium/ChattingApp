@@ -5,6 +5,7 @@ using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy;
 using InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Xunit;
 
@@ -12,6 +13,29 @@ namespace InstantMessenger.UnitTests
 {
     public class MoveUpRolesInHierarchyTests : GroupsModuleUnitTestBase
     {
+        [Fact]
+        public async Task Fails_when_group_is_missing() => await Run(async sut =>
+        {
+            var command = new MoveUpRoleInHierarchyCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+
+            Func<Task> action = async () => await sut.SendAsync(command);
+
+            await action.Should().ThrowAsync<GroupNotFoundException>();
+        });
+
+        [Fact]
+        public async Task Fails_when_role_is_missing() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut)
+                .CreateGroup("group1").AsOwner().Build().Build();
+
+            var command = new MoveUpRoleInHierarchyCommand(group.OwnerId, group.GroupId, Guid.NewGuid());
+
+            Func<Task> action = async () => await sut.SendAsync(command);
+
+            await action.Should().ThrowAsync<RoleNotFoundException>();
+        });
+
         [Fact]
         public async Task Everyone_role_cannot_be_moved_up() => await Run(async sut =>
         {
@@ -70,7 +94,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(new MoveUpRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Fact]
@@ -129,7 +153,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async()=> await sut.SendAsync(new MoveUpRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Theory]
@@ -146,7 +170,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async()=> await sut.SendAsync(new MoveUpRoleInHierarchyCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId));
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });
 
         [Theory]

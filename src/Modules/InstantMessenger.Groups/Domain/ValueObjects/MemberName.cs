@@ -1,5 +1,5 @@
-﻿using System;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Exceptions;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
@@ -12,7 +12,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         public static MemberName Create(string value)
         {
             if(string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Member name cannot be null or whitespace");
+                throw new InvalidMemberNameException(value);
             return new MemberName(value);
         }
     }

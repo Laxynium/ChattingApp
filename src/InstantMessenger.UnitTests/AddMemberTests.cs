@@ -21,6 +21,7 @@ namespace InstantMessenger.UnitTests
                 .AddSingleton<IModuleClient>(x => new FakeModuleClient(userIdToNickname:_userIdToNickname))
         );
 
+        
         [Fact]
         public async Task new_member_is_added_with_everyone_role_and_with_his_personal_nickname() => await Run(async sut =>
         {

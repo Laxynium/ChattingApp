@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Shared.Modules;
 using InstantMessenger.UnitTests.Common;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +29,7 @@ namespace InstantMessenger.UnitTests
 
             Func<Task> action = async () => await sut.SendAsync(command);
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<InvalidGroupNameException>();
         });
 
         [Fact]
