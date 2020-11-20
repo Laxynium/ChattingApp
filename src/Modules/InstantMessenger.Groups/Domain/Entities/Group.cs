@@ -68,6 +68,10 @@ namespace InstantMessenger.Groups.Domain.Entities
 
             var role = GetRole(roleId);
 
+            foreach (var member in _members)
+            {
+                member.RemoveRole(role);
+            }
             _roles.Remove(role);
         }
 

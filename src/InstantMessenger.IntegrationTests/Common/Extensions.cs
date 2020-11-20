@@ -1,4 +1,5 @@
-﻿using InstantMessenger.Identity.Api.Features.SignIn;
+﻿using System;
+using InstantMessenger.Identity.Api.Features.SignIn;
 
 namespace InstantMessenger.IntegrationTests.Common
 {
@@ -7,6 +8,10 @@ namespace InstantMessenger.IntegrationTests.Common
         public static string BearerToken(this AuthDto user)
         {
             return $"Bearer {user.Token}";
+        }
+        public static Guid UserId(this AuthDto user)
+        {
+            return Guid.Parse(user.Subject);
         }
     }
 }

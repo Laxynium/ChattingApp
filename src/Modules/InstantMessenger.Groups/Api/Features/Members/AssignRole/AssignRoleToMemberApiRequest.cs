@@ -3,12 +3,16 @@ using InstantMessenger.Shared.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Members.AssignRole
 {
-    public class RemoveRoleFromMemberApiRequest : ICommand
+    public class RemoveRoleFromMemberApiRequest
     {
-        public Guid GroupId { get; }
-        public Guid MemberUserId { get; }
-        public Guid RoleId { get; }
+        public Guid GroupId { get; set; }
+        public Guid MemberUserId { get; set; }
+        public Guid RoleId { get; set; }
 
+        public RemoveRoleFromMemberApiRequest()
+        {
+            
+        }
         public RemoveRoleFromMemberApiRequest(Guid groupId, Guid memberUserId, Guid roleId)
         {
             GroupId = groupId;

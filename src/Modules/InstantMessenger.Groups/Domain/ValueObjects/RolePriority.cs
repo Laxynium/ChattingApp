@@ -35,7 +35,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
 
         public static RolePriority Create(int value)
         {
-            if (value < 0)
+            if (value < -1)
                 throw new InvalidRolePriorityException(value);
             return new RolePriority(value);
         }

@@ -47,19 +47,18 @@ namespace InstantMessenger.Groups.Api.Queries
         }
         public async Task<IEnumerable<RoleDto>> HandleAsync(GetMemberRolesQuery query)
         {
-            var memberRoleIds = _context.Groups
+            var memberRoleIds = await _context.Groups
                 .AsNoTracking()
                 .Where(x => x.Id == GroupId.From(query.GroupId))
                 .SelectMany(x => x.Members)
                 .Where(x => x.UserId == UserId.From(query.UserIdOfMember))
-                .SelectMany(x => x.Roles)
-                .Select(x=>x.Value);
+                .SelectMany(x => x.Roles).ToListAsync();
 
             return await _context.Groups.AsNoTracking()
                 .Where(x => x.Id == GroupId.From(query.GroupId))
                 .SelectMany(x => x.Roles)
-                .Where(x => memberRoleIds.Contains(x.Id.Value))
-                .OrderByDescending(x => x.Priority.Value)
+                .Where(x => memberRoleIds.Contains(x.Id))
+                .OrderByDescending(x => x.Priority)
                 .Select(x=>new RoleDto(x.Id.Value, x.Name.Value, x.Priority.Value))
                 .ToListAsync();
         }

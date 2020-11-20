@@ -36,6 +36,20 @@ namespace InstantMessenger.Groups.Api
             return Ok();
         }
 
+        [HttpGet("{groupId}")]
+        public async Task<IActionResult> GetGroup([FromRoute] Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetGroupsQuery(groupId));
+            return Ok(result.FirstOrDefault());
+        }
+
+        [HttpGet("{groupId}/owner")]
+        public async Task<IActionResult> GetOwner([FromRoute] Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetMembersQuery(groupId, true));
+            return Ok(result.FirstOrDefault());
+        }
+
 
         [HttpPost("{groupId}/roles")]
         public async Task<IActionResult> Post(AddRoleApiRequest request)
@@ -45,7 +59,7 @@ namespace InstantMessenger.Groups.Api
         }
 
         [HttpDelete("{groupId}/roles/{roleId}")]
-        public async Task<IActionResult> Post(RemoveRoleApiRequest request)
+        public async Task<IActionResult> DeleteRole([FromRoute]RemoveRoleApiRequest request)
         {
             await _facade.SendAsync(new RemoveRoleCommand(User.GetUserId(), request.GroupId, request.RoleId));
             return Ok();
@@ -65,6 +79,13 @@ namespace InstantMessenger.Groups.Api
             return Ok();
         }
 
+        [HttpGet("{groupId}/roles")]
+        public async Task<IActionResult> GetRoles(Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetRolesQuery(User.GetUserId(), groupId));
+            return Ok(result);
+        }
+
         [HttpPost("{groupId}/roles/{roleId}/permissions")]
         public async Task<IActionResult> Post(AddPermissionToRoleApiRequest request)
         {
@@ -73,10 +94,18 @@ namespace InstantMessenger.Groups.Api
         }
 
         [HttpDelete("{groupId}/roles/{roleId}/permissions/{permissionName}")]
-        public async Task<IActionResult> Delete(RemovePermissionFromRoleApiRequest request)
+        public async Task<IActionResult> Delete([FromRoute] RemovePermissionFromRoleApiRequest request)
         {
-            await _facade.SendAsync(new RemoveRoleCommand(User.GetUserId(), request.GroupId, request.RoleId));
+            await _facade.SendAsync(new RemovePermissionFromRoleCommand(User.GetUserId(), request.GroupId, request.RoleId, request.PermissionName));
             return Ok();
+        }
+
+
+        [HttpGet("{groupId}/roles/{roleId}/permissions")]
+        public async Task<IActionResult> GetPermissions(Guid groupId, Guid roleId)
+        {
+            var result = await _facade.QueryAsync(new GetRolePermissionsQuery(groupId, roleId));
+            return Ok(result);
         }
 
         [HttpPost("{groupId}/members/{memberUserId}/roles")]
@@ -87,25 +116,18 @@ namespace InstantMessenger.Groups.Api
         }
 
         [HttpDelete("{groupId}/members/{memberUserId}/roles/{roleId}")]
-        public async Task<IActionResult> Post(RemoveRoleFromMemberApiRequest request)
+        public async Task<IActionResult> RemoveRole([FromRoute]RemoveRoleFromMemberApiRequest request)
         {
             await _facade.SendAsync(new RemoveRoleFromMemberCommand(User.GetUserId(), request.GroupId, request.MemberUserId, request.RoleId));
             return Ok();
         }
 
 
-        [HttpGet("{groupId}")]
-        public async Task<IActionResult> GetGroup([FromRoute] Guid groupId)
+        [HttpGet("{groupId}/members/{memberUserId}/roles")]
+        public async Task<IActionResult> GetMemberRoles(Guid groupId, Guid memberUserId)
         {
-            var result = await _facade.QueryAsync(new GetGroupsQuery(groupId));
-            return Ok(result.FirstOrDefault());
-        }
-
-        [HttpGet("{groupId}/owner")]
-        public async Task<IActionResult> GetOwner([FromRoute] Guid groupId)
-        {
-            var result = await _facade.QueryAsync(new GetMembersQuery(groupId, true));
-            return Ok(result.FirstOrDefault());
+            var result = await _facade.QueryAsync(new GetMemberRolesQuery(User.GetUserId(),groupId, memberUserId));
+            return Ok(result);
         }
     }
 }

@@ -64,6 +64,47 @@ namespace InstantMessenger.UnitTests
             );
         });
 
+        [Fact]
+        public async Task Role_is_also_removed_from_members() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner().CreateRole("role1").Build()
+                .CreateMember().AssignRole(1).Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+
+            await sut.SendAsync(new RemoveRoleCommand(group.OwnerId, group.GroupId, group.Role(1).RoleId));
+
+            var roles = await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId));
+            roles.Should().SatisfyRespectively(
+                x =>
+                {
+                    x.RoleId.Should().NotBeEmpty();
+                    x.Priority.Should().Be(-1);
+                    x.Name.Should().Be("@everyone");
+                }
+            );
+
+            var member1Roles = await sut.QueryAsync(new GetMemberRolesQuery(group.OwnerId, group.GroupId, group.Member(1).UserId));
+            var member2Roles = await sut.QueryAsync(new GetMemberRolesQuery(group.OwnerId, group.GroupId, group.Member(1).UserId));
+            member1Roles.Should().SatisfyRespectively(
+                x =>
+                {
+                    x.RoleId.Should().NotBeEmpty();
+                    x.Priority.Should().Be(-1);
+                    x.Name.Should().Be("@everyone");
+                }
+            );
+            member2Roles.Should().SatisfyRespectively(
+                x =>
+                {
+                    x.RoleId.Should().NotBeEmpty();
+                    x.Priority.Should().Be(-1);
+                    x.Name.Should().Be("@everyone");
+                }
+            );
+        });
+
         [Theory]
         [InlineData("Administrator")]
         [InlineData("ManageRoles")]
