@@ -47,6 +47,23 @@ namespace InstantMessenger.UnitTests
         });
 
         [Fact]
+        public async Task Member_without_correct_permissions_cannot_remove_permission_from_role() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").Build()
+                .CreateRole("role2").AddPermission("Administrator").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build()
+                .Build();
+
+
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "Administrator"));
+
+            await action.Should().ThrowAsync<Exception>();
+        });
+
+        [Fact]
         public async Task Owner_can_remove_permission_from_role() => await Run(async sut =>
         {
             var (userId, groupId, roleId) = (Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
@@ -59,5 +76,111 @@ namespace InstantMessenger.UnitTests
             var permissions = await sut.QueryAsync(new GetRolePermissionsQuery(groupId, roleId));
             permissions.Should().BeEmpty();
         });
+
+        [Fact]
+        public async Task Member_with_administrator_permission_cannot_remove_permission_from_role_with_higher_priority() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("Administrator").Build()
+                .CreateRole("role2").AddPermission("Administrator").Build()
+                .CreateMember().AssignRole(2).Build()
+                .Build().Build();
+
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "Administrator"));
+
+            await action.Should().ThrowAsync<Exception>();
+        });
+
+        [Fact]
+        public async Task Member_with_administrator_permission_cannot_remove_permission_from_role_with_same_priority() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("Administrator").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "Administrator"));
+
+            await action.Should().ThrowAsync<Exception>();
+        });
+
+        [Fact]
+        public async Task Member_with_administrator_permission_can_remove_permission_from_role() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("Administrator").Build()
+                .CreateRole("role2").AddPermission("ManageGroup").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+
+            await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageGroup"));
+
+            var permissions = await sut.QueryAsync(new GetRolePermissionsQuery(group.GroupId, group.Role(2).RoleId));
+            permissions.Should().BeNullOrEmpty();
+        });
+
+        [Fact]
+        public async Task Member_with_manage_roles_permission_cannot_remove_permission_from_role_with_higher_priority() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("Administrator").Build()
+                .CreateRole("role2").AddPermission("ManageRoles").Build()
+                .CreateMember().AssignRole(2).Build()
+                .Build().Build();
+
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "Administrator"));
+
+            await action.Should().ThrowAsync<Exception>();
+        });
+
+        [Fact]
+        public async Task Member_with_manage_roles_permission_cannot_remove_permission_from_role_with_same_priority() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("ManageRoles").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "ManageRoles"));
+
+            await action.Should().ThrowAsync<Exception>();
+        });
+
+        [Fact]
+        public async Task Member_with_manage_roles_permission_cannot_remove_permission_which_he_do_not_possess() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("ManageRoles").Build()
+                .CreateRole("role2").AddPermission("ManageGroup").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageGroup"));
+
+            await action.Should().ThrowAsync<Exception>();
+        });
+
+        [Fact]
+        public async Task Member_with_manage_roles_permission_can_remove_permission_from_role() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .AsOwner()
+                .CreateRole("role1").AddPermission("ManageRoles").Build()
+                .CreateRole("role2").AddPermission("ManageRoles").Build()
+                .CreateMember().AssignRole(1).Build()
+                .Build().Build();
+
+            await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageRoles"));
+
+            var permissions = await sut.QueryAsync(new GetRolePermissionsQuery(group.GroupId, group.Role(2).RoleId));
+            permissions.Should().BeNullOrEmpty();
+        });
+
     }
 }

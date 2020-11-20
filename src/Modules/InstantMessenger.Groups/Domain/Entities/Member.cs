@@ -80,6 +80,13 @@ namespace InstantMessenger.Groups.Domain.Entities
                 return;
             Priority = Priority.Increased();
         }
+
+        public void DecrementPriority()
+        {
+            if (this.Name == RoleName.EveryOneRole)
+                return;
+            Priority = Priority.Decreased();
+        }
     }
 
     public class Permission : SmartEnum<Permission,int>

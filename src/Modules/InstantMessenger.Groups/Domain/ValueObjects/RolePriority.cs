@@ -28,13 +28,15 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
 
         public static RolePriority CreateFirst() => Create(0);
 
+        public RolePriority Increased() => Create(Value + 1);
+
+        public RolePriority Decreased() => Create(Value - 1);
+
         public static RolePriority Create(int value)
         {
             if (value < 0)
                 throw new ArgumentException($"User defined role priority must be greater or equal 0");
             return new RolePriority(value);
         }
-
-        public RolePriority Increased() => Create(Value + 1);
     }
 }

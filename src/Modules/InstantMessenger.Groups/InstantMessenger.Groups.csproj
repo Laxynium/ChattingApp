@@ -40,7 +40,6 @@
     <Folder Include="Api\Features\Channel\" />
     <Folder Include="Api\Features\Channel\RemoveChannel\" />
     <Folder Include="Api\Features\Messages\EmbedLink\" />
-    <Folder Include="Api\Features\Roles\RemoveRole\" />
     <Folder Include="Api\Features\Messages\SendMessage\" />
   </ItemGroup>
 

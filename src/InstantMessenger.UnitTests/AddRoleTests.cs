@@ -27,8 +27,8 @@ namespace InstantMessenger.UnitTests
         [Fact]
         public async Task Fails_when_member_do_not_have_correct_permission() => await Run(async sut =>
         {
-            var group = await GroupBuilder.For(sut).CreateGroup("group1")
-                .AsOwner().CreateMember().Build().Build().Build();
+            var group = await GroupBuilder.For(sut).CreateGroup("group1").AsOwner()
+                .CreateMember().Build().Build().Build();
 
             Func<Task> action = async () => await sut.SendAsync(new AddRoleCommand(group.Member(1).UserId, group.GroupId, Guid.NewGuid(), "role1"));
 

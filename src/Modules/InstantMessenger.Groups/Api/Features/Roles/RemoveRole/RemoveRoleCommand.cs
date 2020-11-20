@@ -2,44 +2,42 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 
-namespace InstantMessenger.Groups.Api.Features.Roles.RemovePermissionFromRole
+namespace InstantMessenger.Groups.Api.Features.Roles.RemoveRole
 {
-    public class RemovePermissionFromRoleCommand : ICommand
+    public class RemoveRoleCommand : ICommand
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
         public Guid RoleId { get; }
-        public string PermissionName { get; }
-        public RemovePermissionFromRoleCommand(Guid userId, Guid groupId, Guid roleId, string permissionName)
+
+        public RemoveRoleCommand(Guid userId, Guid groupId, Guid roleId)
         {
             UserId = userId;
             GroupId = groupId;
             RoleId = roleId;
-            PermissionName = permissionName;
         }
     }
-    public class RemovePermissionFromRoleHandler : ICommandHandler<RemovePermissionFromRoleCommand>
+
+    internal sealed class RemoveRoleHandler: ICommandHandler<RemoveRoleCommand>
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public RemovePermissionFromRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public RemoveRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
         {
             _groupRepository = groupRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task HandleAsync(RemovePermissionFromRoleCommand command)
+        public async Task HandleAsync(RemoveRoleCommand command)
         {
             var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException();
 
-            group.RemovePermissionFromRole(UserId.From(command.UserId), RoleId.From(command.RoleId), Permission.FromName(command.PermissionName));
+            group.RemoveRole(UserId.From(command.UserId), RoleId.From(command.RoleId));
 
             await _unitOfWork.Commit();
         }
     }
-
 }

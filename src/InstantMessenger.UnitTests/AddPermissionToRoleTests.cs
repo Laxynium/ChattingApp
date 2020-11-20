@@ -52,7 +52,7 @@ namespace InstantMessenger.UnitTests
                 .Build();
 
 
-            Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "Administrator"));
+            Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "Administrator"));
 
             await action.Should().ThrowAsync<Exception>();
         });
@@ -83,7 +83,7 @@ namespace InstantMessenger.UnitTests
                 .AsOwner()
                     .CreateRole("role1").Build()
                     .CreateRole("role2").AddPermission("Administrator").Build()
-                    .CreateMember().AssignRole(1).Build()
+                    .CreateMember().AssignRole(2).Build()
                 .Build().Build();
 
             Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(1).RoleId, "ManageRoles"));

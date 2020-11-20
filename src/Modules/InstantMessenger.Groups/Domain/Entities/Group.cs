@@ -59,6 +59,18 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         }
 
+        public void RemoveRole(UserId userId, RoleId roleId)
+        {
+            if (!CanRemoveRole(userId, roleId))
+            {
+                throw new InvalidOperationException("Given user cannot perform remove role operation");
+            }
+
+            var role = GetRole(roleId);
+
+            _roles.Remove(role);
+        }
+
         public void AddMember(UserId newMemberUserId, MemberName memberName, IClock clock)
         {
             if(Exists(newMemberUserId))
@@ -81,18 +93,66 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission)
         {
-            if(!CanAddPermission(userId, roleId, permission))
+            if(!CanManagePermissions(userId, roleId, permission))
                 throw new InvalidOperationException("Given user cannot perform add permission to role operation");
 
             var role = GetRole(roleId);
             role.AddPermission(permission);
         }
 
-        public void RemovePermissionFromRole(RoleId roleId, Permission permission)
+        public void RemovePermissionFromRole(UserId userId, RoleId roleId, Permission permission)
         {
+            if(!CanManagePermissions(userId, roleId, permission))
+                throw new InvalidOperationException("Given user cannot perform remove permission from role operation");
             var role = GetRole(roleId);
             role.RemovePermission(permission);
         }
+
+        public void MoveUpRole(UserId userId, RoleId roleId) => MoveRole(userId,roleId,r =>
+        {
+            var roleAbove = GetRoleAbove(r);
+            if (roleAbove.HasNoValue)//given role is the highest one
+                return;
+            r.IncrementPriority();
+            roleAbove.Value.DecrementPriority();
+        });
+
+        public void MoveDownRole(UserId userId, RoleId roleId) => MoveRole(userId, roleId, r =>
+        {
+            var roleBelow = GetRoleBelow(r);
+            if (roleBelow.HasNoValue)//given role is the lowest one
+                return;
+            r.DecrementPriority();
+            roleBelow.Value.IncrementPriority();
+        });
+
+        private void MoveRole(UserId userId, RoleId roleId, Action<Role> action)
+        {
+            if (!CanMoveRole(userId, roleId))
+                throw new InvalidOperationException("Given user cannot perform move role down operation");
+
+            var role = GetRole(roleId);
+            action(role);
+        }
+
+        private Maybe<Role> GetRoleAbove(Role role) => 
+            UserDefinedRoles.Skip(1)
+            .Zip(UserDefinedRoles)
+            .Where(x => x.First == role)
+            .Select(x => x.Second)
+            .TryFirst();
+
+        private Maybe<Role> GetRoleBelow(Role role) => 
+            UserDefinedRoles
+            .Zip(UserDefinedRoles.Skip(1))
+            .Where(x => x.First == role)
+            .Select(x => x.Second)
+            .TryFirst();
+
+        private List<Role> UserDefinedRoles => _roles
+            .Where(x => x.Name != RoleName.EveryOneRole)
+            .OrderByDescending(x => x.Priority)
+            .ToList();
 
         private Role GetRole(RoleId roleId) 
             => _roles.FirstOrDefault(x => x.Id == roleId) ??  throw new ArgumentException("Role with given id doesn't exists");
@@ -136,7 +196,42 @@ namespace InstantMessenger.Groups.Domain.Entities
             return memberPermissions.Has(Permission.Administrator, Permission.ManageRoles);
         }
 
-        private bool CanAddPermission(UserId userId, RoleId roleId, Permission permission)
+        private bool CanRemoveRole(UserId userId, RoleId roleId)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return true;
+            var memberPermissions = GetMemberPermissions(member);
+            if(!memberPermissions.Has(Permission.Administrator, Permission.ManageRoles))
+                return false;
+
+            var memberHighestRole = GetRoleWithHighestPriority(member);
+            var role = GetRole(roleId);
+            if (role.Priority >= memberHighestRole.Priority)
+                return false;
+
+            return true;
+        }
+
+        private bool CanMoveRole(UserId userId, RoleId roleId)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return true;
+
+            var permissions = GetMemberPermissions(member);
+            if (!permissions.Has(Permission.Administrator, Permission.ManageRoles))
+                return false;
+
+            var memberHighestRole = GetRoleWithHighestPriority(member);
+            var role = GetRole(roleId);
+            if (role.Priority >= memberHighestRole.Priority)
+                return false;
+
+            return true;
+        }
+
+        private bool CanManagePermissions(UserId userId, RoleId roleId, Permission permission)
         {
             var member = GetMember(userId);
             if (member.IsOwner)
