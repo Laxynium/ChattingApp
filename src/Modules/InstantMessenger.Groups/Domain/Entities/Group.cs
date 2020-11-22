@@ -332,5 +332,39 @@ namespace InstantMessenger.Groups.Domain.Entities
                 throw new OwnerCannotLeaveGroupException();
             _members.Remove(member);
         }
+
+        public void KickMember(UserId userId, UserId userIdOfMember)
+        {
+            var asMember = GetMember(userId);
+            var onMember = GetMember(userIdOfMember);
+            if(!CanKickMember(asMember, onMember))
+                throw new InsufficientPermissionsException(userId);
+
+            _members.Remove(onMember);
+        }
+
+        private bool CanKickMember(Member asMember, Member onMember)
+        {
+            if (onMember.IsOwner)
+                return false;
+
+            if (asMember == onMember)
+                return false;
+
+            if (asMember.IsOwner)
+                return true;
+            
+            var permissions = GetMemberPermissions(asMember);
+            if (!permissions.Has(Permission.Administrator, Permission.Kick))
+                return false;
+
+            var asMemberHighestRole = GetRoleWithHighestPriority(asMember);
+            var onMemberHighestRole = GetRoleWithHighestPriority(onMember);
+
+            if (asMemberHighestRole.Priority <= onMemberHighestRole.Priority)
+                return false;
+
+            return true;
+        }
     }
 }

@@ -30,7 +30,6 @@
     <Folder Include="Api\Features\Group\Delete\" />
     <Folder Include="Api\Features\Group\ChangeName\" />
     <Folder Include="Api\Features\Group\ChangeAvatar\" />
-    <Folder Include="Api\Features\Members\Kick\" />
     <Folder Include="Api\Features\Members\Ban\" />
     <Folder Include="Api\Features\Members\ChangeOwnNickname\" />
     <Folder Include="Api\Features\Members\ChangeOthersNicknames\" />
