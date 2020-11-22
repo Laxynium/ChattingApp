@@ -324,5 +324,13 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             return _members.Any(x => x.UserId == userId);
         }
+
+        public void LeaveGroup(UserId userId)
+        {
+            var member = GetMember(userId);
+            if(member.IsOwner)
+                throw new OwnerCannotLeaveGroupException();
+            _members.Remove(member);
+        }
     }
 }
