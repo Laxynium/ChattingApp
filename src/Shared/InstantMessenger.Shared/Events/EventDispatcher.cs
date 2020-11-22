@@ -11,7 +11,7 @@ namespace InstantMessenger.Shared.Events
         {
             _factory = factory;
         }
-        public async Task Publish<TEvent>(TEvent @event) where TEvent : class, IEvent
+        public async Task PublishAsync<TEvent>(TEvent @event) where TEvent : class, IEvent
         {
             using var scope = _factory.CreateScope();
             var handlers = scope.ServiceProvider.GetServices<IEventHandler<TEvent>>();

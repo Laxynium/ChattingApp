@@ -4,6 +4,6 @@ namespace InstantMessenger.Shared.Events
 {
     public interface IEventDispatcher
     {
-        Task Publish<TEvent>(TEvent @event) where TEvent : class, IEvent;
+        Task PublishAsync<TEvent>(TEvent @event) where TEvent : class, IEvent;
     }
 }

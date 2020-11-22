@@ -1,5 +1,7 @@
 ﻿using InstantMessenger.Groups.Api;
 using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Repositories;
+using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
@@ -22,6 +24,7 @@ namespace InstantMessenger.Groups
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
                 .AddEventHandlers()
+                .AddEventDispatcher()
                 .AddModuleRequests()
                 .AddDbContext<GroupsContext>(
                     o =>
@@ -38,6 +41,8 @@ namespace InstantMessenger.Groups
                 )
                 .AddTransient<GroupsModuleFacade>()
                 .AddScoped<IGroupRepository, GroupRepository>()
+                .AddScoped<IInvitationRepository, InvitationRepository>()
+                .AddScoped<IUniqueInvitationCodeRule, UniqueInvitationCodeRule>()
                 .AddScoped<IUnitOfWork,UnitOfWork>()
                 .AddSingleton<IClock>(x => SystemClock.Instance); ;
             return services;

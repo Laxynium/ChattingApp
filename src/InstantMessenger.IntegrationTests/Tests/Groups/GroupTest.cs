@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Group.Create;
+using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
+using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
 using Xunit;
@@ -25,6 +27,7 @@ namespace InstantMessenger.IntegrationTests.Tests.Groups
         public async Task CreateGroup()
         {
             var user = await _fixture.LoginAsUser("user@test.com","user");
+            var user2 = await _fixture.LoginAsUser("user2@test.com","user2");
             var sut = _fixture.GetClient<IGroupsApi>();
             var createGroup = new CreateGroupApiRequest(Guid.NewGuid(), Guid.NewGuid(), "test");
 
@@ -133,6 +136,63 @@ namespace InstantMessenger.IntegrationTests.Tests.Groups
             );
             permissions = await sut.GetRolePermissions(user.BearerToken(), createRole.GroupId, createRole.RoleId);
             permissions.Should().BeNullOrEmpty();
+
+            var generateInvitation = new GenerateInvitationApiRequest(
+                createGroup.GroupId,
+                Guid.NewGuid(),
+                new ExpirationTimeCommandItem(ExpirationTimeTypeCommandItem.Infinite),
+                new UsageCounterCommandItem(UsageCounterTypeCommandItem.Infinite)
+            );
+            await sut.GenerateInvitation(
+                user.BearerToken(),
+                generateInvitation.GroupId,
+                generateInvitation
+            );
+
+            var invitation = await sut.GetInvitation(user.BearerToken(), generateInvitation.GroupId, generateInvitation.InvitationId);
+            invitation.Should().NotBeNull();
+            invitation.InvitationId.Should().Be(generateInvitation.InvitationId);
+            invitation.GroupId.Should().Be(generateInvitation.GroupId);
+            invitation.Code.Should().MatchRegex("[a-zA-Z0-9]{8,8}");
+            invitation.ExpirationTime.Should().NotBeNull();
+            invitation.ExpirationTime.Period.Should().BeNull();
+            invitation.ExpirationTime.Start.Should().NotBe(default);
+            invitation.ExpirationTime.Type.Should().Be(ExpirationTimeTypeDto.Infinite);
+            invitation.UsageCounter.Should().NotBeNull();
+            invitation.UsageCounter.Value.Should().BeNull();
+            invitation.UsageCounter.Type.Should().Be(UsageCounterTypeDto.Infinite);
+
+            await sut.JoinGroup(user2.BearerToken(), invitation.Code);
+
+            var member = await sut.GetMember(user.BearerToken(), group.GroupId, user2.UserId());
+            member.Should().NotBeNull();
+            member.CreatedAt.Should().NotBe(default);
+            member.IsOwner.Should().BeFalse();
+            member.Name.Should().Be("user2");
+            member.UserId.Should().Be(user2.UserId());
+
+            await sut.AssignRole(
+                user.BearerToken(),
+                group.GroupId,
+                user2.UserId(),
+                new AssignRoleToMemberApiRequest(group.GroupId, user2.UserId(), createRole.RoleId)
+            );
+
+            var user2Roles = await sut.GetMemberRoles(user.BearerToken(), group.GroupId, user2.UserId());
+            user2Roles.Should().SatisfyRespectively(
+                x =>
+                {
+                    x.Name.Should().Be("role1");
+                    x.Priority.Should().Be(0);
+                    x.RoleId.Should().Be(createRole.RoleId);
+                },
+                x =>
+                {
+                    x.Name.Should().Be("@everyone");
+                    x.Priority.Should().Be(-1);
+                    x.RoleId.Should().NotBeEmpty();
+                }
+            );
 
             result = await sut.RemoveRole(user.BearerToken(), createRole.GroupId, createRole.RoleId);
             result.EnsureSuccessStatusCode();

@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.Create;
+using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
+using InstantMessenger.Groups.Api.Features.Invitations.JoinGroup;
 using InstantMessenger.Groups.Api.Features.Members.AssignRole;
 using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
@@ -129,5 +131,56 @@ namespace InstantMessenger.Groups.Api
             var result = await _facade.QueryAsync(new GetMemberRolesQuery(User.GetUserId(),groupId, memberUserId));
             return Ok(result);
         }
+
+        [HttpGet("{groupId}/members/{memberUserId}")]
+        public async Task<IActionResult> GetMember(Guid groupId, Guid memberUserId)
+        {
+            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,false,memberUserId));
+            return Ok(result.FirstOrDefault());
+        }
+
+        [HttpGet("{groupId}/members/me")]
+        public async Task<IActionResult> GetMember(Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,false,User.GetUserId()));
+            return Ok(result.FirstOrDefault());
+        }
+
+        [HttpGet("{groupId}/members")]
+        public async Task<IActionResult> GetMembers(Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,false));
+            return Ok(result);
+        }
+
+        [HttpPost("{groupId}/invitations")]
+        public async Task<IActionResult> GenerateInvitation(GenerateInvitationApiRequest request)
+        {
+            await _facade.SendAsync(
+                new GenerateInvitationCommand(
+                    User.GetUserId(),
+                    request.GroupId,
+                    request.InvitationId,
+                    request.ExpirationTime,
+                    request.UsageCounter
+                )
+            );
+            return Ok();
+        }
+
+        [HttpGet("{groupId}/invitations/{invitationId}")]
+        public async Task<IActionResult> GenerateInvitation(Guid groupId, Guid invitationId)
+        {
+            var result = await _facade.QueryAsync(new GetInvitationQuery(User.GetUserId(), invitationId));
+            return Ok(result);
+        }
+
+        [HttpPost("join/{code}")]
+        public async Task<IActionResult> JoinGroup(string code)
+        {
+            await _facade.SendAsync(new JoinGroupCommand(User.GetUserId(),code));
+            return Ok();
+        }
+
     }
 }

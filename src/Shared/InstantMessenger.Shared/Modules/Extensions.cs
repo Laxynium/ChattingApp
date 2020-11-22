@@ -43,7 +43,7 @@ namespace InstantMessenger.Shared.Modules
                             {
                                 var dispatcher = sp.GetService<IEventDispatcher>();
                                 return (Task) dispatcher.GetType()
-                                    .GetMethod(nameof(dispatcher.Publish))
+                                    .GetMethod(nameof(dispatcher.PublishAsync))
                                     .MakeGenericMethod(eventType)
                                     .Invoke(dispatcher, new[] {@event});
                             }

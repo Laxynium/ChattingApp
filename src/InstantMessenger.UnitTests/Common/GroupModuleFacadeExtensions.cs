@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using InstantMessenger.Groups;
 using InstantMessenger.Groups.Api.Features.Group.Create;
+using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Members.Add;
 using InstantMessenger.Groups.Api.Features.Members.AssignRole;
 using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
+using InstantMessenger.Groups.Api.Queries;
 
 namespace InstantMessenger.UnitTests.Common
 {
@@ -45,7 +47,7 @@ namespace InstantMessenger.UnitTests.Common
         private void AddRole(RoleDto role) => _group.AddRole(role);
 
         private void AddMember(MemberDto member) => _group.AddMember(member);
-
+        private void AddInvitation(InvitationDto invitation) => _group.AddInvitation(invitation);
         private void AddBuildAction(Func<Task> action) => _buildActions.Add(action);
 
         internal class AsUserBuilder
@@ -78,7 +80,25 @@ namespace InstantMessenger.UnitTests.Common
                 return new MemberBuilder(this,member);
             }
 
+            public AsUserBuilder CreateInvitation(ExpirationTimeCommandItem expirationTime, UsageCounterCommandItem usageCounter)
+            {
+                var invitation = new InvitationDto(Guid.NewGuid());
+                _builder.AddInvitation(invitation);
+                _builder.AddBuildAction(
+                    async () =>
+                    {
+                        await _facade.SendAsync(
+                            new GenerateInvitationCommand(_userIdContext, _group.GroupId, invitation.InvitationId, expirationTime, usageCounter)
+                        );
+                        var invitationDto = await _facade.QueryAsync(new GetInvitationQuery(_userIdContext, invitation.InvitationId));
+                        invitation.Code = invitationDto.Code;
+                    });
+
+                return this;
+            }
+
             public GroupBuilder Build() => _builder;
+
             private void AddBuildAction(Func<Task> action) => _builder.AddBuildAction(action);
 
             internal class RoleBuilder
@@ -135,6 +155,7 @@ namespace InstantMessenger.UnitTests.Common
         {
             private readonly List<RoleDto> _roles = new List<RoleDto>();
             private readonly List<MemberDto> _members = new List<MemberDto>();
+            private readonly List<InvitationDto> _invitations = new List<InvitationDto>();
             internal Guid OwnerId { get; }
             internal Guid GroupId { get; }
             internal string GroupName { get; }
@@ -148,6 +169,7 @@ namespace InstantMessenger.UnitTests.Common
 
             internal RoleDto Role(int i) => _roles[i-1];
             internal MemberDto Member(int i) => _members[i-1];
+            internal InvitationDto Invitation(int i) => _invitations[i-1];
             internal GroupDto AddRole(RoleDto role)
             {
                 _roles.Add(role);
@@ -156,6 +178,12 @@ namespace InstantMessenger.UnitTests.Common
             internal GroupDto AddMember(MemberDto member)
             {
                 _members.Add(member);
+                return this;
+            }
+
+            internal GroupDto AddInvitation(InvitationDto invitation)
+            {
+                _invitations.Add(invitation);
                 return this;
             }
         }
@@ -178,6 +206,16 @@ namespace InstantMessenger.UnitTests.Common
             internal MemberDto()
             {
                 UserId = Guid.NewGuid();
+            }
+        }
+
+        internal class InvitationDto
+        {
+            internal Guid InvitationId { get; }
+            internal string Code { get; set; }
+            public InvitationDto(Guid invitationId)
+            {
+                InvitationId = invitationId;
             }
         }
     }

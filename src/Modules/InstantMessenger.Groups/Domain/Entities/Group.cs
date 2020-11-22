@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.Exceptions;
+using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using NodaTime;
 
@@ -140,6 +142,24 @@ namespace InstantMessenger.Groups.Domain.Entities
             r.DecrementPriority();
             roleBelow.Value.IncrementPriority();
         });
+
+        public async Task<Invitation> GenerateInvitation(UserId userId, InvitationId invitationId, ExpirationTime expirationTime,
+            UsageCounter usageCounter, IUniqueInvitationCodeRule uniqueInvitationCodeRule)
+        {
+            var member = GetMember(userId);
+            if(!CanGenerateInvitation(member))
+                throw new InsufficientPermissionsException(member.UserId);
+
+            return await Invitation.Create(invitationId, Id, expirationTime, usageCounter, uniqueInvitationCodeRule);
+        }
+
+        private bool CanGenerateInvitation(Member member)
+        {
+            if (member.IsOwner)
+                return true;
+            var permissions = GetMemberPermissions(member);
+            return permissions.Has(Permission.Administrator, Permission.Invite);
+        }
 
         private void MoveRole(UserId userId, RoleId roleId, Action<Role> action)
         {
@@ -298,6 +318,11 @@ namespace InstantMessenger.Groups.Domain.Entities
         private void WithOwner(Member owner)
         {
             _members.Add(owner);
+        }
+
+        public bool ContainsMember(UserId userId)
+        {
+            return _members.Any(x => x.UserId == userId);
         }
     }
 }

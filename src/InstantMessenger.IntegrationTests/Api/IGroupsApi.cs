@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.Create;
+using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
@@ -51,5 +52,17 @@ namespace InstantMessenger.IntegrationTests.Api
 
         [Get("{groupId}/roles/{roleId}/permissions")]
         Task<List<PermissionDto>> GetRolePermissions([Header("Authorization")] string token, [Path] Guid groupId, [Path] Guid roleId);
+
+        [Post("{groupId}/invitations")]
+        Task<HttpResponseMessage> GenerateInvitation([Header("Authorization")] string token, [Path] Guid groupId, [Body]GenerateInvitationApiRequest request);
+
+        [Get("{groupId}/invitations/{invitationId}")]
+        Task<InvitationDto> GetInvitation([Header("Authorization")] string token, [Path] Guid groupId, [Path]Guid invitationId);
+
+        [Post("join/{code}")]
+        Task<HttpResponseMessage> JoinGroup([Header("Authorization")] string token, [Path] string code);
+
+        [Get("{groupId}/members/{userId}")]
+        Task<MemberDto> GetMember([Header("Authorization")] string token, [Path] Guid groupId, [Path]Guid userId);
     }
 }
