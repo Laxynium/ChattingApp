@@ -13,11 +13,11 @@ namespace InstantMessenger.Groups.Api.Features.Members.Kick
         public Guid GroupId { get; }
         public Guid UserIdOfMember { get; }
 
-        public KickMemberCommand(Guid userId, Guid groupId, Guid member)
+        public KickMemberCommand(Guid userId, Guid groupId, Guid userIdOfMember)
         {
             UserId = userId;
             GroupId = groupId;
-            UserIdOfMember = member;
+            UserIdOfMember = userIdOfMember;
         }
     }
 

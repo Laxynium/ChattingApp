@@ -5,6 +5,8 @@ using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Invitations.JoinGroup;
 using InstantMessenger.Groups.Api.Features.Members.AssignRole;
+using InstantMessenger.Groups.Api.Features.Members.Kick;
+using InstantMessenger.Groups.Api.Features.Members.LeaveGroup;
 using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
@@ -35,6 +37,12 @@ namespace InstantMessenger.Groups.Api
         public async Task<IActionResult> Post([FromBody]CreateGroupApiRequest request)
         {
             await _facade.SendAsync(new CreateGroupCommand(User.GetUserId(),request.GroupId, request.GroupName));
+            return Ok();
+        }
+        [HttpPost("{groupId}/leave")]
+        public async Task<IActionResult> Post(Guid groupId)
+        {
+            await _facade.SendAsync(new LeaveGroupCommand(User.GetUserId(),groupId));
             return Ok();
         }
 
@@ -109,6 +117,14 @@ namespace InstantMessenger.Groups.Api
             var result = await _facade.QueryAsync(new GetRolePermissionsQuery(groupId, roleId));
             return Ok(result);
         }
+
+        [HttpPost("{groupId}/members/{memberUserId}/kick")]
+        public async Task<IActionResult> Post(Guid groupId, Guid memberUserId)
+        {
+            await _facade.SendAsync(new KickMemberCommand(User.GetUserId(), groupId, memberUserId));
+            return Ok();
+        }
+
 
         [HttpPost("{groupId}/members/{memberUserId}/roles")]
         public async Task<IActionResult> Post(AssignRoleToMemberApiRequest request)
