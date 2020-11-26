@@ -13,6 +13,8 @@ namespace InstantMessenger.Groups.Domain.Entities
     public abstract class PermissionOverride : ValueObject
     {
         private readonly ImmutableHashSet<Permission> _validPermissions = ImmutableHashSet<Permission>.Empty
+            .Add(Permission.ManageRoles)
+            .Add(Permission.ManageChannels)
             .Add(Permission.AddReactions)
             .Add(Permission.EmbedLinks)
             .Add(Permission.AttachFiles)

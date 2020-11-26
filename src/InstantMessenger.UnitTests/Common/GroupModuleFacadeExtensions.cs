@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using InstantMessenger.Groups;
 using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
+using InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForMember;
 using InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForRole;
 using InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForRole;
 using InstantMessenger.Groups.Api.Features.Group.Create;
@@ -182,6 +183,12 @@ namespace InstantMessenger.UnitTests.Common
                 {
                     var role = _group.Role(roleNumber);
                     _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new AllowPermissionForRoleCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
+                    return this;
+                }
+                public ChannelBuilder AllowPermissionForMember(int memberNumber, string permission)
+                {
+                    var member = _group.Member(memberNumber);
+                    _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new AllowPermissionForMemberCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, member.UserId, permission)));
                     return this;
                 }
 

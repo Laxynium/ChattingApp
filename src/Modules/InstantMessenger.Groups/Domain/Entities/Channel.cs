@@ -24,6 +24,30 @@ namespace InstantMessenger.Groups.Domain.Entities
             Name = name;
         }
 
+        public Permissions CalculatePermissions(Member asMember, RoleId everyoneRole)
+        {
+            var permissions = Permissions.Empty();
+            var forEveryoneRole = _rolePermissionOverrides
+                .Where(x => x.RoleId == everyoneRole)
+                .Cast<PermissionOverride>()
+                .ToList();
+            permissions = Apply(forEveryoneRole, permissions);
+
+            var memberRolesSpecificOverrides = _rolePermissionOverrides
+                .Where(x => asMember.Roles.Contains(x.RoleId))
+                .Cast<PermissionOverride>()
+                .ToList();
+            permissions = Apply(memberRolesSpecificOverrides, permissions);
+
+            var memberSpecificOverrides = _memberPermissionOverrides
+                .Where(x => x.UserIdOfMember == asMember.UserId)
+                .Cast<PermissionOverride>()
+                .ToList();
+            permissions = Apply(memberSpecificOverrides, permissions);
+
+            return permissions;
+        }
+
         public Permissions CalculatePermissions(Permissions permissions, Member asMember, RoleId everyoneRole)
         {
             var forEveryoneRole = _rolePermissionOverrides

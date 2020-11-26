@@ -186,7 +186,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
         {
             var asMember = GetMember(userId);
-            if(!CanManageChannel(asMember, channel))
+            if(!CanApplyOverrideOnChannel(asMember, channel, permission))
                 throw new InsufficientPermissionsException(userId);
 
             var role = GetRole(roleId);
@@ -196,7 +196,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void DenyPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
         {
             var asMember = GetMember(userId);
-            if(!CanManageChannel(asMember,channel))
+            if(!CanApplyOverrideOnChannel(asMember,channel, permission))
                 throw new InsufficientPermissionsException(userId);
 
             channel.DenyPermission(GetRole(roleId), permission);
@@ -205,7 +205,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void DenyPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
         {
             var asMember = GetMember(userId);
-            if (!CanManageChannel(asMember, channel))
+            if (!CanApplyOverrideOnChannel(asMember, channel, permission))
                 throw new InsufficientPermissionsException(userId);
 
             channel.DenyPermission(GetMember(userIdOfMember), permission);
@@ -214,7 +214,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void AllowPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
         {
             var asMember = GetMember(userId);
-            if (!CanManageChannel(asMember, channel))
+            if (!CanApplyOverrideOnChannel(asMember, channel, permission))
                 throw new InsufficientPermissionsException(userId);
 
             channel.AllowPermission(GetMember(userIdOfMember), permission);
@@ -244,7 +244,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             var asMember = GetMember(userId);
             var onMember = GetMember(userIfOfMember);
 
-            if (!CanManageChannel(asMember, channel))
+            if (!CanApplyOverrideOnChannel(asMember, channel,permission))
                 throw new InsufficientPermissionsException(userId);
 
             channel.RemoveOverride(onMember, permission);
@@ -254,30 +254,27 @@ namespace InstantMessenger.Groups.Domain.Entities
             var asMember = GetMember(userId);
             var role = GetRole(roleId);
 
-            if (!CanManageChannel(asMember, channel))
+            if (!CanApplyOverrideOnChannel(asMember, channel, permission))
                 throw new InsufficientPermissionsException(userId);
 
             channel.RemoveOverride(role, permission);
         }
 
-        private bool CanManageChannel(Member asMember, Channel channel)
+        private bool CanApplyOverrideOnChannel(Member asMember, Channel channel, Permission permission)
         {
             if (asMember.IsOwner)
                 return true;
 
-            var permissions = GetMemberPermissions(asMember);
-            if (permissions.Has(Permission.Administrator))
+            var memberPermissions = GetMemberPermissions(asMember);
+            if (memberPermissions.Has(Permission.Administrator))
                 return true;
 
-
-            var everyoneRole = GetEverOneRole();
-            permissions = channel.CalculatePermissions(permissions, asMember, everyoneRole.Id);
-
-
-            if (permissions.Has(Permission.ManageChannels))
+            if (channel.CalculatePermissions(asMember, GetEverOneRole().Id).Has(Permission.ManageRoles))
                 return true;
 
-            return false;
+            var calculatedPermissions = channel.CalculatePermissions(memberPermissions, asMember, GetEverOneRole().Id);
+
+            return calculatedPermissions.Has(permission) && permission != Permission.ManageRoles;
         }
 
         private bool CanGenerateInvitation(Member member)
