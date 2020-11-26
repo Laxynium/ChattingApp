@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.Exceptions;
@@ -187,7 +186,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
         {
             var asMember = GetMember(userId);
-            if(!CanOverrideChannelPermissions(asMember, channel))
+            if(!CanManageChannel(asMember, channel))
                 throw new InsufficientPermissionsException(userId);
 
             var role = GetRole(roleId);
@@ -197,30 +196,71 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void DenyPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
         {
             var asMember = GetMember(userId);
-            if(!CanOverrideChannelPermissions(asMember,channel))
+            if(!CanManageChannel(asMember,channel))
                 throw new InsufficientPermissionsException(userId);
 
-            channel.DenyPermission(roleId, permission);
+            channel.DenyPermission(GetRole(roleId), permission);
+        }
+
+        public void DenyPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
+        {
+            var asMember = GetMember(userId);
+            if (!CanManageChannel(asMember, channel))
+                throw new InsufficientPermissionsException(userId);
+
+            channel.DenyPermission(GetMember(userIdOfMember), permission);
         }
 
         public void AllowPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
         {
             var asMember = GetMember(userId);
-            if (!CanOverrideChannelPermissions(asMember, channel))
+            if (!CanManageChannel(asMember, channel))
                 throw new InsufficientPermissionsException(userId);
 
-            channel.AllowPermission(userIdOfMember, permission);
+            channel.AllowPermission(GetMember(userIdOfMember), permission);
         }
-        public void DenyPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
+
+        public void RemoveChannel(UserId userId, Channel channel)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return;
+            var permissions = GetMemberPermissions(member);
+            if (permissions.Has(Permission.Administrator))
+                return;
+
+            var everyoneRole = GetEverOneRole();
+            permissions = channel.CalculatePermissions(permissions, member, everyoneRole.Id);
+
+
+            if (permissions.Has(Permission.ManageChannels))
+                return;
+
+            throw new InsufficientPermissionsException(userId);
+        }
+
+        public void RemoveOverride(UserId userId, Channel channel, Permission permission, UserId userIfOfMember)
         {
             var asMember = GetMember(userId);
-            if (!CanOverrideChannelPermissions(asMember, channel))
+            var onMember = GetMember(userIfOfMember);
+
+            if (!CanManageChannel(asMember, channel))
                 throw new InsufficientPermissionsException(userId);
 
-            channel.DenyPermission(userIdOfMember, permission);
+            channel.RemoveOverride(onMember, permission);
+        }
+        public void RemoveOverride(UserId userId, Channel channel, Permission permission, RoleId roleId)
+        {
+            var asMember = GetMember(userId);
+            var role = GetRole(roleId);
+
+            if (!CanManageChannel(asMember, channel))
+                throw new InsufficientPermissionsException(userId);
+
+            channel.RemoveOverride(role, permission);
         }
 
-        private bool CanOverrideChannelPermissions(Member asMember, Channel channel)
+        private bool CanManageChannel(Member asMember, Channel channel)
         {
             if (asMember.IsOwner)
                 return true;

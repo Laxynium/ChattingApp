@@ -27,13 +27,7 @@ namespace InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForMember
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId)) ??
                           throw new ChannelNotFoundException(ChannelId.From(command.ChannelId));
 
-            group.AllowPermission(
-                UserId.From(command.UserId),
-                channel,
-                UserId.From(command.MemberUserId),
-                Permission.FromName(command.Permission)
-            );
-
+            group.DenyPermission(UserId.From(command.UserId),channel,UserId.From(command.MemberUserId),Permission.FromName(command.Permission));
 
             await _unitOfWork.Commit();
         }

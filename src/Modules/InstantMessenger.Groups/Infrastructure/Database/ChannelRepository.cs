@@ -22,5 +22,11 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         public async Task<Channel> GetAsync(GroupId groupId, ChannelId channelId) 
             => await _context.Channels
                 .FirstOrDefaultAsync(x=>x.Id == channelId && x.GroupId == groupId);
+
+        public Task RemoveAsync(Channel channel)
+        {
+            _context.Remove(channel);
+            return Task.CompletedTask;
+        }
     }
 }

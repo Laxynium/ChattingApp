@@ -61,14 +61,24 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void AllowPermission(Role role, Permission permission) 
             => ReplaceOverride(new RolePermissionOverride(role.Id, permission, OverrideType.Allow));
 
-        public void DenyPermission(RoleId roleId, Permission permission) 
-            => ReplaceOverride(new RolePermissionOverride(roleId, permission, OverrideType.Deny));
+        public void DenyPermission(Role role, Permission permission) 
+            => ReplaceOverride(new RolePermissionOverride(role.Id, permission, OverrideType.Deny));
 
-        public void AllowPermission(UserId userIdOfMember, Permission permission) 
-            => ReplaceOverride(new MemberPermissionOverride(userIdOfMember, permission, OverrideType.Allow));
+        public void AllowPermission(Member member, Permission permission) 
+            => ReplaceOverride(new MemberPermissionOverride(member.UserId, permission, OverrideType.Allow));
 
-        public void DenyPermission(UserId memberId, Permission permission) 
-            => ReplaceOverride(new MemberPermissionOverride(memberId, permission, OverrideType.Deny));
+        public void DenyPermission(Member member, Permission permission) 
+            => ReplaceOverride(new MemberPermissionOverride(member.UserId, permission, OverrideType.Deny));
+
+        public void RemoveOverride(Member member, Permission permission) 
+            => RemoveOverride(_memberPermissionOverrides,_memberPermissionOverrides
+                .Where(x=>x.UserIdOfMember == member.UserId && x.Permission == permission)
+                .ToArray());
+
+        public void RemoveOverride(Role role, Permission permission) 
+            => RemoveOverride(_rolePermissionOverrides, _rolePermissionOverrides
+                .Where(x=>x.RoleId == role.Id && x.Permission == permission)
+                .ToArray());
 
         private void ReplaceOverride(RolePermissionOverride @override) => ReplaceOverride(_rolePermissionOverrides, @override);
 
@@ -82,6 +92,15 @@ namespace InstantMessenger.Groups.Domain.Entities
             }
 
             permissionOverrides.Add(@override);
+        }
+
+        private static void RemoveOverride<T>(ICollection<T> permissionOverrides, params T[] @overrides) where T : PermissionOverride
+        {
+            foreach (var @override in @overrides)
+            {
+                if (permissionOverrides.Contains(@override))
+                    permissionOverrides.Remove(@override);
+            }
         }
     }
 }

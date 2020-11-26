@@ -108,7 +108,7 @@ namespace InstantMessenger.UnitTests
                 .AsOwner()
                 .CreateRole("role1").Build()
                 .CreateRole("role2").AddPermission(correctPermission).Build()
-                .CreateMember().Build()
+                .CreateMember().AssignRole(1).Build()
                 .CreateMember().AssignRole(2).Build()
                 .Build().Build();
 

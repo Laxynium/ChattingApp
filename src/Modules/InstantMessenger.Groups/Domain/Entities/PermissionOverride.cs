@@ -15,7 +15,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         private readonly ImmutableHashSet<Permission> _validPermissions = ImmutableHashSet<Permission>.Empty
             .Add(Permission.AddReactions)
             .Add(Permission.EmbedLinks)
-            .Add(Permission.ManageChannels)
+            .Add(Permission.AttachFiles)
             .Add(Permission.MentionRoles)
             .Add(Permission.SendMessages)
             .Add(Permission.ReadMessages);
