@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using InstantMessenger.Groups;
+using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
+using InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForRole;
+using InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForRole;
 using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Members.Add;
@@ -48,6 +51,7 @@ namespace InstantMessenger.UnitTests.Common
 
         private void AddMember(MemberDto member) => _group.AddMember(member);
         private void AddInvitation(InvitationDto invitation) => _group.AddInvitation(invitation);
+        private void AddChannel(ChannelDto channel) => _group.AddChannel(channel);
         private void AddBuildAction(Func<Task> action) => _buildActions.Add(action);
 
         internal class AsUserBuilder
@@ -95,6 +99,16 @@ namespace InstantMessenger.UnitTests.Common
                     });
 
                 return this;
+            }
+
+            public ChannelBuilder CreateChannel(string channelName)
+            {
+                var channel = new ChannelDto(Guid.NewGuid());
+                _builder.AddChannel(channel);
+                _builder.AddBuildAction(
+                    async () => await _facade.SendAsync(new CreateChannelCommand(_userIdContext, _group.GroupId, channel.ChannelId, channelName))
+                );
+                return new ChannelBuilder(this,channel);
             }
 
             public GroupBuilder Build() => _builder;
@@ -148,6 +162,44 @@ namespace InstantMessenger.UnitTests.Common
 
                 public AsUserBuilder Build() => _builder;
             }
+
+            internal class ChannelBuilder
+            {
+                private readonly AsUserBuilder _builder;
+                private readonly ChannelDto _channel;
+                private readonly GroupDto _group;
+                private readonly GroupsModuleFacade _groupsModuleFacade;
+
+                public ChannelBuilder(AsUserBuilder builder, ChannelDto channel)
+                {
+                    _builder = builder;
+                    _channel = channel;
+                    _group = _builder._builder._group;
+                    _groupsModuleFacade = _builder._facade;
+                }
+
+                public ChannelBuilder AllowPermissionForRole(int roleNumber, string permission)
+                {
+                    var role = _group.Role(roleNumber);
+                    _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new AllowPermissionForRoleCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
+                    return this;
+                }
+
+                public ChannelBuilder DenyPermissionForRole(int roleNumber, string permission)
+                {
+                    var role = _group.Role(roleNumber);
+                    _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new DenyPermissionForRoleCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
+                    return this;
+                }
+                //public ChannelBuilder AllowPermissionForMember(string permission, Guid userIfOfMember)
+                //{
+                //    _builder.AddBuildAction(async () => await _groupsModuleFacade.AddPermission(_builder._userIdContext, _group.GroupId, _channel.RoleId, name));
+                //    return this;
+                //}
+
+                public AsUserBuilder Build() => _builder;
+            }
+
         }
 
 
@@ -156,6 +208,7 @@ namespace InstantMessenger.UnitTests.Common
             private readonly List<RoleDto> _roles = new List<RoleDto>();
             private readonly List<MemberDto> _members = new List<MemberDto>();
             private readonly List<InvitationDto> _invitations = new List<InvitationDto>();
+            private readonly List<ChannelDto> _channels = new List<ChannelDto>();
             internal Guid OwnerId { get; }
             internal Guid GroupId { get; }
             internal string GroupName { get; }
@@ -170,6 +223,7 @@ namespace InstantMessenger.UnitTests.Common
             internal RoleDto Role(int i) => _roles[i-1];
             internal MemberDto Member(int i) => _members[i-1];
             internal InvitationDto Invitation(int i) => _invitations[i-1];
+            internal ChannelDto Channel(int i) => _channels[i-1];
             internal GroupDto AddRole(RoleDto role)
             {
                 _roles.Add(role);
@@ -184,6 +238,11 @@ namespace InstantMessenger.UnitTests.Common
             internal GroupDto AddInvitation(InvitationDto invitation)
             {
                 _invitations.Add(invitation);
+                return this;
+            }
+            internal GroupDto AddChannel(ChannelDto invitation)
+            {
+                _channels.Add(invitation);
                 return this;
             }
         }
@@ -216,6 +275,15 @@ namespace InstantMessenger.UnitTests.Common
             public InvitationDto(Guid invitationId)
             {
                 InvitationId = invitationId;
+            }
+        }
+        internal class ChannelDto
+        {
+            internal Guid ChannelId { get; }
+            internal string Code { get; set; }
+            public ChannelDto(Guid channelId)
+            {
+                ChannelId = channelId;
             }
         }
     }

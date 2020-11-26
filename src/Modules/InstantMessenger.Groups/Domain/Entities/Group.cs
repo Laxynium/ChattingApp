@@ -18,7 +18,6 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         private readonly HashSet<Role> _roles = new HashSet<Role>();
         public IEnumerable<Role> Roles => _roles.ToList();
-
         public GroupName Name { get; }
         public DateTimeOffset CreatedAt { get; }
 
@@ -151,6 +150,94 @@ namespace InstantMessenger.Groups.Domain.Entities
                 throw new InsufficientPermissionsException(member.UserId);
 
             return await Invitation.Create(invitationId, Id, expirationTime, usageCounter, uniqueInvitationCodeRule);
+        }
+
+        public bool ContainsMember(UserId userId)
+        {
+            return _members.Any(x => x.UserId == userId);
+        }
+
+        public void LeaveGroup(UserId userId)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                throw new OwnerCannotLeaveGroupException();
+            _members.Remove(member);
+        }
+
+        public void KickMember(UserId userId, UserId userIdOfMember)
+        {
+            var asMember = GetMember(userId);
+            var onMember = GetMember(userIdOfMember);
+            if (!CanKickMember(asMember, onMember))
+                throw new InsufficientPermissionsException(userId);
+
+            _members.Remove(onMember);
+        }
+
+        public Channel CreateChannel(UserId userId, ChannelId channelId, ChannelName channelName)
+        {
+            if(!CanCreateChannel(userId))
+                throw new InsufficientPermissionsException(userId);
+
+            var channel = new Channel(channelId,this.Id, channelName);
+            return channel;
+        }
+
+        public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
+        {
+            var asMember = GetMember(userId);
+            if(!CanOverrideChannelPermissions(asMember, channel))
+                throw new InsufficientPermissionsException(userId);
+
+            var role = GetRole(roleId);
+
+            channel.AllowPermission(role, permission);
+        }
+        public void DenyPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
+        {
+            var asMember = GetMember(userId);
+            if(!CanOverrideChannelPermissions(asMember,channel))
+                throw new InsufficientPermissionsException(userId);
+
+            channel.DenyPermission(roleId, permission);
+        }
+
+        public void AllowPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
+        {
+            var asMember = GetMember(userId);
+            if (!CanOverrideChannelPermissions(asMember, channel))
+                throw new InsufficientPermissionsException(userId);
+
+            channel.AllowPermission(userIdOfMember, permission);
+        }
+        public void DenyPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
+        {
+            var asMember = GetMember(userId);
+            if (!CanOverrideChannelPermissions(asMember, channel))
+                throw new InsufficientPermissionsException(userId);
+
+            channel.DenyPermission(userIdOfMember, permission);
+        }
+
+        private bool CanOverrideChannelPermissions(Member asMember, Channel channel)
+        {
+            if (asMember.IsOwner)
+                return true;
+
+            var permissions = GetMemberPermissions(asMember);
+            if (permissions.Has(Permission.Administrator))
+                return true;
+
+
+            var everyoneRole = GetEverOneRole();
+            permissions = channel.CalculatePermissions(permissions, asMember, everyoneRole.Id);
+
+
+            if (permissions.Has(Permission.ManageChannels))
+                return true;
+
+            return false;
         }
 
         private bool CanGenerateInvitation(Member member)
@@ -320,29 +407,6 @@ namespace InstantMessenger.Groups.Domain.Entities
             _members.Add(owner);
         }
 
-        public bool ContainsMember(UserId userId)
-        {
-            return _members.Any(x => x.UserId == userId);
-        }
-
-        public void LeaveGroup(UserId userId)
-        {
-            var member = GetMember(userId);
-            if(member.IsOwner)
-                throw new OwnerCannotLeaveGroupException();
-            _members.Remove(member);
-        }
-
-        public void KickMember(UserId userId, UserId userIdOfMember)
-        {
-            var asMember = GetMember(userId);
-            var onMember = GetMember(userIdOfMember);
-            if(!CanKickMember(asMember, onMember))
-                throw new InsufficientPermissionsException(userId);
-
-            _members.Remove(onMember);
-        }
-
         private bool CanKickMember(Member asMember, Member onMember)
         {
             if (onMember.IsOwner)
@@ -362,6 +426,19 @@ namespace InstantMessenger.Groups.Domain.Entities
             var onMemberHighestRole = GetRoleWithHighestPriority(onMember);
 
             if (asMemberHighestRole.Priority <= onMemberHighestRole.Priority)
+                return false;
+
+            return true;
+        }
+
+        private bool CanCreateChannel(UserId userId)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return true;
+
+            var permissions = GetMemberPermissions(member);
+            if (!permissions.Has(Permission.Administrator, Permission.ManageChannels))
                 return false;
 
             return true;

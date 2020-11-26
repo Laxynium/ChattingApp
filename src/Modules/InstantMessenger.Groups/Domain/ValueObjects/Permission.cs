@@ -18,6 +18,8 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         public static readonly Permission EmbedLinks = new Permission(nameof(EmbedLinks), 0x400);
         public static readonly Permission AddReactions = new Permission(nameof(AddReactions), 0x800);
         public static readonly Permission MentionRoles = new Permission(nameof(MentionRoles), 0x1000);
+        public static readonly Permission ReadMessages = new Permission(nameof(ReadMessages), 0x2000);
+        public static readonly Permission SendMessages = new Permission(nameof(SendMessages), 0x4000);
 
         private Permission(string name, int value):base(name,value)
         {

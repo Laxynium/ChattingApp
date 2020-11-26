@@ -43,6 +43,7 @@ namespace InstantMessenger.Groups
                 .AddScoped<IGroupRepository, GroupRepository>()
                 .AddScoped<IInvitationRepository, InvitationRepository>()
                 .AddScoped<IUniqueInvitationCodeRule, UniqueInvitationCodeRule>()
+                .AddScoped<IChannelRepository, ChannelRepository>()
                 .AddScoped<IUnitOfWork,UnitOfWork>()
                 .AddSingleton<IClock>(x => SystemClock.Instance); ;
             return services;

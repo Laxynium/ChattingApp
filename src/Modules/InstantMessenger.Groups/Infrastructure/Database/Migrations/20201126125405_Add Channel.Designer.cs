@@ -4,14 +4,16 @@ using InstantMessenger.Groups.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(GroupsContext))]
-    partial class GroupsContextModelSnapshot : ModelSnapshot
+    [Migration("20201126125405_Add Channel")]
+    partial class AddChannel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

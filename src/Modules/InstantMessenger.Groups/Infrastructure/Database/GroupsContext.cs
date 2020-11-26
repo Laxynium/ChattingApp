@@ -10,6 +10,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
     {
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Invitation> Invitations { get; set; }
+        public virtual DbSet<Channel> Channels { get; set; }
         public GroupsContext(DbContextOptions<GroupsContext>options):base(options)
         {
             
@@ -20,6 +21,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
 
             BuildGroup(modelBuilder.Entity<Group>());
             BuildInvitation(modelBuilder.Entity<Invitation>());
+            Build(modelBuilder.Entity<Channel>());
         }
 
         private static void BuildInvitation(EntityTypeBuilder<Invitation> invitation)
@@ -151,6 +153,65 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                         .IsRequired();
                     r.Property(x => x.Permissions)
                         .HasConversion(x => x.Value, x => Permissions.From(x))
+                        .IsRequired();
+                }
+            );
+        }
+
+        private static void Build(EntityTypeBuilder<Channel> channel)
+        {
+            channel.ToTable("Channels");
+            channel.HasKey(x => x.Id);
+            channel.Property(x => x.Id)
+                .HasConversion(x => x.Value, x => ChannelId.From(x))
+                .ValueGeneratedNever()
+                .HasColumnName("ChannelId");
+
+            channel.Property(x => x.GroupId)
+                .HasConversion(x=>x.Value,x=>GroupId.From(x))
+                .IsRequired();
+
+            channel.HasOne<Group>()
+                .WithMany()
+                .HasForeignKey(x=>x.GroupId)
+                .IsRequired();
+
+            channel.Property(x => x.Name)
+                .HasConversion(x => x.Value, x => ChannelName.Create(x))
+                .IsRequired();
+
+            channel.Metadata.FindNavigation(nameof(Channel.MemberPermissionOverrides)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            channel.OwnsMany(
+                x => x.MemberPermissionOverrides,
+                b =>
+                {
+                    b.ToTable("ChannelMemberPermissionOverrides");
+                    b.HasKey(x => new {x.UserIdOfMember, x.Permission});
+                    b.Property(x => x.UserIdOfMember)
+                        .HasConversion(x=>x.Value,x=>UserId.From(x))
+                        .IsRequired();
+                    b.Property(x => x.Type).HasConversion<string>()
+                        .IsRequired();
+                    b.Property(x => x.Permission)
+                        .HasConversion(x => x.Name, x => Permission.FromName(x, true))
+                        .IsRequired();
+                }
+            );
+
+            channel.Metadata.FindNavigation(nameof(Channel.RolePermissionOverrides)).SetPropertyAccessMode(PropertyAccessMode.Field);
+            channel.OwnsMany(
+                x => x.RolePermissionOverrides,
+                b =>
+                {
+                    b.ToTable("ChannelRolePermissionOverrides");
+                    b.HasKey(x => new {x.RoleId, x.Permission});
+                    b.Property(x => x.RoleId)
+                        .HasConversion(x=>x.Value,x=>RoleId.From(x))
+                        .IsRequired();
+                    b.Property(x => x.Type).HasConversion<string>()
+                        .IsRequired();
+                    b.Property(x => x.Permission)
+                        .HasConversion(x => x.Name, x => Permission.FromName(x, true))
                         .IsRequired();
                 }
             );
