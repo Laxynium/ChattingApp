@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Repositories;
+using InstantMessenger.Groups.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Infrastructure.Database

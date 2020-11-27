@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Exceptions;
 
-namespace InstantMessenger.Groups.Domain.Entities
+namespace InstantMessenger.Groups.Domain.ValueObjects
 {
     public class InvitationCode : SimpleValueObject<string>
     {

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.Exceptions;
+using InstantMessenger.Groups.Domain.Messages.Entities;
+using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using NodaTime;
@@ -479,6 +481,33 @@ namespace InstantMessenger.Groups.Domain.Entities
                 return false;
 
             return true;
+        }
+
+        public Message SendMessage(UserId userId, Channel channel, MessageId messageId, MessageContent content, IClock clock)
+        {
+            var member = GetMember(userId);
+            if(!CanSendMessage(member, channel))
+                throw new InsufficientPermissionsException(userId);
+
+            var message = new Message(messageId, userId, Id, channel.Id, content,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+
+            return message;
+        }
+
+        private bool CanSendMessage(Member member, Channel channel)
+        {
+            if (member.IsOwner)
+                return true;
+            var permissions = GetMemberPermissions(member);
+            if (permissions.Has(Permission.Administrator))
+                return true;
+
+            permissions = channel.CalculatePermissions(permissions, member, GetEverOneRole().Id);
+
+            if (permissions.Has(Permission.SendMessages))
+                return true;
+
+            return false;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.Messages.Entities;
+using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,6 +13,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Invitation> Invitations { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
         public GroupsContext(DbContextOptions<GroupsContext>options):base(options)
         {
             
@@ -22,6 +25,42 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             BuildGroup(modelBuilder.Entity<Group>());
             BuildInvitation(modelBuilder.Entity<Invitation>());
             Build(modelBuilder.Entity<Channel>());
+            Build(modelBuilder.Entity<Message>());
+        }
+
+        private static void Build(EntityTypeBuilder<Message> message)
+        {
+            message.HasKey(x => x.Id);
+            message.Property(x => x.Id)
+                .ValueGeneratedNever()
+                .HasConversion(x=>x.Value,x=>MessageId.From(x))
+                .IsRequired()
+                .HasColumnName("MessageId");
+            
+            message.Property(x => x.GroupId)
+                .HasConversion(x => x.Value, x => GroupId.From(x))
+                .IsRequired();
+            message.HasOne<Group>()
+                .WithMany()
+                .IsRequired()
+                .HasForeignKey(x => x.GroupId);
+
+            message.Property(x => x.ChannelId)
+                .HasConversion(x => x.Value, x => ChannelId.From(x))
+                .IsRequired();
+            message.HasOne<Channel>()
+                .WithMany()
+                .IsRequired()
+                .HasForeignKey(x => x.ChannelId);
+
+            message.Property(x => x.From)
+                .HasConversion(x => x.Value, x => UserId.From(x))
+                .IsRequired();
+
+            message.Property(x => x.CreatedAt).IsRequired();
+            message.Property(x => x.Content)
+                .HasConversion(x=>x.Value,x=>new MessageContent(x))
+                .IsRequired();
         }
 
         private static void BuildInvitation(EntityTypeBuilder<Invitation> invitation)

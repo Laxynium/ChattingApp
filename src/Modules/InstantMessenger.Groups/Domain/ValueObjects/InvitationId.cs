@@ -1,7 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
 
-namespace InstantMessenger.Groups.Domain.Entities
+namespace InstantMessenger.Groups.Domain.ValueObjects
 {
     public class InvitationId :SimpleValueObject<Guid>
     {

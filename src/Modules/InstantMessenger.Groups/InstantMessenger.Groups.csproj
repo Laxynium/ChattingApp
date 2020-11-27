@@ -44,7 +44,6 @@
     <Folder Include="Api\Features\Messages\AddReaction\" />
     <Folder Include="Api\Features\Channel\EditChannel\" />
     <Folder Include="Api\Features\Messages\EmbedLink\" />
-    <Folder Include="Api\Features\Messages\SendMessage\" />
   </ItemGroup>
 
 </Project>

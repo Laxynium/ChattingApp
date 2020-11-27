@@ -1,5 +1,6 @@
 ﻿using InstantMessenger.Groups.Api;
 using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Infrastructure.Database;
@@ -44,6 +45,7 @@ namespace InstantMessenger.Groups
                 .AddScoped<IInvitationRepository, InvitationRepository>()
                 .AddScoped<IUniqueInvitationCodeRule, UniqueInvitationCodeRule>()
                 .AddScoped<IChannelRepository, ChannelRepository>()
+                .AddScoped<IMessageRepository, MessageRepository>()
                 .AddScoped<IUnitOfWork,UnitOfWork>()
                 .AddSingleton<IClock>(x => SystemClock.Instance); ;
             return services;
