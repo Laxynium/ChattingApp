@@ -9,6 +9,7 @@ import {
 
 const initialState: IdentityStateInterface = {
   isSubmitting: false,
+  activationCodeSend: false,
 };
 
 const identityReducer = createReducer(
@@ -25,6 +26,7 @@ const identityReducer = createReducer(
     (state, action): IdentityStateInterface => ({
       ...state,
       isSubmitting: false,
+      activationCodeSend: true,
     })
   ),
   on(
@@ -32,6 +34,7 @@ const identityReducer = createReducer(
     (state): IdentityStateInterface => ({
       ...state,
       isSubmitting: false,
+      activationCodeSend: false,
     })
   )
 );

@@ -35,6 +35,7 @@ namespace InstantMessenger.Api
             app.UseRouting();
             app.UseIdentityModule()
                 .UseSharedModule();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -26,9 +26,25 @@ namespace InstantMessenger.Identity
         public static IServiceCollection AddIdentityModule(this IServiceCollection services)
         {
             var options = services.GetOptions<IdentityOptions>(nameof(IdentityOptions));
+            services.AddSingleton(options);
             services.AddControllers()
                 .AddControllersAsServices()
                 .AddNewtonsoftJson();
+
+            services.AddCors(
+                c =>
+                {
+                    c.AddDefaultPolicy(
+                        x =>
+                        {
+                            x.AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowAnyOrigin()
+                                .SetIsOriginAllowedToAllowWildcardSubdomains();
+                        }
+                    );
+                }
+            );
 
             services.AddAuthentication(
                 o =>
@@ -76,6 +92,7 @@ namespace InstantMessenger.Identity
                 .AddSingleton<IPasswordHasher<User>>(s => new PasswordHasher<User>())
                 .AddTransient<IAuthTokenService, AuthTokenService>()
                 .AddTransient<IAuthTokensCache, AuthTokensCache>()
+                .AddScoped<ActivationLinkGenerator>()
                 .AddSingleton(options);
 
             return services;
@@ -83,6 +100,8 @@ namespace InstantMessenger.Identity
 
         public static IApplicationBuilder UseIdentityModule(this IApplicationBuilder app)
         {
+            app.UseCors();
+
             app.UseAuthentication(); 
             app.UseAuthorization();
             app.UseModuleRequests()

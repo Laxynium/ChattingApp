@@ -22,6 +22,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
         private readonly RandomStringGenerator _stringGenerator;
         private readonly LinkGenerator _linkGenerator;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ActivationLinkGenerator _generator;
         private readonly IMailService _mailService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly MailOptions _mailOptions;
@@ -34,6 +35,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             RandomStringGenerator stringGenerator,
             LinkGenerator linkGenerator,
             IHttpContextAccessor contextAccessor,
+            ActivationLinkGenerator generator,
             IMailService mailService,
             IUnitOfWork unitOfWork,
             MailOptions mailOptions)
@@ -45,6 +47,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             _stringGenerator = stringGenerator;
             _linkGenerator = linkGenerator;
             _contextAccessor = contextAccessor;
+            _generator = generator;
             _mailService = mailService;
             _unitOfWork = unitOfWork;
             _mailOptions = mailOptions;
@@ -55,15 +58,13 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             
             await _userRepository.AddAsync(user);
 
-
             var randomString = _stringGenerator.Generate(30);
-
-            var url = _linkGenerator.GetUriByAction(_contextAccessor.HttpContext, "Activate", "Identity", new { userId = user.Id, token = randomString });
 
             var activationLink = ActivationLink.Create(user.Id, randomString);
 
             await _activationLinkRepository.AddAsync(activationLink);
 
+            var url = _generator.Generate(user.Id, randomString);
 
             var message = BuildMessage(user, url);
 
