@@ -38,6 +38,10 @@ namespace InstantMessenger.Identity.Domain.Entities
 
         public async Task Activate(ActivationLink link, string token, Nickname nickname, IUniqueNicknameRule rule)
         {
+            if (IsVerified)
+            {
+                throw new InvalidVerificationTokenException();
+            }
             if (!link.Verify(token))
             {
                 throw new InvalidVerificationTokenException();

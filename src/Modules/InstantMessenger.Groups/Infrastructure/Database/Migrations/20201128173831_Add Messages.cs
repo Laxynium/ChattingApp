@@ -14,7 +14,6 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                 {
                     MessageId = table.Column<Guid>(nullable: false),
                     From = table.Column<Guid>(nullable: false),
-                    GroupId = table.Column<Guid>(nullable: false),
                     ChannelId = table.Column<Guid>(nullable: false),
                     Content = table.Column<string>(nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false)
@@ -29,13 +28,6 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                         principalTable: "Channels",
                         principalColumn: "ChannelId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalSchema: "Groups",
-                        principalTable: "Groups",
-                        principalColumn: "GroupId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -43,12 +35,6 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                 schema: "Groups",
                 table: "Messages",
                 column: "ChannelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_GroupId",
-                schema: "Groups",
-                table: "Messages",
-                column: "GroupId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

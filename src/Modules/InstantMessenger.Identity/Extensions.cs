@@ -5,6 +5,7 @@ using InstantMessenger.Identity.Api.Queries;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.Rules;
+using InstantMessenger.Identity.Infrastructure;
 using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MailKit;
@@ -67,6 +68,7 @@ namespace InstantMessenger.Identity
             );
             services
                 .AddCommandHandlers()
+                .Decorate(typeof(ICommandHandler<>),typeof(CommandHandlerTransactionDecorator<>))
                 .AddCommandDispatcher()
                 .AddQueryHandlers()
                 .AddQueryDispatcher()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
@@ -8,15 +9,27 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InstantMessenger.Groups.Infrastructure.Database
 {
-    public class GroupsContext : DbContext
+    public interface IQueryGroupContext
+    {
+        IQueryable<Group> GroupsQuery { get; }
+        IQueryable<Invitation> InvitationsQuery { get; }
+        IQueryable<Channel> ChannelsQuery { get; }
+        IQueryable<Message> MessagesQuery { get; }
+    }
+    public class GroupsContext : DbContext, IQueryGroupContext
     {
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Invitation> Invitations { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
+
+        public IQueryable<Group> GroupsQuery => Groups.AsNoTracking();
+        public IQueryable<Invitation> InvitationsQuery => Invitations.AsNoTracking();
+        public IQueryable<Channel> ChannelsQuery => Channels.AsNoTracking();
+        public IQueryable<Message> MessagesQuery => Messages.AsNoTracking();
+
         public GroupsContext(DbContextOptions<GroupsContext>options):base(options)
         {
-            
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,21 +50,15 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                 .IsRequired()
                 .HasColumnName("MessageId");
             
-            message.Property(x => x.GroupId)
-                .HasConversion(x => x.Value, x => GroupId.From(x))
-                .IsRequired();
-            message.HasOne<Group>()
-                .WithMany()
-                .IsRequired()
-                .HasForeignKey(x => x.GroupId);
-
             message.Property(x => x.ChannelId)
-                .HasConversion(x => x.Value, x => ChannelId.From(x))
+                .HasConversion(x => x.Value, 
+                    x => ChannelId.From(x))
                 .IsRequired();
             message.HasOne<Channel>()
                 .WithMany()
+                .HasForeignKey(x => x.ChannelId)
                 .IsRequired()
-                .HasForeignKey(x => x.ChannelId);
+                .OnDelete(DeleteBehavior.Cascade);
 
             message.Property(x => x.From)
                 .HasConversion(x => x.Value, x => UserId.From(x))

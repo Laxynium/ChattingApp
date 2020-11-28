@@ -17,6 +17,14 @@
     <Compile Remove="Infrastructure\Database\Migrations\20201126114917_Add Channel.Designer.cs" />
     <Compile Remove="Infrastructure\Database\Migrations\20201126115348_Add Channel.cs" />
     <Compile Remove="Infrastructure\Database\Migrations\20201126115348_Add Channel.Designer.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201127134712_Add Messages.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201127134712_Add Messages.Designer.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201128173249_Add Messages Fix.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201128173249_Add Messages Fix.Designer.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201128173428_Add Messages Fix.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201128173428_Add Messages Fix.Designer.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201128173641_Add Messages Fix.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201128173641_Add Messages Fix.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

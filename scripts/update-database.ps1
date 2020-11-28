@@ -1,6 +1,8 @@
-
-Update-Database -Project Modules\InstantMessenger.Identity -StartupProject InstantMessenger.Api -Verbose -Context IdentityContext
-Update-Database -Project Modules\InstantMessenger.Profiles -StartupProject InstantMessenger.Api -Verbose -Context ProfilesContext
-Update-Database -Project Modules\InstantMessenger.Friendships -StartupProject InstantMessenger.Api -Verbose -Context FriendshipsContext
-Update-Database -Project Modules\InstantMessenger.PrivateMessages -StartupProject InstantMessenger.Api -Verbose -Context PrivateMessagesContext
-Update-Database -Project Modules\InstantMessenger.Groups -StartupProject InstantMessenger.Api -Verbose -Context GroupsContext
+$projects = @(
+    @{project="Identity";context="IdentityContext"}
+    @{project="Profiles";context="ProfilesContext"}
+    @{project="Friendships";context="FriendshipsContext"}
+    @{project="PrivateMessages";context="PrivateMessagesContext"},
+    @{project="Groups";context="GroupsContext"}
+)
+foreach ($project in $projects) { Update-Database -Project "Modules\InstantMessenger.$($project.project)" -StartupProject InstantMessenger.Api -Verbose -Context "$($project.context)"}

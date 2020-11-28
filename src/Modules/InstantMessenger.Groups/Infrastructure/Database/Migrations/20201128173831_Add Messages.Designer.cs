@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(GroupsContext))]
-    [Migration("20201127134712_Add Messages")]
+    [Migration("20201128173831_Add Messages")]
     partial class AddMessages
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,14 +101,9 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                     b.Property<Guid>("From")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ChannelId");
-
-                    b.HasIndex("GroupId");
 
                     b.ToTable("Messages");
                 });
@@ -336,12 +331,6 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                     b.HasOne("InstantMessenger.Groups.Domain.Entities.Channel", null)
                         .WithMany()
                         .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InstantMessenger.Groups.Domain.Entities.Group", null)
-                        .WithMany()
-                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

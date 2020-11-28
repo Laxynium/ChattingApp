@@ -489,7 +489,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             if(!CanSendMessage(member, channel))
                 throw new InsufficientPermissionsException(userId);
 
-            var message = new Message(messageId, userId, Id, channel.Id, content,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+            var message = new Message(messageId, userId, channel.Id, content,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
 
             return message;
         }

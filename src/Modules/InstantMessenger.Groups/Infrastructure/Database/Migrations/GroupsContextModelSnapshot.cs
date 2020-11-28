@@ -99,14 +99,9 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                     b.Property<Guid>("From")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ChannelId");
-
-                    b.HasIndex("GroupId");
 
                     b.ToTable("Messages");
                 });
@@ -334,12 +329,6 @@ namespace InstantMessenger.Groups.Infrastructure.Database.Migrations
                     b.HasOne("InstantMessenger.Groups.Domain.Entities.Channel", null)
                         .WithMany()
                         .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InstantMessenger.Groups.Domain.Entities.Group", null)
-                        .WithMany()
-                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -13,14 +13,12 @@ namespace InstantMessenger.Identity.Api.Features.PasswordReset
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAuthTokenService _tokenService;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ResetPasswordHandler(IUserRepository userRepository, IPasswordHasher<User> passwordHasher, IAuthTokenService tokenService, IUnitOfWork unitOfWork)
+        public ResetPasswordHandler(IUserRepository userRepository, IPasswordHasher<User> passwordHasher, IAuthTokenService tokenService)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _tokenService = tokenService;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(ResetPasswordCommand command)
         {
@@ -42,8 +40,6 @@ namespace InstantMessenger.Identity.Api.Features.PasswordReset
             }
 
             user.ChangePassword(Password.Create(command.Password), _passwordHasher);
-
-            await _unitOfWork.Commit();
         }
     }
 }

@@ -6,9 +6,7 @@ using InstantMessenger.Identity.Domain.ValueObjects;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MailKit;
 using InstantMessenger.Shared.MailKit.Builders;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using MimeKit;
 
 namespace InstantMessenger.Identity.Api.Features.SignUp
@@ -20,11 +18,8 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
         private readonly IUniqueEmailRule _uniqueEmailRule;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly RandomStringGenerator _stringGenerator;
-        private readonly LinkGenerator _linkGenerator;
-        private readonly IHttpContextAccessor _contextAccessor;
         private readonly ActivationLinkGenerator _generator;
         private readonly IMailService _mailService;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly MailOptions _mailOptions;
 
         public SignUpHandler(
@@ -33,11 +28,8 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             IUniqueEmailRule uniqueEmailRule, 
             IPasswordHasher<User> passwordHasher,
             RandomStringGenerator stringGenerator,
-            LinkGenerator linkGenerator,
-            IHttpContextAccessor contextAccessor,
             ActivationLinkGenerator generator,
             IMailService mailService,
-            IUnitOfWork unitOfWork,
             MailOptions mailOptions)
         {
             _userRepository = userRepository;
@@ -45,11 +37,8 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             _uniqueEmailRule = uniqueEmailRule;
             _passwordHasher = passwordHasher;
             _stringGenerator = stringGenerator;
-            _linkGenerator = linkGenerator;
-            _contextAccessor = contextAccessor;
             _generator = generator;
             _mailService = mailService;
-            _unitOfWork = unitOfWork;
             _mailOptions = mailOptions;
         }
         public async Task HandleAsync(SignUpCommand request)
@@ -69,8 +58,6 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             var message = BuildMessage(user, url);
 
             await _mailService.SendAsync(message);
-
-            await _unitOfWork.Commit();
         }
 
         private MimeMessage BuildMessage(User user, string url) => IMessageBuilder.Create()
