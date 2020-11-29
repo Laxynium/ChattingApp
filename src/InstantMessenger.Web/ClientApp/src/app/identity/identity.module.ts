@@ -11,6 +11,9 @@ import {IdentityService} from './services/identity.service';
 import {reducers} from './store/reducers';
 import {SignUpEffect} from 'src/app/identity/store/effects/signUp.effect';
 import {ActivationComponent} from 'src/app/identity/components/activation/activation.component';
+import {ActivateEffect} from 'src/app/identity/store/effects/activate.effect';
+import {SignInEffect} from 'src/app/identity/store/effects/signIn.effect';
+import {PersistanceService} from '../shared/services/persistance.service';
 
 const routes = [
   {path: 'sign-in', component: LoginComponent},
@@ -26,8 +29,8 @@ const routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('identity', reducers),
-    EffectsModule.forFeature([SignUpEffect]),
+    EffectsModule.forFeature([SignUpEffect, ActivateEffect, SignInEffect]),
   ],
-  providers: [IdentityService],
+  providers: [IdentityService, PersistanceService],
 })
 export class IdentityModule {}

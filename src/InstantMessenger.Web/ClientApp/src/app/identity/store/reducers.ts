@@ -2,6 +2,16 @@ import {Action, createReducer, on} from '@ngrx/store';
 
 import {IdentityStateInterface} from '../types/identityState.interface';
 import {
+  activateAction,
+  activateSuccessAction,
+  activateFailureAction,
+} from './actions/activate.actions';
+import {
+  signInAction,
+  signInSuccessAction,
+  signInFailureAction,
+} from './actions/signIn.actions';
+import {
   signUpAction,
   signUpFailureAction,
   signUpSuccessAction,
@@ -9,7 +19,7 @@ import {
 
 const initialState: IdentityStateInterface = {
   isSubmitting: false,
-  activationCodeSend: false,
+  currentUser: null,
 };
 
 const identityReducer = createReducer(
@@ -23,10 +33,9 @@ const identityReducer = createReducer(
   ),
   on(
     signUpSuccessAction,
-    (state, action): IdentityStateInterface => ({
+    (state): IdentityStateInterface => ({
       ...state,
       isSubmitting: false,
-      activationCodeSend: true,
     })
   ),
   on(
@@ -34,7 +43,51 @@ const identityReducer = createReducer(
     (state): IdentityStateInterface => ({
       ...state,
       isSubmitting: false,
-      activationCodeSend: false,
+    })
+  ),
+
+  on(
+    activateAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: true,
+    })
+  ),
+  on(
+    activateSuccessAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: false,
+    })
+  ),
+  on(
+    activateFailureAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: false,
+    })
+  ),
+
+  on(
+    signInAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: true,
+    })
+  ),
+  on(
+    signInSuccessAction,
+    (state, action): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: false,
+      currentUser: action.currentUser,
+    })
+  ),
+  on(
+    signInFailureAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: false,
     })
   )
 );

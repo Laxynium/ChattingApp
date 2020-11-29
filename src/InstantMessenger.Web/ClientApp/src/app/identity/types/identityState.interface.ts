@@ -1,4 +1,5 @@
+import {CurrentUserInterface} from '../../shared/types/currentUser.interface';
 export interface IdentityStateInterface {
   isSubmitting: boolean;
-  activationCodeSend: boolean;
+  currentUser: CurrentUserInterface | null;
 }

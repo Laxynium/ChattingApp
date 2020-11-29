@@ -2,12 +2,40 @@
   <div>
     <div>
       <h2>Activate account</h2>
-      <p>Thank you for registration.
-        Please activate an account to login.</p>
+      <p>Thank you for registration. Please activate an account to login.</p>
     </div>
 
     <div class="mt-5">
-      <button class="btn btn-primary">Activate Account</button>
+      <form [formGroup]="form" (ngSubmit)="onActivate()">
+        <div class="form-group">
+          <label for="nickname">Nickname</label>
+          <input
+            name="nickname"
+            type="text"
+            class="form-control"
+            formControlName="nickname"
+          />
+          <div
+            *ngIf="nickname.invalid && (nickname.dirty || nickname.touched)"
+            class="text-danger"
+          >
+            <div *ngIf="nickname.errors.required">Nickname is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <button
+            class="btn btn-primary"
+            [disabled]="!form.valid || (isSubmitting$ | async)"
+            type="submit"
+          >
+            Activate Account
+          </button>
+          <img
+            *ngIf="isSubmitting$ | async"
+            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+          />
+        </div>
+      </form>
     </div>
   </div>
 </div>

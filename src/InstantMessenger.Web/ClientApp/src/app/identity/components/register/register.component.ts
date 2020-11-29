@@ -11,7 +11,6 @@ import * as R from 'ramda';
 import {Observable} from 'rxjs';
 import {signUpAction} from 'src/app/identity/store/actions/signUp.actions';
 import {isSubmittingSelector} from 'src/app/identity/store/selectors';
-import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 
 export const passwordMismatch: ValidatorFn = (
   form: FormGroup

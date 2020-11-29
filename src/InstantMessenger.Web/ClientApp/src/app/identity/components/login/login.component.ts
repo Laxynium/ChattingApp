@@ -1,5 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ToastService} from '../../../shared/toasts/toast.service';
+import {select, Store} from '@ngrx/store';
+import {signInAction} from '../../store/actions/signIn.actions';
+import {Observable} from 'rxjs';
+import {isSubmittingSelector} from '../../store/selectors';
 
 @Component({
   selector: 'app-login',
@@ -8,19 +13,32 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  isSubmitting$: Observable<boolean>;
+  constructor(private fb: FormBuilder, private store: Store) {}
   ngOnInit(): void {
     this.initializeForm();
     this.initializeValues();
   }
-  initializeValues() {}
+  initializeValues() {
+    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+  }
   initializeForm() {
     this.form = this.fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.required],
     });
   }
-  onSubmit() {}
+  onSubmit() {
+    const data = this.form.value;
+    this.store.dispatch(
+      signInAction({
+        request: {
+          email: data.email,
+          password: data.password,
+        },
+      })
+    );
+  }
   get email() {
     return this.form.get('email');
   }
