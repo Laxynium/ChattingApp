@@ -20,5 +20,5 @@ export const validPassword: ValidatorFn = (
   control: FormControl
 ): ValidationErrors | null => {
   const passwordRegex = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
-  return Validators.pattern(passwordRegex);
+  return Validators.pattern(passwordRegex)(control);
 };
