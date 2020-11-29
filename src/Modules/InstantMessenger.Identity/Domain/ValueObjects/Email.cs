@@ -13,7 +13,7 @@ namespace InstantMessenger.Identity.Domain.ValueObjects
         {
             if (!IsValid(value))
             {
-                throw new InvalidEmailException();
+                throw new InvalidEmailException(value);
             }
 
             var email = new Email(value);

@@ -102,8 +102,8 @@ namespace InstantMessenger.Identity
 
         public static IApplicationBuilder UseIdentityModule(this IApplicationBuilder app)
         {
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseCors();
-
             app.UseAuthentication(); 
             app.UseAuthorization();
             app.UseModuleRequests()

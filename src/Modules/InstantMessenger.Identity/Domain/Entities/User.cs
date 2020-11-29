@@ -30,7 +30,7 @@ namespace InstantMessenger.Identity.Domain.Entities
         public static async Task<User> Create(Email email, Password password, IUniqueEmailRule rule, IPasswordHasher<User> hasher)
         {
             if(!await rule.IsMet(email))
-                throw new EmailNotUniqueException();
+                throw new EmailNotUniqueException(email);
 
             var hash = hasher.HashPassword(null, password.Value);
             return new User(Guid.NewGuid(), email, hash, false);
@@ -49,7 +49,7 @@ namespace InstantMessenger.Identity.Domain.Entities
 
             if (!await rule.IsMeet(nickname))
             {
-                throw new NicknameInUseException();
+                throw new NicknameInUseException(nickname);
             }
 
             IsVerified = true;
@@ -66,7 +66,7 @@ namespace InstantMessenger.Identity.Domain.Entities
         {
             if (!await rule.IsMeet(nickname))
             {
-                throw new NicknameInUseException();
+                throw new NicknameInUseException(nickname);
             }
 
             Nickname = nickname;

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Identity.Domain.Entities;
+using InstantMessenger.Identity.Domain.Exceptions;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Shared.Commands;
 using Microsoft.AspNetCore.Identity;
