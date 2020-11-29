@@ -4,7 +4,8 @@ import {ToastService} from '../../../shared/toasts/toast.service';
 import {select, Store} from '@ngrx/store';
 import {signInAction} from '../../store/actions/signIn.actions';
 import {Observable} from 'rxjs';
-import {isSubmittingSelector} from '../../store/selectors';
+import {isSubmittingSelector, currentUser} from '../../store/selectors';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,18 @@ import {isSubmittingSelector} from '../../store/selectors';
 export class LoginComponent implements OnInit {
   form: FormGroup;
   isSubmitting$: Observable<boolean>;
-  constructor(private fb: FormBuilder, private store: Store) {}
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    store.pipe(select(currentUser)).subscribe((x) => {
+      if (x) {
+        this.router.navigateByUrl('/');
+      }
+    });
+  }
   ngOnInit(): void {
     this.initializeForm();
     this.initializeValues();

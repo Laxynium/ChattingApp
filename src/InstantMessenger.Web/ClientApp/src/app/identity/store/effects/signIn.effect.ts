@@ -43,7 +43,7 @@ export class SignInEffect {
           this.toastService.showSuccess('You have successfully logged in');
         }),
         tap((x) => {
-          this.persistanceService.set('accessToken', x.currentUser.token);
+          this.persistanceService.set('currentUser', x.currentUser);
         })
       ),
     {dispatch: false}

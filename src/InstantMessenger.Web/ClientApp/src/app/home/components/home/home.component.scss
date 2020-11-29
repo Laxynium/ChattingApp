@@ -1,0 +1,67 @@
+.home {
+  display: flex;
+  height: 100%;
+  .menu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 25rem;
+    min-width: 15rem;
+    flex: 0 1 auto;
+    .bottom {
+      text-align: center;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-items: flex-end;
+      flex-grow: 0;
+
+      .nickname {
+        text-align: left;
+        font-size: 25px;
+        flex-grow: 1;
+      }
+
+      .sign-out {
+        justify-self: flex-end;
+      }
+    }
+    .content {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      flex-direction: column;
+      display: flex;
+      overflow-y: auto;
+    }
+
+    .user-img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  .main {
+    padding-left: 2px;
+    width: 100%;
+    flex: 1 1 auto;
+    position: relative;
+  }
+}
+
+.spinner {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.chat-wrapper {
+  height: 100%;
+  width: 100%;
+}
+.overflow-auto {
+  overflow-y: auto;
+}
+.menu-toggle {
+  z-index: 100;
+}

@@ -11,3 +11,8 @@ export const isSubmittingSelector = createSelector(
   identityFeatureSelector,
   (identityState: IdentityStateInterface) => identityState.isSubmitting
 );
+
+export const currentUser = createSelector(
+  identityFeatureSelector,
+  (state: IdentityStateInterface) => state.currentUser
+);

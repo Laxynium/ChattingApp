@@ -17,6 +17,7 @@ import {PersistanceService} from '../shared/services/persistance.service';
 import {ForgotPasswordComponent} from './components/forgot-password/forgot-password.component';
 import {ForgotPasswordEffect} from 'src/app/identity/store/effects/forgotPassword.effect';
 import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
+import {getMetaReducers} from 'src/app/identity/store/meta.reducers';
 
 const routes = [
   {path: 'sign-in', component: LoginComponent},
@@ -24,7 +25,7 @@ const routes = [
   {path: 'identity/activate', component: ActivationComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
   {path: 'identity/reset-password', component: ResetPasswordComponent},
-  {path: '**', redirectTo: '/sign-in'},
+  // {path: '**', redirectTo: '/sign-in'},
 ];
 
 @NgModule({
@@ -39,7 +40,9 @@ const routes = [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    StoreModule.forFeature('identity', reducers),
+    StoreModule.forFeature('identity', reducers, {
+      metaReducers: getMetaReducers(),
+    }),
     EffectsModule.forFeature([
       SignUpEffect,
       ActivateEffect,
