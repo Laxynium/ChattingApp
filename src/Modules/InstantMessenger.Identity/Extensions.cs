@@ -94,7 +94,7 @@ namespace InstantMessenger.Identity
                 .AddSingleton<IPasswordHasher<User>>(s => new PasswordHasher<User>())
                 .AddTransient<IAuthTokenService, AuthTokenService>()
                 .AddTransient<IAuthTokensCache, AuthTokensCache>()
-                .AddScoped<ActivationLinkGenerator>()
+                .AddScoped<LinkGenerator>()
                 .AddSingleton(options);
 
             return services;

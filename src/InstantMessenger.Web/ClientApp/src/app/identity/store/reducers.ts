@@ -2,6 +2,11 @@ import {Action, createReducer, on} from '@ngrx/store';
 
 import {IdentityStateInterface} from '../types/identityState.interface';
 import {
+  forgotPasswordAction,
+  forgotPasswordFailureAction,
+  forgotPasswordSuccessAction,
+} from './actions/forgotPassword.actions';
+import {
   activateAction,
   activateSuccessAction,
   activateFailureAction,
@@ -85,6 +90,28 @@ const identityReducer = createReducer(
   ),
   on(
     signInFailureAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: false,
+    })
+  ),
+
+  on(
+    forgotPasswordAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: true,
+    })
+  ),
+  on(
+    forgotPasswordSuccessAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      isSubmitting: false,
+    })
+  ),
+  on(
+    forgotPasswordFailureAction,
     (state): IdentityStateInterface => ({
       ...state,
       isSubmitting: false,

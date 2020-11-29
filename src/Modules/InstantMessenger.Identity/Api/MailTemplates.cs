@@ -13,7 +13,7 @@ namespace InstantMessenger.Identity.Api
         {
             public static readonly string Subject = "Password Reset";
             public static readonly string Body = @"Please use link below in order to reset your password.
-Token: [[{0}]]";
+<a href='{0}'>Reset password</a>";
 
         }
     }

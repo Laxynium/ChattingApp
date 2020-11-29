@@ -11,16 +11,8 @@ import * as R from 'ramda';
 import {Observable} from 'rxjs';
 import {signUpAction} from 'src/app/identity/store/actions/signUp.actions';
 import {isSubmittingSelector} from 'src/app/identity/store/selectors';
-
-export const passwordMismatch: ValidatorFn = (
-  form: FormGroup
-): ValidationErrors | null => {
-  const password = form.get('password');
-  const passwordConfirmation = form.get('passwordConfirmation');
-  return password.value === passwordConfirmation.value
-    ? null
-    : {passwordMismatch: true};
-};
+import {passwordMismatch} from 'src/app/identity/validators/password.validators';
+import {validPassword} from '../../validators/password.validators';
 
 @Component({
   selector: 'app-register',
@@ -40,7 +32,6 @@ export class RegisterComponent implements OnInit {
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
   }
   initializeForm(): void {
-    const passwordRegex = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,}$/;
     this.form = this.fb.group(
       {
         email: [
@@ -49,17 +40,11 @@ export class RegisterComponent implements OnInit {
         ],
         password: [
           '',
-          Validators.compose([
-            Validators.required,
-            Validators.pattern(passwordRegex),
-          ]),
+          Validators.compose([Validators.required, validPassword]),
         ],
         passwordConfirmation: [
           '',
-          Validators.compose([
-            Validators.required,
-            Validators.pattern(passwordRegex),
-          ]),
+          Validators.compose([Validators.required, validPassword]),
         ],
       },
       {validators: passwordMismatch}

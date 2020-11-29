@@ -14,22 +14,38 @@ import {ActivationComponent} from 'src/app/identity/components/activation/activa
 import {ActivateEffect} from 'src/app/identity/store/effects/activate.effect';
 import {SignInEffect} from 'src/app/identity/store/effects/signIn.effect';
 import {PersistanceService} from '../shared/services/persistance.service';
+import {ForgotPasswordComponent} from './components/forgot-password/forgot-password.component';
+import {ForgotPasswordEffect} from 'src/app/identity/store/effects/forgotPassword.effect';
+import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
 
 const routes = [
   {path: 'sign-in', component: LoginComponent},
   {path: 'sign-up', component: RegisterComponent},
   {path: 'identity/activate', component: ActivationComponent},
+  {path: 'forgot-password', component: ForgotPasswordComponent},
+  {path: 'identity/reset-password', component: ResetPasswordComponent},
   {path: '**', redirectTo: '/sign-in'},
 ];
 
 @NgModule({
-  declarations: [RegisterComponent, LoginComponent, ActivationComponent],
+  declarations: [
+    RegisterComponent,
+    LoginComponent,
+    ActivationComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature('identity', reducers),
-    EffectsModule.forFeature([SignUpEffect, ActivateEffect, SignInEffect]),
+    EffectsModule.forFeature([
+      SignUpEffect,
+      ActivateEffect,
+      SignInEffect,
+      ForgotPasswordEffect,
+    ]),
   ],
   providers: [IdentityService, PersistanceService],
 })

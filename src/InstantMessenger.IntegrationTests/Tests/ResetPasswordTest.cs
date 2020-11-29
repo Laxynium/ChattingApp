@@ -38,8 +38,9 @@ namespace InstantMessenger.IntegrationTests.Tests
             result.IsSuccessStatusCode.Should().BeTrue();
             _mailService.Messages.Should()
                 .HaveSingleMailWithProperReceiverAndSender(@from: "appmailbox@test.com", to: email)
-                .And.ContainProperToken();
-            var token = EmailContentExtractor.GetTokenFromForgotPasswordEmail(_mailService.Messages.First());
+                .And.ContainProperLink();
+            var link = EmailContentExtractor.GetTokenFromForgotPasswordEmail(_mailService.Messages.First());
+            var (_, token) = EmailContentExtractor.GetQueryParams(link);
 
             var newPassword = "TEestt12!@";
 

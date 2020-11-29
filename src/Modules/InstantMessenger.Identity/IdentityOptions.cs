@@ -11,5 +11,6 @@ namespace InstantMessenger.Identity
 
         public string ClientAppUrlBase { get; set; }
         public string ActivationEndpoint { get; set; }
+        public string ResetPasswordEndpoint { get; set; }
     }
 }

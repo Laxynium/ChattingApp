@@ -16,16 +16,19 @@ namespace InstantMessenger.Identity.Api.Features.SendPasswordReset
         private readonly IAuthTokenService _authTokenService;
         private readonly IMailService _mailService;
         private readonly MailOptions _mailOptions;
+        private readonly LinkGenerator _linkGenerator;
 
         public SendPasswordResetHandler(IUserRepository userRepository,
             IAuthTokenService authTokenService,
             IMailService mailService,
-            MailOptions mailOptions)
+            MailOptions mailOptions,
+            LinkGenerator linkGenerator)
         {
             _userRepository = userRepository;
             _authTokenService = authTokenService;
             _mailService = mailService;
             _mailOptions = mailOptions;
+            _linkGenerator = linkGenerator;
         }
         public async Task HandleAsync(SendPasswordResetCommand command)
         {
@@ -36,8 +39,9 @@ namespace InstantMessenger.Identity.Api.Features.SendPasswordReset
             }
 
             var token = _authTokenService.Create(user.Id, user.PasswordHash);
+            var link = _linkGenerator.GenerateResetPasswordLink(user.Id,token);
 
-            var message = BuildMessage(user, token);
+            var message = BuildMessage(user, link);
 
             await _mailService.SendAsync(message);
         }

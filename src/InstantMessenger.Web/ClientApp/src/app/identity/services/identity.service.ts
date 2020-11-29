@@ -8,9 +8,12 @@ import {SignUpRequestInterface} from '../types/signUpRequest.interface';
 import {ActivateRequestInterface} from '../types/ActivateRequest.interface';
 import {SignInRequestInterface} from 'src/app/identity/types/signInRequest.interface';
 import {SignInResponseInterface} from '../../shared/types/signIn.response';
+import {ForgotPasswordRequestInterface} from '../types/forgotPasswordRequest.interface';
+import {ResetPasswordRequestInterface} from '../types/resetPasswordRequest.interface';
 
 @Injectable()
 export class IdentityService {
+  [x: string]: any;
   constructor(private http: HttpClient) {}
   signUp(payload: SignUpRequestInterface): Observable<{}> {
     const url = `${environment.apiUrl}/identity/sign-up`;
@@ -41,5 +44,15 @@ export class IdentityService {
           );
       })
     );
+  }
+
+  forgotPassword(payload: ForgotPasswordRequestInterface): Observable<{}> {
+    const url = `${environment.apiUrl}/identity/forgot-password`;
+    return this.http.post(url, payload).pipe(map((_) => ({})));
+  }
+
+  resetPassword(payload: ResetPasswordRequestInterface): Observable<{}> {
+    const url = `${environment.apiUrl}/identity/reset-password`;
+    return this.http.post(url, payload).pipe(map((_) => ({})));
   }
 }

@@ -18,7 +18,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
         private readonly IUniqueEmailRule _uniqueEmailRule;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly RandomStringGenerator _stringGenerator;
-        private readonly ActivationLinkGenerator _generator;
+        private readonly LinkGenerator _generator;
         private readonly IMailService _mailService;
         private readonly MailOptions _mailOptions;
 
@@ -28,7 +28,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
             IUniqueEmailRule uniqueEmailRule, 
             IPasswordHasher<User> passwordHasher,
             RandomStringGenerator stringGenerator,
-            ActivationLinkGenerator generator,
+            LinkGenerator generator,
             IMailService mailService,
             MailOptions mailOptions)
         {
@@ -53,7 +53,7 @@ namespace InstantMessenger.Identity.Api.Features.SignUp
 
             await _activationLinkRepository.AddAsync(activationLink);
 
-            var url = _generator.Generate(user.Id, randomString);
+            var url = _generator.GenerateActivationLink(user.Id, randomString);
 
             var message = BuildMessage(user, url);
 
