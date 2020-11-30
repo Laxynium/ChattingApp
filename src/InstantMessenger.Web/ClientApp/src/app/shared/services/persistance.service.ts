@@ -2,6 +2,13 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export class PersistanceService {
+  unset(key: string): any {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('Error removing to localStorage', e);
+    }
+  }
   set(key: string, data: any): void {
     try {
       localStorage.setItem(key, JSON.stringify(data));

@@ -18,6 +18,7 @@ import {ForgotPasswordComponent} from './components/forgot-password/forgot-passw
 import {ForgotPasswordEffect} from 'src/app/identity/store/effects/forgotPassword.effect';
 import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
 import {getMetaReducers} from 'src/app/identity/store/meta.reducers';
+import {LogoutEffect} from 'src/app/identity/store/effects/logout.effect';
 
 const routes = [
   {path: 'sign-in', component: LoginComponent},
@@ -48,6 +49,7 @@ const routes = [
       ActivateEffect,
       SignInEffect,
       ForgotPasswordEffect,
+      LogoutEffect,
     ]),
   ],
   providers: [IdentityService, PersistanceService],

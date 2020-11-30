@@ -27,6 +27,5 @@ export const resetPasswordSuccessAction = createAction(
 );
 
 export const resetPasswordFailureAction = createAction(
-  ActionTypes.RESET_PASSWORD_FAILURE,
-  props<{error: ErrorResponseInterface}>()
+  ActionTypes.RESET_PASSWORD_FAILURE
 );

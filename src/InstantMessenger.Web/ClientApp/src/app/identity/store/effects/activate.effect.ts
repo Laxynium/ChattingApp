@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Actions, createEffect, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {map, switchMap, catchError, tap} from 'rxjs/operators';
 import {
   activateAction,
@@ -10,6 +10,9 @@ import {IdentityService} from '../../services/identity.service';
 import {of} from 'rxjs';
 import {ToastService} from '../../../shared/toasts/toast.service';
 import {Router} from '@angular/router';
+import {requestFailedAction} from 'src/app/shared/store/api-request.error';
+import {HttpErrorResponse} from '@angular/common/http';
+import {mapToError} from 'src/app/shared/types/error.response';
 
 @Injectable()
 export class ActivateEffect {
@@ -19,15 +22,10 @@ export class ActivateEffect {
       switchMap(({request}) =>
         this.identityService.activate(request).pipe(
           map(() => activateSuccessAction()),
-          catchError((response) =>
+          catchError((r: HttpErrorResponse) =>
             of(
-              activateFailureAction({
-                error: {
-                  code: response.error.code,
-                  message: response.error.message,
-                  statusCode: response.status,
-                },
-              })
+              activateFailureAction(),
+              requestFailedAction({error: mapToError(r)})
             )
           )
         )
@@ -42,17 +40,6 @@ export class ActivateEffect {
         tap(() => {
           this.toastService.showSuccess('Account activated successfully');
           this.router.navigateByUrl('/identity/sign-in');
-        })
-      ),
-    {dispatch: false}
-  );
-
-  activateFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(activateFailureAction),
-        tap((action) => {
-          this.toastService.showError(action.error.message);
         })
       ),
     {dispatch: false}

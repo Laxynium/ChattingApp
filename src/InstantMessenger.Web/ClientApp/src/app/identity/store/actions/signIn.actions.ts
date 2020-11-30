@@ -15,7 +15,4 @@ export const signInSuccessAction = createAction(
   props<{currentUser: CurrentUserInterface}>()
 );
 
-export const signInFailureAction = createAction(
-  ActionTypes.SIGN_IN_FAILURE,
-  props<{error: ErrorResponseInterface}>()
-);
+export const signInFailureAction = createAction(ActionTypes.SIGN_IN_FAILURE);

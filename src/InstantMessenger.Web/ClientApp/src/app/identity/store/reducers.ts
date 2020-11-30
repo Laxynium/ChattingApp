@@ -21,6 +21,10 @@ import {
   signUpFailureAction,
   signUpSuccessAction,
 } from './actions/signUp.actions';
+import {
+  logoutActiion,
+  logoutSuccessAction,
+} from 'src/app/identity/store/actions/logout.actions';
 
 const initialState: IdentityStateInterface = {
   isSubmitting: false,
@@ -115,6 +119,21 @@ const identityReducer = createReducer(
     (state): IdentityStateInterface => ({
       ...state,
       isSubmitting: false,
+    })
+  ),
+
+  on(
+    logoutActiion,
+    (state): IdentityStateInterface => ({
+      ...state,
+      currentUser: null,
+    })
+  ),
+  on(
+    logoutSuccessAction,
+    (state): IdentityStateInterface => ({
+      ...state,
+      currentUser: null,
     })
   )
 );

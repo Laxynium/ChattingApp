@@ -3,4 +3,5 @@ export interface CurrentUserInterface {
   nickname: string;
   email: string;
   token: string;
+  avatar: string;
 }

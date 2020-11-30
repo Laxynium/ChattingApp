@@ -12,12 +12,12 @@ import {IdentityModule} from './identity/identity.module';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {EffectsModule} from '@ngrx/effects';
-import {SignUpEffect} from 'src/app/identity/store/effects/signUp.effect';
 import {ToastService} from './shared/toasts/toast.service';
 import {ToastsContainer} from 'src/app/shared/toasts/toasts.container.component';
 import {AuthInterceptor} from './identity/services/authentication.interceptor.service';
 import {PersistanceService} from './shared/services/persistance.service';
 import {HomeModule} from './home/home.module';
+import {RequestFailedEffect} from 'src/app/shared/store/api-request.error';
 
 @NgModule({
   declarations: [AppComponent, ToastsContainer],
@@ -35,7 +35,7 @@ import {HomeModule} from './home/home.module';
       maxAge: 25,
       logOnly: environment.production,
     }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([RequestFailedEffect]),
   ],
   providers: [
     ToastService,

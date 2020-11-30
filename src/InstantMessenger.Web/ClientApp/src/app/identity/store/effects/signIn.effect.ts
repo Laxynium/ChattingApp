@@ -10,6 +10,9 @@ import {
 import {switchMap, map, catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {PersistanceService} from '../../../shared/services/persistance.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {requestFailedAction} from 'src/app/shared/store/api-request.error';
+import {mapToError} from 'src/app/shared/types/error.response';
 
 @Injectable()
 export class SignInEffect {
@@ -19,15 +22,10 @@ export class SignInEffect {
       switchMap((action) =>
         this.identityService.signIn(action.request).pipe(
           map((r) => signInSuccessAction({currentUser: r})),
-          catchError((response) =>
+          catchError((r: HttpErrorResponse) =>
             of(
-              signInFailureAction({
-                error: {
-                  code: response.error.code,
-                  message: response.error.message,
-                  statusCode: response.status,
-                },
-              })
+              signInFailureAction(),
+              requestFailedAction({error: mapToError(r)})
             )
           )
         )
@@ -45,15 +43,6 @@ export class SignInEffect {
         tap((x) => {
           this.persistanceService.set('currentUser', x.currentUser);
         })
-      ),
-    {dispatch: false}
-  );
-
-  $signInFailure = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(signInFailureAction),
-        tap((x) => this.toastService.showError(x.error.message))
       ),
     {dispatch: false}
   );

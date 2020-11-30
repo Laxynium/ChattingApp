@@ -5,9 +5,9 @@ import {ToastService} from 'src/app/shared/toasts/toast.service';
 import {switchMap, map, catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Router} from '@angular/router';
-import {resetPasswordFailureAction} from '../actions/forgotPassword.actions';
 import {
   resetPasswordAction,
+  resetPasswordFailureAction,
   resetPasswordSuccessAction,
 } from '../actions/forgotPassword.actions';
 import {
@@ -15,6 +15,9 @@ import {
   forgotPasswordSuccessAction,
   forgotPasswordFailureAction,
 } from '../actions/forgotPassword.actions';
+import {requestFailedAction} from 'src/app/shared/store/api-request.error';
+import {mapToError} from 'src/app/shared/types/error.response';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable()
 export class ForgotPasswordEffect {
@@ -49,15 +52,10 @@ export class ForgotPasswordEffect {
       switchMap((action) =>
         this.identityService.resetPassword(action.request).pipe(
           map(() => resetPasswordSuccessAction()),
-          catchError((response) =>
+          catchError((r: HttpErrorResponse) =>
             of(
-              resetPasswordFailureAction({
-                error: {
-                  code: response.error.code,
-                  message: response.error.message,
-                  statusCode: response.status,
-                },
-              })
+              resetPasswordFailureAction(),
+              requestFailedAction({error: mapToError(r)})
             )
           )
         )
@@ -74,17 +72,6 @@ export class ForgotPasswordEffect {
         }),
         tap((_) => {
           this.router.navigateByUrl('/sign-in');
-        })
-      ),
-    {dispatch: false}
-  );
-
-  $resetPasswordFailure = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(resetPasswordFailureAction),
-        tap((action) => {
-          this.toastService.showError(action.error.message);
         })
       ),
     {dispatch: false}

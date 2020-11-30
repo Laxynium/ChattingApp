@@ -31,7 +31,7 @@ namespace InstantMessenger.Profiles.Api
         }
 
         [HttpPost("avatar")]
-        public async Task<IActionResult> Patch([FromForm]ChangeAvatarApiRequest request)
+        public async Task<IActionResult> Post([FromForm]ChangeAvatarApiRequest request)
         {
             await _commandDispatcher.SendAsync(new ChangeAvatarCommand(User.GetUserId(), request.Image));
             return Ok();

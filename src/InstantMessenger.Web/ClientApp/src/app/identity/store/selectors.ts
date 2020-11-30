@@ -1,5 +1,6 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {IdentityStateInterface} from '../types/identityState.interface';
 
 export const identityFeatureSelector = createFeatureSelector<
@@ -14,5 +15,5 @@ export const isSubmittingSelector = createSelector(
 
 export const currentUser = createSelector(
   identityFeatureSelector,
-  (state: IdentityStateInterface) => state.currentUser
+  (state: IdentityStateInterface): CurrentUserInterface => state.currentUser
 );

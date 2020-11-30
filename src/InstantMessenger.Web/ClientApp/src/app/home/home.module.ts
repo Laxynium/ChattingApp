@@ -2,16 +2,20 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {HomeComponent} from './components/home/home.component';
 import {AuthGuard} from '../identity/guards/auth.guard';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {ProfileComponent} from './profile/components/profile/profile.component';
+import {HomeComponent} from 'src/app/home/home/components/home/home.component';
+import {ProfilesModule} from 'src/app/home/profile/profiles.module';
 
 const routes = [
   {
     path: '',
     component: HomeComponent,
     canActivate: [AuthGuard],
-    children: [],
+    children: [
+      {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+    ],
   },
   {path: '**', redirectTo: '/'},
 ];
@@ -23,6 +27,8 @@ const routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgbModule,
+
+    ProfilesModule,
   ],
   providers: [],
 })

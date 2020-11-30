@@ -40,6 +40,7 @@ export class IdentityService {
               nickname: response.nickname,
               email: response.email,
               token: r.token,
+              avatar: null,
             }))
           );
       })

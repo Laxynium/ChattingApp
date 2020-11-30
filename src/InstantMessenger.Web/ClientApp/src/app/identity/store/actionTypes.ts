@@ -18,4 +18,8 @@ export enum ActionTypes {
   RESET_PASSWORD = '[Identity] Reset password',
   RESET_PASSWORD_SUCCESS = '[Identity] Reset password success',
   RESET_PASSWORD_FAILURE = '[Identity] Reset password failure',
+
+  LOGOUT = '[Identity] Logout',
+  LOGOUT_SUCCESS = '[Identity] Logout success',
+  LOGOUT_FAILURE = '[Identity] Logout failure',
 }

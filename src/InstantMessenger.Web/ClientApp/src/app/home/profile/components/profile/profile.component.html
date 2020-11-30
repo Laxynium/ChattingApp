@@ -1,0 +1,6 @@
+<h2 class="text-center">Profile</h2>
+<div>
+  <img src="{{avatar$ | async}}" class="rounded-circle profile-img">
+  <strong>{{nickname$ |async}}</strong>
+  <input #fileInput type="file" [multiple]="false" (change)="uploadAvatar(fileInput.files)">
+</div>

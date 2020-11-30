@@ -14,22 +14,10 @@
           </div>
           <div class="card-body">
             <!-- your navs bound to current route fragments -->
-            <ul
-              ngbNav
-              [activeId]="route.fragment | async"
-              class="nav flex flex-column align-items-stretch h-100"
-            >
-              <li
-                [ngbNavItem]="link.fragment"
-                *ngFor="let link of links"
-                class="nav-item flex-grow-1 flex-shrink-1 flex-auto"
-              >
-                <a
-                  class="nav-link btn btn-outline-primary"
-                  ngbNavLink
-                  routerLink="."
-                  >{{ link.title }}</a
-                >
+            <ul ngbNav [activeId]="router.url" class="nav flex flex-column align-items-stretch h-100">
+              <li [ngbNavItem]="link.link" *ngFor="let link of links"
+                class="nav-item flex-grow-1 flex-shrink-1 flex-auto">
+                <a class="nav-link btn btn-outline-primary" ngbNavLink routerLink="{{link.link}}">{{ link.title }}</a>
               </li>
             </ul>
           </div>
@@ -37,13 +25,9 @@
       </div>
       <div class="flex-grow-0">
         <div class="bottom pl-2">
-          <img
-            src="https://via.placeholder.com/40"
-            alt=""
-            class="rounded-circle user-img"
-          />
+          <img src="https://via.placeholder.com/40" alt="" class="rounded-circle user-img" />
           <span class="nickname">Nickname</span>
-          <button class="btn btn-secondary">
+          <button class="btn btn-secondary" (click)="logout()">
             <i class="sign-out fas fa-sign-out-alt">Logout</i>
           </button>
         </div>
