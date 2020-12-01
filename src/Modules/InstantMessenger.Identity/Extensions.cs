@@ -73,6 +73,7 @@ namespace InstantMessenger.Identity
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
                 .AddModuleRequests()
+                .AddExceptionMapper<ExceptionMapper>()
                 .AddMailKit()
                 .AddHttpContextAccessor()
                 .AddMemoryCache()
@@ -102,12 +103,12 @@ namespace InstantMessenger.Identity
 
         public static IApplicationBuilder UseIdentityModule(this IApplicationBuilder app)
         {
-            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseCors();
             app.UseAuthentication(); 
             app.UseAuthorization();
             app.UseModuleRequests()
-                .Subscribe<MeQuery>("/identity/me", async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q));
+                .Subscribe<MeQuery>("/identity/me", async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q))
+                .Subscribe<GetUserQuery>("/identity/users", async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q));
             return app;
         }
     }

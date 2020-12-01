@@ -11,6 +11,13 @@ namespace InstantMessenger.Shared.Modules
     public static class Extensions
     {
         private const string AppName = "InstantMessenger";
+
+        public static IServiceCollection AddExceptionMapper<TMapper>(this IServiceCollection services) where TMapper : class,IExceptionMapper
+        {
+            services.AddSingleton<IExceptionMapper, TMapper>();
+            return services;
+        }
+
         public static IServiceCollection AddModuleRequests(this IServiceCollection services)
         {
             services.AddModuleRegistry();

@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using InstantMessenger.PrivateMessages.Domain.Exceptions;
 using NodaTime;
 
 namespace InstantMessenger.PrivateMessages.Domain

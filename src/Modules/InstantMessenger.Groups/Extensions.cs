@@ -3,6 +3,7 @@ using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.Rules;
+using InstantMessenger.Groups.Infrastructure;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
@@ -27,6 +28,7 @@ namespace InstantMessenger.Groups
                 .AddEventHandlers()
                 .AddEventDispatcher()
                 .AddModuleRequests()
+                .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<GroupsContext>(
                     o =>
                     {

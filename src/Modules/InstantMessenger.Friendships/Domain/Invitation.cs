@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using InstantMessenger.Friendships.Api;
+using InstantMessenger.Friendships.Domain.Exceptions;
+using InstantMessenger.Friendships.Domain.Rules;
 using NodaTime;
 
 namespace InstantMessenger.Friendships.Domain
@@ -20,7 +23,17 @@ namespace InstantMessenger.Friendships.Domain
             CreatedAt = createdAt;
             Status = status;
         }
-        public static Invitation Create(Guid senderId, Guid receiverId, IClock clock) => new Invitation(Guid.NewGuid(), senderId, receiverId, clock.GetCurrentInstant().InUtc().ToDateTimeOffset(), InvitationStatus.Pending);
+
+        public static async Task<Invitation> Create(Person sender, Person receiver, IUniquePendingInvitationRule rule, IClock clock)
+        {
+            if(sender == receiver)
+                throw new InvalidInvitationException();
+
+            if(!await rule.IsMet(sender, receiver))
+                throw new InvitationAlreadyExistsException();
+
+            return new Invitation(Guid.NewGuid(), sender.Id, receiver.Id, clock.GetCurrentInstant().InUtc().ToDateTimeOffset(), InvitationStatus.Pending);
+        }
 
         public Friendship AcceptInvitation(Person acceptor, IClock clock)
         {

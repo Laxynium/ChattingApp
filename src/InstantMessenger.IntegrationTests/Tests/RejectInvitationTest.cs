@@ -30,14 +30,14 @@ namespace InstantMessenger.IntegrationTests.Tests
 
             var sut = _fixture.GetClient<IFriendshipsApi>();
 
-            await sut.SendFriendshipInvitation(userA.BearerToken(), new SendFriendshipInvitationApiRequest(Guid.Parse(userB.Subject)));
+            await sut.SendFriendshipInvitation(userA.BearerToken(), new SendFriendshipInvitationApiRequest(userB.Nickname));
 
             var pendingInvitation = await sut.GetPendingInvitations(userB.BearerToken());
             pendingInvitation.Should().SatisfyRespectively(x =>
             {
                 x.InvitationId.Should().NotBeEmpty();
-                x.SenderId.Should().Be(Guid.Parse(userA.Subject));
-                x.ReceiverId.Should().Be(Guid.Parse(userB.Subject));
+                x.SenderId.Should().Be(userA.UserId);
+                x.ReceiverId.Should().Be(userB.UserId);
                 x.Status.Should().Be(InvitationStatus.Pending.ToString());
                 x.CreatedAt.Should().NotBe(default);
             });

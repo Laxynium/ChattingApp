@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Profiles.Domain.Exceptions;
 using Mainwave.MimeTypes;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;

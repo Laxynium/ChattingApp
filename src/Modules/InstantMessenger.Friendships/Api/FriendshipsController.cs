@@ -29,7 +29,7 @@ namespace InstantMessenger.Friendships.Api
         public async Task<IActionResult> Post(SendFriendshipInvitationApiRequest request)
         {
             await _commandDispatcher.SendAsync(
-                new SendFriendshipInvitationCommand(User.GetUserId(), request.ReceiverId));
+                new SendFriendshipInvitationCommand(User.GetUserId(), request.ReceiverNickname));
             return Ok();
         }
 
@@ -52,7 +52,15 @@ namespace InstantMessenger.Friendships.Api
         [HttpGet("invitations/pending")]
         public async Task<IActionResult> GetPending()
         {
-            var result = await _queryDispatcher.QueryAsync(new GetPendingInvitationsQuery(User.GetUserId()));
+            var result = await _queryDispatcher.QueryAsync(new GetAllPendingInvitationsQuery(User.GetUserId()));
+
+            return Ok(result);
+        }
+
+        [HttpGet("invitations/pending/incoming")]
+        public async Task<IActionResult> GetIncomingPending()
+        {
+            var result = await _queryDispatcher.QueryAsync(new GetIncomingPendingInvitationsQuery(User.GetUserId()));
 
             return Ok(result);
         }

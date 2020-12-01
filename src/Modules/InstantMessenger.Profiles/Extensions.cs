@@ -1,5 +1,6 @@
 ﻿using InstantMessenger.Profiles.Api;
 using InstantMessenger.Profiles.Domain;
+using InstantMessenger.Profiles.Infrastructure;
 using InstantMessenger.Profiles.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
@@ -21,6 +22,7 @@ namespace InstantMessenger.Profiles
                 .AddQueryDispatcher()
                 .AddEventHandlers()
                 .AddModuleRequests()
+                .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<ProfilesContext>(
                     o =>
                     {

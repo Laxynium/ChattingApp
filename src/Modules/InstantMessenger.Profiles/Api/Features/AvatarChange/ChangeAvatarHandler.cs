@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Profiles.Domain;
+using InstantMessenger.Profiles.Domain.Exceptions;
 using InstantMessenger.Shared.Commands;
 
 namespace InstantMessenger.Profiles.Api.Features.AvatarChange

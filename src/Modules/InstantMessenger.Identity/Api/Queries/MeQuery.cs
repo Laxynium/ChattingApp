@@ -5,16 +5,9 @@ namespace InstantMessenger.Identity.Api.Queries
 {
     public class UserDto
     {
-        public Guid Id { get; }
-        public string Email { get; }
-        public string Nickname { get; }
-
-        public UserDto(Guid id, string email, string nickname)
-        {
-            Id = id;
-            Email = email;
-            Nickname = nickname;
-        }
+        public Guid Id { get; set; }
+        public string Email { get; set; }
+        public string Nickname { get; set; }
     }
     public class MeQuery : IQuery<UserDto>
     {

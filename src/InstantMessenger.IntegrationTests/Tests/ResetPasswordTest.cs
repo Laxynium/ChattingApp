@@ -44,7 +44,7 @@ namespace InstantMessenger.IntegrationTests.Tests
 
             var newPassword = "TEestt12!@";
 
-            result = await sut.ResetPassword(new ResetPasswordCommand(Guid.Parse(user.Subject), token, newPassword));
+            result = await sut.ResetPassword(new ResetPasswordCommand(user.UserId, token, newPassword));
 
             result.IsSuccessStatusCode.Should().BeTrue();
             await sut.SignIn(new SignInCommand(email, newPassword));

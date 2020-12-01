@@ -42,7 +42,7 @@ namespace InstantMessenger.IntegrationTests.Tests.Groups
             owner.Should().NotBeNull();
             owner.CreatedAt.Should().NotBe(default);
             owner.IsOwner.Should().BeTrue();
-            owner.UserId.Should().Be(Guid.Parse(user.Subject));
+            owner.UserId.Should().Be(user.UserId);
             owner.MemberId.Should().NotBeEmpty();
             owner.Name.Should().Be("user");
 

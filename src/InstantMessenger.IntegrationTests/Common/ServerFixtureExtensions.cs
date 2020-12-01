@@ -12,12 +12,26 @@ using InstantMessenger.Shared.MailKit;
 
 namespace InstantMessenger.IntegrationTests.Common
 {
+    internal class UserDto
+    {
+        public Guid UserId { get;  }
+        public string Nickname { get;  }
+        public string Email { get;  }
+        public string Token { get;  }
+        public UserDto(Guid userId, string nickname, string email, string token)
+        {
+            UserId = userId;
+            Nickname = nickname;
+            Email = email;
+            Token = token;
+        }
+    }
     internal static class ServerFixtureExtensions
     {
-        internal static async Task<AuthDto> LoginWithDefaultUser(this ServerFixture fixture)
+        internal static async Task<UserDto> LoginWithDefaultUser(this ServerFixture fixture)
             => await LoginAsUser(fixture,"test@test.com","nickname");
 
-        internal static async Task<AuthDto> LoginAsUser(this ServerFixture fixture, string email, string nickname)
+        internal static async Task<UserDto> LoginAsUser(this ServerFixture fixture, string email, string nickname)
         {
             var password = "TEest12!@";
             var identityApi = fixture.GetClient<IIdentityApi>();
@@ -29,15 +43,15 @@ namespace InstantMessenger.IntegrationTests.Common
             await identityApi.ActivateAccount(new ActivateCommand(Guid.Parse(userId), token, nickname));
 
             var authDto = await identityApi.SignIn(new SignInCommand(email, password));
-            return authDto;
+            return new UserDto(Guid.Parse(authDto.Subject),nickname, email, authDto.Token);
         }
 
-        internal static async Task<ConversationDto> CreateConversation(this ServerFixture fixture, AuthDto userA, AuthDto userB)
+        internal static async Task<ConversationDto> CreateConversation(this ServerFixture fixture, UserDto userA, UserDto userB)
         {
             var friendshipApi = fixture.GetClient<IFriendshipsApi>();
             await friendshipApi.SendFriendshipInvitation(
                 $"Bearer {userA.Token}",
-                new SendFriendshipInvitationApiRequest(Guid.Parse(userB.Subject))
+                new SendFriendshipInvitationApiRequest(userB.Nickname)
             );
 
             var pendingInvitation = await friendshipApi.GetPendingInvitations($"Bearer {userB.Token}");

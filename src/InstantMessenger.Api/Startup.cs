@@ -4,6 +4,7 @@ using InstantMessenger.Identity;
 using InstantMessenger.PrivateMessages;
 using InstantMessenger.Profiles;
 using InstantMessenger.Shared;
+using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,10 @@ namespace InstantMessenger.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseMiddleware<ErrorHandlerMiddleware>();
             }
 
             app.UseRouting();

@@ -6,12 +6,12 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
     public class SendFriendshipInvitationCommand : ICommand
     {
         public Guid SenderId { get; }
-        public Guid ReceiverId { get; }
+        public string ReceiverNickname { get; }
 
-        public SendFriendshipInvitationCommand(Guid senderId, Guid receiverId)
+        public SendFriendshipInvitationCommand(Guid senderId, string receiverNickname)
         {
             SenderId = senderId;
-            ReceiverId = receiverId;
+            ReceiverNickname = receiverNickname;
         }
     }
 }

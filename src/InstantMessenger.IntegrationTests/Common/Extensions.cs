@@ -3,15 +3,17 @@ using InstantMessenger.Identity.Api.Features.SignIn;
 
 namespace InstantMessenger.IntegrationTests.Common
 {
-    public static class Extensions
+    internal static class Extensions
     {
-        public static string BearerToken(this AuthDto user)
-        {
-            return $"Bearer {user.Token}";
-        }
-        public static Guid UserId(this AuthDto user)
-        {
-            return Guid.Parse(user.Subject);
-        }
+        public static string BearerToken(this UserDto user) 
+            => $"Bearer {user.Token}";
+        public static Guid UserId(this UserDto user)
+            => user.UserId;
+
+        public static string BearerToken(this AuthDto user) 
+            => $"Bearer {user.Token}";
+
+        public static Guid UserId(this AuthDto user) 
+            => Guid.Parse(user.Subject);
     }
 }

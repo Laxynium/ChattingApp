@@ -1,5 +1,6 @@
 ﻿using InstantMessenger.PrivateMessages.Api;
 using InstantMessenger.PrivateMessages.Domain;
+using InstantMessenger.PrivateMessages.Infrastructure;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
@@ -21,6 +22,7 @@ namespace InstantMessenger.PrivateMessages
                 .AddQueryDispatcher()
                 .AddEventHandlers()
                 .AddModuleRequests()
+                .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<PrivateMessagesContext>(o =>
                 {
                     using var provider = services.BuildServiceProvider();

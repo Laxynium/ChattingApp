@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.PrivateMessages.Domain;
+using InstantMessenger.PrivateMessages.Domain.Exceptions;
 using InstantMessenger.Shared.Commands;
 using NodaTime;
 
@@ -22,7 +23,7 @@ namespace InstantMessenger.PrivateMessages.Api.Features.MarkMessageAsRead
 
         public async Task HandleAsync(MarkMessageAsReadCommand command)
         {
-            var message = await _messageRepository.GetAsync(MessageId.From(command.MessageId));
+            var message = await _messageRepository.GetAsync(MessageId.From(command.MessageId)) ?? throw new MessageNotFoundException();
 
             message.MarkAsRead(new Participant(command.ParticipantId), _clock);
 

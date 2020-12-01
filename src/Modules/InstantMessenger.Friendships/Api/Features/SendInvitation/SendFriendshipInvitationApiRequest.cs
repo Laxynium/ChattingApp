@@ -4,11 +4,11 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
 {
     public class SendFriendshipInvitationApiRequest
     {
-        public Guid ReceiverId { get; }
+        public string ReceiverNickname { get; }
 
-        public SendFriendshipInvitationApiRequest(Guid receiverId)
+        public SendFriendshipInvitationApiRequest(string receiverNickname)
         {
-            ReceiverId = receiverId;
+            ReceiverNickname = receiverNickname;
         }
     }
 }

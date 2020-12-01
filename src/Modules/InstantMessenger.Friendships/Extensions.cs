@@ -1,5 +1,7 @@
 ﻿using InstantMessenger.Friendships.Api;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Rules;
+using InstantMessenger.Friendships.Infrastructure;
 using InstantMessenger.Friendships.Infrastructure.Database;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
@@ -22,6 +24,7 @@ namespace InstantMessenger.Friendships
                 .AddQueryDispatcher()
                 .AddEventHandlers()
                 .AddModuleRequests()
+                .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<FriendshipsContext>(x =>
                 {
                     using var provider = services.BuildServiceProvider();
@@ -33,6 +36,7 @@ namespace InstantMessenger.Friendships
                 .AddScoped<IInvitationRepository, InvitationRepository>()
                 .AddScoped<IFriendshipRepository, FriendshipRepository>()
                 .AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<IUniquePendingInvitationRule, UniquePendingInvitationRule>()
                 .AddSingleton<IClock>(x=>SystemClock.Instance);
             return services;
         }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MessageBrokers;
 using NodaTime;

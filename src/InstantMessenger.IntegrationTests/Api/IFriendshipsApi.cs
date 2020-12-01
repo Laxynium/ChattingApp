@@ -23,7 +23,7 @@ namespace InstantMessenger.IntegrationTests.Api
         [Post("/api/friendships/invitations/reject")]
         Task<HttpRequestMessage> RejectInvitation([Header("Authorization")] string token, [Body]RejectFriendshipInvitationApiRequest request);
 
-        [Get("/api/friendships/invitations/pending")]
+        [Get("/api/friendships/invitations/pending/incoming")]
         Task<List<InvitationDto>> GetPendingInvitations([Header("Authorization")] string token);
 
         [Get("/api/friendships")]

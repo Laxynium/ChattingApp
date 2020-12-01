@@ -16,25 +16,26 @@ namespace InstantMessenger.Friendships.Api.Queries
         public Guid ReceiverId { get; set; }
         public string Status { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
+        public string Type { get; set; }
     }
-    public class GetPendingInvitationsQuery : IQuery<IEnumerable<InvitationDto>>
+    public class GetIncomingPendingInvitationsQuery : IQuery<IEnumerable<InvitationDto>>
     {
         public Guid PersonId { get; }
 
-        public GetPendingInvitationsQuery(Guid personId)
+        public GetIncomingPendingInvitationsQuery(Guid personId)
         {
             PersonId = personId;
         }
     }
-    public class GetPendingInvitationsHandler: IQueryHandler<GetPendingInvitationsQuery, IEnumerable<InvitationDto>>
+    public class GetIncomingPendingInvitationsHandler: IQueryHandler<GetIncomingPendingInvitationsQuery, IEnumerable<InvitationDto>>
     {
         private readonly FriendshipsContext _context;
 
-        public GetPendingInvitationsHandler(FriendshipsContext context)
+        public GetIncomingPendingInvitationsHandler(FriendshipsContext context)
         {
             _context = context;
         }
-        public async Task<IEnumerable<InvitationDto>> HandleAsync(GetPendingInvitationsQuery query) =>
+        public async Task<IEnumerable<InvitationDto>> HandleAsync(GetIncomingPendingInvitationsQuery query) =>
             await _context.Invitations.AsNoTracking()
                 .Where(x => x.ReceiverId == query.PersonId && x.Status == InvitationStatus.Pending)
                 .Select(x => new InvitationDto
@@ -43,7 +44,8 @@ namespace InstantMessenger.Friendships.Api.Queries
                     ReceiverId = x.ReceiverId,
                     SenderId = x.SenderId,
                     Status =  x.Status.ToString(),
-                    CreatedAt = x.CreatedAt
+                    CreatedAt = x.CreatedAt,
+                    Type = "Incoming"
                 })
                 .ToListAsync();
     }
