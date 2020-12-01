@@ -1,5 +1,7 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {FriendsStateInterface} from 'src/app/home/friends/store/reducers';
+import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 
 export const friendsFeatureSelector = createFeatureSelector<
@@ -19,7 +21,7 @@ export const arePendingInvitationsLoadingSelector = createSelector(
 
 export const pendingInvitationsSelector = createSelector(
   friendsFeatureSelector,
-  (state: FriendsStateInterface) =>
+  (state: FriendsStateInterface): InvitationFullInterface[] =>
     state.pendingInvitations.map((x) => ({
       ...x,
       receiver: {
@@ -32,6 +34,25 @@ export const pendingInvitationsSelector = createSelector(
         ...x.sender,
         avatar: x.sender.avatar
           ? x.sender.avatar
+          : 'assets/profile-placeholder.png',
+      },
+    }))
+);
+
+export const areFriendsLoadingSelector = createSelector(
+  friendsFeatureSelector,
+  (state: FriendsStateInterface) => state.areFriendsLoading
+);
+
+export const friendSelector = createSelector(
+  friendsFeatureSelector,
+  (state: FriendsStateInterface): FriendshipInterface[] =>
+    state.friendships.map((x) => ({
+      ...x,
+      friend: {
+        ...x.friend,
+        avatar: x.friend.avatar
+          ? x.friend.avatar
           : 'assets/profile-placeholder.png',
       },
     }))

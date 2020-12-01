@@ -22,11 +22,14 @@
       <td>
         <div class="d-flex justify-content-end">
           <div *ngIf="invitation.type == 'Incoming'">
-            <button class="btn btn-sm btn-success mr-1">Accept</button>
-            <button class="btn btn-sm btn-danger mr-1">Reject</button>
+            <button class="btn btn-sm btn-success mr-1"
+              (click)="acceptInvitation(invitation.invitationId)">Accept</button>
+            <button class="btn btn-sm btn-danger mr-1"
+              (click)="rejectInvitation(invitation.invitationId)">Reject</button>
           </div>
           <div *ngIf="invitation.type == 'Outgoing'">
-            <button class="btn btn-sm btn-danger mr-1">Cancel</button>
+            <button class="btn btn-sm btn-danger mr-1"
+              (click)="cancelInvitation(invitation.invitationId)">Cancel</button>
           </div>
         </div>
       </td>

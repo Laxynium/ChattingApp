@@ -1,16 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map, reduce, tap} from 'rxjs/operators';
-import {getPendingInvitationsAction} from 'src/app/home/friends/store/actions';
+import {map} from 'rxjs/operators';
+import {
+  acceptInvitationAction,
+  cancelInvitationAction,
+  getPendingInvitationsAction,
+  rejectInvitationAction,
+} from 'src/app/home/friends/store/actions';
 import {
   arePendingInvitationsLoadingSelector,
   pendingInvitationsSelector,
 } from 'src/app/home/friends/store/selectors';
-import {
-  InvitationFullInterface,
-  InvitationInterface,
-} from 'src/app/home/friends/types/invitation.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
 import {PaginatorInterface} from 'src/app/home/friends/types/paginator.interface';
 
 @Component({
@@ -28,6 +30,7 @@ export class PendingInvitationsComponent implements OnInit {
   $invitations: Observable<InvitationFullInterface[]>;
   $arePendingInvitationsLoading: Observable<boolean>;
   $totalSize: Observable<number>;
+
   constructor(private store: Store) {
     const pendingInvitations = this.store.pipe(
       select(pendingInvitationsSelector)
@@ -45,6 +48,17 @@ export class PendingInvitationsComponent implements OnInit {
   refreshInvitations() {
     this.store.dispatch(getPendingInvitationsAction());
   }
+
+  acceptInvitation(invitationId: string) {
+    this.store.dispatch(acceptInvitationAction({id: invitationId}));
+  }
+  rejectInvitation(invitationId: string) {
+    this.store.dispatch(rejectInvitationAction({id: invitationId}));
+  }
+  cancelInvitation(invitationId: string) {
+    this.store.dispatch(cancelInvitationAction({id: invitationId}));
+  }
+
   private paginate(
     invitations: InvitationFullInterface[]
   ): InvitationFullInterface[] {

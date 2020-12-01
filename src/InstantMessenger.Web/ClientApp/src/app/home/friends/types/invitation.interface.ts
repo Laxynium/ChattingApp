@@ -16,4 +16,5 @@ export interface InvitationFullInterface {
   status: string;
   createdAt: string;
   type: string;
+  isLoading: boolean;
 }

@@ -10,7 +10,13 @@ import {PendingInvitationsComponent} from './components/pending-invitations/pend
 import {InviteFriendComponent} from './components/invite-friend/invite-friend.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {reducers} from 'src/app/home/friends/store/reducers';
-import {SendInvitationEffect} from 'src/app/home/friends/store/effects';
+import {
+  AcceptInvitationEffect,
+  CancelInvitationEffect,
+  GetFriendsData,
+  RejectInvitationEffect,
+  SendInvitationEffect,
+} from 'src/app/home/friends/store/effects';
 import {FriendsService} from 'src/app/home/friends/services/friends.service';
 
 @NgModule({
@@ -27,7 +33,13 @@ import {FriendsService} from 'src/app/home/friends/services/friends.service';
     FormsModule,
     FontAwesomeModule,
     StoreModule.forFeature('friends', reducers),
-    EffectsModule.forFeature([SendInvitationEffect]),
+    EffectsModule.forFeature([
+      GetFriendsData,
+      SendInvitationEffect,
+      AcceptInvitationEffect,
+      RejectInvitationEffect,
+      CancelInvitationEffect,
+    ]),
   ],
   providers: [FriendsService],
 })

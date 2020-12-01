@@ -18,7 +18,7 @@ import {AuthInterceptor} from './identity/services/authentication.interceptor.se
 import {PersistanceService} from './shared/services/persistance.service';
 import {HomeModule} from './home/home.module';
 import {RequestFailedEffect} from 'src/app/shared/store/api-request.error';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [AppComponent, ToastsContainer],
@@ -29,6 +29,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     BrowserAnimationsModule,
     CommonModule,
     NgbModule,
+    FontAwesomeModule,
     StoreModule.forRoot([]),
     IdentityModule,
     HomeModule,
