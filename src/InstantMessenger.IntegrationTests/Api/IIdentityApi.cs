@@ -36,8 +36,20 @@ namespace InstantMessenger.IntegrationTests.Api
         [Put("/api/identity/nickname")]
         Task<HttpResponseMessage> ChangeNickname([Header("Authorization")] string token, [Body] ChangeNicknameApiRequest request);
 
-        [Post("/api/profiles/avatar")]
+        [Post("/api/identity/avatar")]
         Task<HttpResponseMessage> ChangeAvatar([Header("Authorization")] string token,
             [Body] HttpContent content);
+
+    }
+    public static class Extensions
+    {
+        public static async Task<HttpResponseMessage> ChangeAvatar(this IIdentityApi api, string token, byte[] imageData)
+        {
+            var content = new MultipartFormDataContent();
+            var imageContent = new ByteArrayContent(imageData);
+            imageContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
+            content.Add(imageContent, "image", "avatar.png");
+            return await api.ChangeAvatar(token, content);
+        }
     }
 }

@@ -21,10 +21,10 @@ namespace InstantMessenger.IntegrationTests.Tests
         [Fact]
         public async Task ChangeAvatar()
         {
-            var user = await _fixture.LoginWithDefaultUser();
+            var user = await _fixture.LoginAsUser("user1@test.com","user1");
             var sut = _fixture.GetClient<IIdentityApi>();
 
-            var result = await sut.ChangeAvatar(user.Token, new ByteArrayContent(TestImage()));
+            var result = await sut.ChangeAvatar(user.BearerToken(), TestImage());
 
             result.IsSuccessStatusCode.Should().BeTrue();
             var updatedUser = await sut.Me(user.BearerToken());

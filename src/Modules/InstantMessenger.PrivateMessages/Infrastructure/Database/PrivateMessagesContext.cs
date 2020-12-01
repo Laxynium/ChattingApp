@@ -29,33 +29,21 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database
                 .HasConversion(x => x.Value, x => MessageId.From(x))
                 .ValueGeneratedNever()
                 .IsRequired();
-            message.OwnsOne(
-                x => x.From,
-                c =>
-                {
-                    c.Property(x => x.Id)
-                        .HasColumnName(nameof(Message.From))
-                        .IsRequired();
-                }
-            );
-            message.OwnsOne(
-                x => x.To,
-                c =>
-                {
-                    c.Property(x => x.Id)
-                        .HasColumnName(nameof(Message.To))
-                        .IsRequired();
-                }
-            );
-            message.OwnsOne(
-                x => x.ConversationId,
-                c =>
-                {
-                    c.Property(x => x.Value)
-                        .HasColumnName(nameof(Message.ConversationId))
-                        .IsRequired();
-                }
-            );
+            message.Property(x => x.From)
+                .HasConversion(x => x.Id, x => new Participant(x))
+                .IsRequired();
+            message.Property(x => x.To)
+                .HasConversion(x => x.Id, x => new Participant(x))
+                .IsRequired();
+            message.Property(x => x.ConversationId)
+                .HasConversion(x => x.Value, x => new ConversationId(x))
+                .IsRequired();
+
+            message.HasOne<Conversation>()
+                .WithMany()
+                .HasForeignKey(x => x.ConversationId)
+                .IsRequired();
+
             message.OwnsOne(x => x.Body, b =>
             {
                 b.Property(x => x.TextContent)
@@ -75,24 +63,12 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database
                 .HasConversion(x => x.Value, x => new ConversationId(x))
                 .ValueGeneratedNever()
                 .IsRequired();
-            conversation.OwnsOne(
-                x => x.FirstParticipant,
-                c =>
-                {
-                    c.Property(x => x.Id)
-                        .HasColumnName(nameof(Conversation.FirstParticipant))
-                        .IsRequired();
-                }
-            );
-            conversation.OwnsOne(
-                x => x.SecondParticipant,
-                c =>
-                {
-                    c.Property(x => x.Id)
-                        .HasColumnName(nameof(Conversation.SecondParticipant))
-                        .IsRequired();
-                }
-            );
+            conversation.Property(x => x.FirstParticipant)
+                .HasConversion(x => x.Id, x => new Participant(x))
+                .IsRequired();
+            conversation.Property(x => x.SecondParticipant)
+                .HasConversion(x => x.Id, x => new Participant(x))
+                .IsRequired();
             conversation.ToTable("Conversations");
         }
     }

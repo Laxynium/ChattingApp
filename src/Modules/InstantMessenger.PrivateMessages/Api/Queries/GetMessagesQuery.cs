@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.PrivateMessages.Domain;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using InstantMessenger.Shared.Queries;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +41,9 @@ namespace InstantMessenger.PrivateMessages.Api.Queries
         }
         public async Task<IEnumerable<MessageDto>> HandleAsync(GetMessagesQuery query) => await _context.Messages.AsNoTracking()
             .OrderByDescending(x=>x.CreatedAt)
-            .Where(x => x.ConversationId.Value == query.ConversationId
+            .Where(x => x.ConversationId == new ConversationId(query.ConversationId)
                         &&
-                        (x.From.Id == query.Participant || x.To.Id == query.Participant))
+                        (x.From == new Participant(query.Participant) || x.To == new Participant(query.Participant)))
             .Select(
                 x => new MessageDto
                 {

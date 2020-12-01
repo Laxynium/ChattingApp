@@ -40,6 +40,7 @@ namespace InstantMessenger.IntegrationTests.Common
             var webHostBuilder = new WebHostBuilder()
                 .ConfigureAppConfiguration((c, b) => b.AddJsonFile("appsettings.json"))
                 .ConfigureTestServices(services => { services.AddSingleton<IMailService, FakeMailService>(); })
+                .UseEnvironment("Development")
                 .UseStartup<Startup>();
             _testServer = new TestServer(webHostBuilder);
             await InitDb<IdentityContext>();
