@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using InstantMessenger.Identity.Api.Features.ChangeAvatar;
 using InstantMessenger.Identity.Api.Features.ChangeNickname;
 using InstantMessenger.Identity.Api.Features.PasswordReset;
 using InstantMessenger.Identity.Api.Features.SendPasswordReset;
@@ -75,6 +76,13 @@ namespace InstantMessenger.Identity.Api
         public async Task<IActionResult> ChangeNickname(ChangeNicknameApiRequest request)
         {
             await _commandDispatcher.SendAsync(new ChangeNicknameCommand(User.GetUserId(), request.Nickname));
+            return Ok();
+        }
+
+        [HttpPost("avatar")]
+        public async Task<IActionResult> ChangeAvatar([FromForm]ChangeAvatarApiRequest request)
+        {
+            await _commandDispatcher.SendAsync(new ChangeAvatarCommand(User.GetUserId(), request.Image));
             return Ok();
         }
 

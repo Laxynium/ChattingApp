@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace InstantMessenger.Profiles.Domain.Exceptions
+﻿namespace InstantMessenger.Identity.Domain.Exceptions
 {
     public class AvatarSizeTooBigException : DomainException
     {

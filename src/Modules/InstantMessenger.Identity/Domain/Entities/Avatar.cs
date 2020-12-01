@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using InstantMessenger.Profiles.Domain.Exceptions;
+using InstantMessenger.Identity.Domain.Exceptions;
 using Mainwave.MimeTypes;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 
-namespace InstantMessenger.Profiles.Domain
+namespace InstantMessenger.Identity.Domain.Entities
 {
     public class Avatar : SimpleValueObject<byte[]>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace InstantMessenger.Profiles.Infrastructure.Database.Migrations
+namespace InstantMessenger.Identity.Infrastructure.Database.Migrations
 {
     public partial class AddAvatar : Migration
     {
@@ -9,8 +9,8 @@ namespace InstantMessenger.Profiles.Infrastructure.Database.Migrations
         {
             migrationBuilder.AddColumn<byte[]>(
                 name: "Avatar",
-                schema: "Profiles",
-                table: "Profiles",
+                schema: "Identity",
+                table: "Users",
                 nullable: true);
         }
 
@@ -18,8 +18,8 @@ namespace InstantMessenger.Profiles.Infrastructure.Database.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Avatar",
-                schema: "Profiles",
-                table: "Profiles");
+                schema: "Identity",
+                table: "Users");
         }
     }
 }

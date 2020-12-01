@@ -19,7 +19,8 @@ namespace InstantMessenger.Identity.Api.Queries
             {
                 Id = user.Id,
                 Email = user.Email,
-                Nickname = user.Nickname
+                Nickname = user.Nickname,
+                Avatar = user.Avatar.AsBase64String()
             };
         }
     }

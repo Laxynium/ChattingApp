@@ -56,7 +56,13 @@ namespace InstantMessenger.Identity.Infrastructure.Database
             builder.Property(x => x.Nickname)
                 .HasConversion(x => x.Value, x => Nickname.Create(x))
                 .IsRequired(false);
-            builder.ToTable("Users");
+            builder.OwnsOne(
+                u => u.Avatar,
+                b =>
+                {
+                    b.Property(x => x.Value).IsRequired().HasColumnName("Avatar");
+                }
+            );
         }
     }
 }

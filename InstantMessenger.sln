@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Identity",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Profiles", "src\Modules\InstantMessenger.Profiles\InstantMessenger.Profiles.csproj", "{CFBAB886-8886-4DC7-A48A-443F3E549BCD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.PrivateMessages", "src\Modules\InstantMessenger.PrivateMessages\InstantMessenger.PrivateMessages.csproj", "{1FF21B37-BA74-4BBC-9270-F4B364A43C58}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Friendships", "src\Modules\InstantMessenger.Friendships\InstantMessenger.Friendships.csproj", "{EF44F7A6-6517-48CB-B010-78B077B601D9}"
@@ -34,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Groups", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.UnitTests", "src\InstantMessenger.UnitTests\InstantMessenger.UnitTests.csproj", "{14C085AB-A1EA-457E-B8AA-9D351524C0DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstantMessenger.Web", "src\InstantMessenger.Web\InstantMessenger.Web.csproj", "{E9ABDCAB-8F16-474C-869C-D25BB81154BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Web", "src\InstantMessenger.Web\InstantMessenger.Web.csproj", "{E9ABDCAB-8F16-474C-869C-D25BB81154BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +48,6 @@ Global
 		{71DB59B0-F2AA-4B7E-A760-498811324DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71DB59B0-F2AA-4B7E-A760-498811324DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71DB59B0-F2AA-4B7E-A760-498811324DA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFBAB886-8886-4DC7-A48A-443F3E549BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFBAB886-8886-4DC7-A48A-443F3E549BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFBAB886-8886-4DC7-A48A-443F3E549BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFBAB886-8886-4DC7-A48A-443F3E549BCD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1FF21B37-BA74-4BBC-9270-F4B364A43C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1FF21B37-BA74-4BBC-9270-F4B364A43C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FF21B37-BA74-4BBC-9270-F4B364A43C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,7 +86,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{71DB59B0-F2AA-4B7E-A760-498811324DA3} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
-		{CFBAB886-8886-4DC7-A48A-443F3E549BCD} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
 		{1FF21B37-BA74-4BBC-9270-F4B364A43C58} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
 		{EF44F7A6-6517-48CB-B010-78B077B601D9} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}
 		{5E322C12-86CF-4C69-A23C-562985C26BAE} = {F0DC43F8-8AF8-4AA4-A7DE-6A924320DEDE}

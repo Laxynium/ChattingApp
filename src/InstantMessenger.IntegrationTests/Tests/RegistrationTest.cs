@@ -53,14 +53,6 @@ namespace InstantMessenger.IntegrationTests.Tests
 
             meResult.Id.Should().NotBeEmpty();
             meResult.Email.Should().Be(command.Email);
-
-
-            var profileApi = _fixture.GetClient<IProfilesApi>();
-
-            var profileResult = await profileApi.Get(user.BearerToken());
-
-            profileResult.Id.Should().Be(meResult.Id);
-            profileResult.Avatar.Should().BeNull();
         }
     }
 }

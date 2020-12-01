@@ -16,7 +16,7 @@ namespace InstantMessenger.Identity.Domain.Entities
         public bool IsVerified { get; private set; }
 
         public Nickname Nickname { get; private set; }
-
+        public Avatar Avatar { get; private set; } = null;
         private User(){}
         private User(Guid id, Email email, string passwordHash, bool isVerified)
         {
@@ -56,7 +56,7 @@ namespace InstantMessenger.Identity.Domain.Entities
             Nickname = nickname;
         }
 
-        public void ChangePassword(Password password,IPasswordHasher<User> hasher)
+        public void Change(Password password,IPasswordHasher<User> hasher)
         {
             var hash = hasher.HashPassword(null, password.Value);
             PasswordHash = hash;
@@ -70,6 +70,11 @@ namespace InstantMessenger.Identity.Domain.Entities
             }
 
             Nickname = nickname;
+        }
+
+        public void Change(Avatar avatar)
+        {
+            Avatar = avatar;
         }
     }
 }

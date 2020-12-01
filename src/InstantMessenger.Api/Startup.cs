@@ -2,7 +2,6 @@ using InstantMessenger.Friendships;
 using InstantMessenger.Groups;
 using InstantMessenger.Identity;
 using InstantMessenger.PrivateMessages;
-using InstantMessenger.Profiles;
 using InstantMessenger.Shared;
 using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +18,6 @@ namespace InstantMessenger.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityModule()
-                .AddProfilesModule()
                 .AddFriendshipsModule()
                 .AddPrivateMessagesModule()
                 .AddGroupsModule()

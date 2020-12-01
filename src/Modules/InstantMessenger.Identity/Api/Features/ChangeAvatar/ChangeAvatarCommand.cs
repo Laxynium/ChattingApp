@@ -2,16 +2,16 @@
 using InstantMessenger.Shared.Commands;
 using Microsoft.AspNetCore.Http;
 
-namespace InstantMessenger.Profiles.Api.Features.AvatarChange
+namespace InstantMessenger.Identity.Api.Features.ChangeAvatar
 {
     internal sealed class ChangeAvatarCommand : ICommand
     {
-        public Guid ProfileId { get; }
+        public Guid UserId { get; }
         public IFormFile Image { get; }
 
-        public ChangeAvatarCommand(Guid profileId, IFormFile image)
+        public ChangeAvatarCommand(Guid userId, IFormFile image)
         {
-            ProfileId = profileId;
+            UserId = userId;
             Image = image;
         }
     }

@@ -5,7 +5,6 @@ using InstantMessenger.Friendships.Infrastructure.Database;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
-using InstantMessenger.Profiles.Infrastructure.Database;
 using InstantMessenger.Shared.MailKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -44,7 +43,6 @@ namespace InstantMessenger.IntegrationTests.Common
                 .UseStartup<Startup>();
             _testServer = new TestServer(webHostBuilder);
             await InitDb<IdentityContext>();
-            await InitDb<ProfilesContext>();
             await InitDb<FriendshipsContext>();
             await InitDb<PrivateMessagesContext>();
             await InitDb<GroupsContext>();

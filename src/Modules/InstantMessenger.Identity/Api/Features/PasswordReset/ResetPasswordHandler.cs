@@ -39,7 +39,7 @@ namespace InstantMessenger.Identity.Api.Features.PasswordReset
                 return;
             }
 
-            user.ChangePassword(Password.Create(command.Password), _passwordHasher);
+            user.Change(Password.Create(command.Password), _passwordHasher);
         }
     }
 }

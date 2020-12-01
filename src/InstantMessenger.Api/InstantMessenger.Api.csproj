@@ -10,7 +10,6 @@
       <ProjectReference Include="..\Modules\InstantMessenger.Groups\InstantMessenger.Groups.csproj" />
       <ProjectReference Include="..\Modules\InstantMessenger.Identity\InstantMessenger.Identity.csproj" />
       <ProjectReference Include="..\Modules\InstantMessenger.PrivateMessages\InstantMessenger.PrivateMessages.csproj" />
-      <ProjectReference Include="..\Modules\InstantMessenger.Profiles\InstantMessenger.Profiles.csproj" />
     </ItemGroup>
 
     <ItemGroup>

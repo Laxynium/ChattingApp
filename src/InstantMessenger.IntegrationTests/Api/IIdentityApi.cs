@@ -35,5 +35,9 @@ namespace InstantMessenger.IntegrationTests.Api
 
         [Put("/api/identity/nickname")]
         Task<HttpResponseMessage> ChangeNickname([Header("Authorization")] string token, [Body] ChangeNicknameApiRequest request);
+
+        [Post("/api/profiles/avatar")]
+        Task<HttpResponseMessage> ChangeAvatar([Header("Authorization")] string token,
+            [Body] HttpContent content);
     }
 }

@@ -8,6 +8,7 @@ namespace InstantMessenger.Identity.Api.Queries
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string Nickname { get; set; }
+        public string Avatar { get; set; } //base64 encoded image byte[]
     }
     public class MeQuery : IQuery<UserDto>
     {
