@@ -7,6 +7,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProfileComponent} from './profile/components/profile/profile.component';
 import {HomeComponent} from 'src/app/home/home/components/home/home.component';
 import {ProfilesModule} from 'src/app/home/profile/profiles.module';
+import {FriendsComponent} from './friends/components/friends/friends.component';
+import {FriendsModule} from 'src/app/home/friends/friends.module';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 const routes = [
   {
@@ -14,7 +17,9 @@ const routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
+      {path: '', component: ProfileComponent, canActivate: [AuthGuard]},
       {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+      {path: 'friends', component: FriendsComponent, canActivate: [AuthGuard]},
     ],
   },
   {path: '**', redirectTo: '/'},
@@ -27,8 +32,10 @@ const routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgbModule,
+    FontAwesomeModule,
 
     ProfilesModule,
+    FriendsModule,
   ],
   providers: [],
 })

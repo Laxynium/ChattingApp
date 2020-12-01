@@ -1,4 +1,17 @@
-.profile-img {
-  width: 200px;
-  height: 200px;
+.profile {
+  &-img {
+    width: 128px;
+    height: 128px;
+  }
+  &-nickname {
+    font-size: 2rem;
+    position: absolute;
+    bottom: 0;
+    &-edit {
+      font-size: 1.4rem;
+    }
+  }
+  &-nickname-container {
+    position: relative;
+  }
 }

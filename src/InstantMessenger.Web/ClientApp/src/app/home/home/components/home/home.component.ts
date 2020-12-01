@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {tap} from 'rxjs/operators';
 import {logoutActiion} from 'src/app/identity/store/actions/logout.actions';
+import {faBars} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home',
@@ -11,13 +12,14 @@ import {logoutActiion} from 'src/app/identity/store/actions/logout.actions';
 })
 export class HomeComponent implements OnInit {
   links = [
-    {title: 'Profile', fragment: 'one', link: '/profile'},
-    {title: 'Friends', fragment: 'two', link: '/friends'},
-    {title: 'Messages', fragment: 'Four', link: '/messages'},
-    {title: 'Groups', fragment: 'Three', link: '/groups'},
+    {title: 'Profile', link: '/profile'},
+    {title: 'Friends', link: '/friends'},
+    {title: 'Messages', link: '/messages'},
+    {title: 'Groups', link: '/groups'},
   ];
   constructor(public router: Router, private store: Store) {}
-
+  toggleMenuIcon = faBars;
+  isMenuVisible = true;
   ngOnInit(): void {}
 
   logout() {

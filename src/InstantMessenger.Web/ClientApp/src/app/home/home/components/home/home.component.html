@@ -1,13 +1,13 @@
 <div class="home">
-  <div class="menu-toggle d-md-none position-absolute">
-    <i class="fas fa-bars fa-2x"></i>
+  <div class="menu-toggle d-md-none position-absolute" (click)="isMenuVisible = true" *ngIf="!isMenuVisible">
+    <fa-icon [icon]="toggleMenuIcon" size="2x"></fa-icon>
   </div>
-  <div class="menu">
+  <div class="menu" *ngIf="isMenuVisible">
     <div class="d-flex flex-column flex-grow-1 h-100">
       <div class="flex-grow-1 position-relative">
         <div class="card position-absolute h-100 w-100">
           <div class="card-header">
-            <button type="button" class="close d-md-none" aria-label="Close">
+            <button type="button" class="close d-md-none" aria-label="Close" (click)="isMenuVisible = false">
               <span aria-hidden="true">&times;</span>
             </button>
             <h1 class="h4">InstantMessenger</h1>

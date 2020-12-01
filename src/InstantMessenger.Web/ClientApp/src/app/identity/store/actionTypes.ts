@@ -22,4 +22,7 @@ export enum ActionTypes {
   LOGOUT = '[Identity] Logout',
   LOGOUT_SUCCESS = '[Identity] Logout success',
   LOGOUT_FAILURE = '[Identity] Logout failure',
+
+  CHANGE_NICKNAME = '[Identity] Change nickname',
+  CHANGE_NICKNAME_SUCCESS = '[Identity] Change nickname success',
 }

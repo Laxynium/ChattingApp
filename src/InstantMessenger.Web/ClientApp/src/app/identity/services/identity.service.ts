@@ -56,4 +56,9 @@ export class IdentityService {
     const url = `${environment.apiUrl}/identity/reset-password`;
     return this.http.post(url, payload).pipe(map((_) => ({})));
   }
+
+  changeNickname(nickname: string): Observable<string> {
+    const url = `${environment.apiUrl}/identity/nickname`;
+    return this.http.put(url, {nickname: nickname}).pipe(map(() => nickname));
+  }
 }

@@ -25,6 +25,7 @@ import {
   logoutActiion,
   logoutSuccessAction,
 } from 'src/app/identity/store/actions/logout.actions';
+import {changeNicknameSuccessAction} from 'src/app/identity/store/actions/changeNickname.actions';
 
 const initialState: IdentityStateInterface = {
   isSubmitting: false,
@@ -134,6 +135,16 @@ const identityReducer = createReducer(
     (state): IdentityStateInterface => ({
       ...state,
       currentUser: null,
+    })
+  ),
+  on(
+    changeNicknameSuccessAction,
+    (state, action): IdentityStateInterface => ({
+      ...state,
+      currentUser: {
+        ...state.currentUser,
+        nickname: action.response.nickname,
+      },
     })
   )
 );

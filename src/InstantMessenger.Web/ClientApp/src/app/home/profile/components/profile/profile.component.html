@@ -1,6 +1,69 @@
 <h2 class="text-center">Profile</h2>
-<div>
-  <img src="{{avatar$ | async}}" class="rounded-circle profile-img">
-  <strong>{{nickname$ |async}}</strong>
-  <input #fileInput type="file" [multiple]="false" (change)="uploadAvatar(fileInput.files)">
+<div class="container mt-2">
+  <div class="row">
+    <div class="col p-0">
+      <img src="{{avatar$ | async}}" class="profile-img">
+    </div>
+    <div class="col profile-nickname-container"><strong class="profile-nickname">{{nickname$ |async}}</strong>
+    </div>
+    <div class="col-sm-10">&nbsp;</div>
+  </div>
+  <div class="row">
+    <button class="mt-1 btn btn-sm btn-secondary" (click)="open(avatarModal)">Upload avatar</button>
+    <button class="mt-1 ml-2 btn btn-sm btn-secondary" (click)="open(nicknameModal)">Change nickname</button>
+  </div>
 </div>
+
+<ng-template #avatarModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Avatar upload</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="avatarForm">
+      <div class="form-group">
+        <label for="avatar"><strong>Choose png avatar file. </strong></label>
+        <div class="input-group">
+          <input class="form-control-file" formControlName="avatar" name="avatar" #fileInput type="file"
+            [multiple]="false">
+        </div>
+        <div *ngIf="avatar.invalid && (avatar.dirty || avatar.touched)" class="text-danger">
+          <div *ngIf="avatar.errors.required">Avatar file is required</div>
+          <div *ngIf="avatar.errors.requiredFileType">Avatar file must be in png format</div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button [disabled]="!avatarForm.valid" type="button" class="btn btn-outline-dark"
+      (click)="uploadAvatar(fileInput.files)">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #nicknameModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Nickname change</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="nicknameForm">
+      <div class="form-group">
+        <label for="nickname">Nickname</label>
+        <div class="input-group">
+          <input formControlName="nickname" name="nickname" type="text">
+        </div>
+        <div *ngIf="nickname.invalid && (nickname.dirty || nickname.touched)" class="text-danger">
+          <div *ngIf="nickname.errors.required">Nickname file is required</div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button [disabled]="!nicknameForm.valid" type="button" class="btn btn-outline-dark"
+      (click)="changeNickname()">Save</button>
+  </div>
+</ng-template>

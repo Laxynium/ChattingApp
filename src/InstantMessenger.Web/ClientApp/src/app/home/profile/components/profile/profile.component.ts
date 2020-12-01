@@ -1,15 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {ProfileService} from 'src/app/home/profile/services/profile.service';
+import {Observable} from 'rxjs';
+import {requiredFileType} from 'src/app/home/profile/components/profile/validators';
+import {getProfile} from 'src/app/home/profile/store/actions/getProfile.actions';
 import {uploadAvatar} from 'src/app/home/profile/store/actions/uploadAvatar.actions';
 import {
   avatarSelector,
   nicknameSelector,
 } from 'src/app/home/profile/store/selectors';
-import {currentUser} from 'src/app/identity/store/selectors';
+import {changeNicknameAction} from 'src/app/identity/store/actions/changeNickname.actions';
 
 @Component({
   selector: 'app-profile',
@@ -19,8 +20,13 @@ import {currentUser} from 'src/app/identity/store/selectors';
 export class ProfileComponent implements OnInit {
   nickname$: Observable<string>;
   avatar$: Observable<string>;
-  form: FormGroup;
-  constructor(private fb: FormBuilder, private store: Store) {
+  avatarForm: FormGroup;
+  nicknameForm: FormGroup;
+  constructor(
+    private fb: FormBuilder,
+    private modalService: NgbModal,
+    private store: Store
+  ) {
     this.nickname$ = this.store.pipe(select(nicknameSelector));
     this.avatar$ = this.store.pipe(select(avatarSelector));
   }
@@ -28,9 +34,22 @@ export class ProfileComponent implements OnInit {
     this.initializeForm();
     this.initializeValues();
   }
-  initializeValues() {}
+  initializeValues() {
+    this.store.dispatch(getProfile());
+  }
   initializeForm() {
-    this.form = this.fb.group({});
+    this.avatarForm = this.fb.group({
+      avatar: [
+        '',
+        Validators.compose([Validators.required, requiredFileType('png')]),
+      ],
+    });
+    this.nicknameForm = this.fb.group({
+      nickname: ['', Validators.required],
+    });
+    this.nickname$.subscribe((n) => {
+      this.nicknameForm.setValue({nickname: n});
+    });
   }
   uploadAvatar(files: File[]) {
     this.store.dispatch(
@@ -40,12 +59,24 @@ export class ProfileComponent implements OnInit {
         },
       })
     );
+    this.modalService.dismissAll();
   }
-  onSubmit() {}
-  get email() {
-    return this.form.get('email');
+  changeNickname() {
+    const nickname = this.nicknameForm.value.nickname;
+    this.store.dispatch(changeNicknameAction({request: {nickname: nickname}}));
   }
-  get password() {
-    return this.form.get('password');
+  open(content) {
+    this.modalService
+      .open(content, {ariaLabelledBy: 'modal-basic-title'})
+      .result.then(
+        () => {},
+        () => {}
+      );
+  }
+  get avatar() {
+    return this.avatarForm.get('avatar');
+  }
+  get nickname() {
+    return this.nicknameForm.get('nickname');
   }
 }

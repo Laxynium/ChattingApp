@@ -1,0 +1,36 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nickname</th>
+      <th scope="col">Since</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let friend of friends; index as i">
+      <td><img class="friend-icon" src="{{friend.icon }}" /></td>
+      <td>
+        {{friend.nickname}}
+      </td>
+      <td>{{friend.since}}</td>
+      <td>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-sm btn-primary mr-1">Chat</button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="d-flex justify-content-between p-2">
+  <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize"
+    (pageChange)="refreshFriends()">
+  </ngb-pagination>
+
+  <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshFriends()">
+    <option [ngValue]="2">2 items per page</option>
+    <option [ngValue]="4">4 items per page</option>
+    <option [ngValue]="6">6 items per page</option>
+  </select>
+</div>

@@ -1,8 +1,6 @@
 import {Action, createReducer, on} from '@ngrx/store';
-import {
-  uploadAvatar,
-  uploadAvatarSuccess,
-} from 'src/app/home/profile/store/actions/uploadAvatar.actions';
+import {getProfileSuccess} from 'src/app/home/profile/store/actions/getProfile.actions';
+import {uploadAvatarSuccess} from 'src/app/home/profile/store/actions/uploadAvatar.actions';
 import {ProfilesState} from 'src/app/home/profile/types/ProfilesState.interface';
 
 const initialState: ProfilesState = {
@@ -13,6 +11,13 @@ const profilesReducer = createReducer(
   initialState,
   on(
     uploadAvatarSuccess,
+    (state, action): ProfilesState => ({
+      ...state,
+      avatar: action.profile.avatar,
+    })
+  ),
+  on(
+    getProfileSuccess,
     (state, action): ProfilesState => ({
       ...state,
       avatar: action.profile.avatar,

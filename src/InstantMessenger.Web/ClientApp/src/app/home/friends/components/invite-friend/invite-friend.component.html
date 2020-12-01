@@ -1,0 +1,11 @@
+<form [formGroup]="form" (ngSubmit)="sendInvitation()" class="form-inline pt-2">
+  <div class="form-group mx-sm-3 mb-2">
+    <label for="nickname" class="sr-only">Nickname</label>
+    <input formControlName='nickname' type="text" class="form-control" name="nickname" placeholder="Nickname">
+  </div>
+  <button [disabled]="form.invalid || ($isSubmitting | async)" type="submit" class="btn btn-primary mb-2">Send
+    invitation</button>
+  <div *ngIf="($isSubmitting | async)" class="form-group mx-sm-3 mb-2 spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</form>

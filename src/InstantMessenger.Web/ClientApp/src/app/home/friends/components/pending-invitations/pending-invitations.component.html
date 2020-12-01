@@ -1,0 +1,39 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">From</th>
+      <th scope="col">Type</th>
+      <th scope="col">Created at</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let invitation of $invitations | async;">
+      <td>{{invitation.status}}</td><!-- <img class="friend-icon" src="{{invitation.icon }}" /> -->
+      <td>{{invitation.senderId}}</td>
+      <td>
+        {{invitation.type}}
+      </td>
+      <td>{{invitation.createdAt}}</td>
+      <td>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-sm btn-success mr-1">Accept</button>
+          <button class="btn btn-sm btn-danger mr-1">Reject</button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="d-flex justify-content-between p-2">
+  <ngb-pagination [(page)]="this.paginator.currentPage" [pageSize]="this.paginator.pageSize"
+    [collectionSize]="this.$totalSize | async" (pageChange)="refreshInvitations()">
+  </ngb-pagination>
+
+  <select class="custom-select" style="width: auto" [(ngModel)]="this.paginator.pageSize"
+    (ngModelChange)="refreshInvitations()">
+    <option [ngValue]="2">2 items per page</option>
+    <option [ngValue]="4">4 items per page</option>
+    <option [ngValue]="6">6 items per page</option>
+  </select>
+</div>
