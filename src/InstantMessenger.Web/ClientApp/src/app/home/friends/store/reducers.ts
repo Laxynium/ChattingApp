@@ -7,11 +7,11 @@ import {
   sendInvitationFailureAction,
   sendInvitationSuccessAction,
 } from 'src/app/home/friends/store/actions';
-import {InvitationInterface} from 'src/app/home/friends/types/invitation.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
 
 export interface FriendsStateInterface {
   isSubmitting: boolean;
-  pendingInvitations: InvitationInterface[];
+  pendingInvitations: InvitationFullInterface[];
   arePendingInvitationsLoading: boolean;
 }
 

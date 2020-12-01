@@ -7,7 +7,10 @@ import {
   arePendingInvitationsLoadingSelector,
   pendingInvitationsSelector,
 } from 'src/app/home/friends/store/selectors';
-import {InvitationInterface} from 'src/app/home/friends/types/invitation.interface';
+import {
+  InvitationFullInterface,
+  InvitationInterface,
+} from 'src/app/home/friends/types/invitation.interface';
 import {PaginatorInterface} from 'src/app/home/friends/types/paginator.interface';
 
 @Component({
@@ -22,7 +25,7 @@ export class PendingInvitationsComponent implements OnInit {
     totalSize: 0,
   };
 
-  $invitations: Observable<InvitationInterface[]>;
+  $invitations: Observable<InvitationFullInterface[]>;
   $arePendingInvitationsLoading: Observable<boolean>;
   $totalSize: Observable<number>;
   constructor(private store: Store) {
@@ -42,7 +45,9 @@ export class PendingInvitationsComponent implements OnInit {
   refreshInvitations() {
     this.store.dispatch(getPendingInvitationsAction());
   }
-  private paginate(invitations: InvitationInterface[]): InvitationInterface[] {
+  private paginate(
+    invitations: InvitationFullInterface[]
+  ): InvitationFullInterface[] {
     return invitations.slice(
       (this.paginator.currentPage - 1) * this.paginator.pageSize,
       (this.paginator.currentPage - 1) * this.paginator.pageSize +

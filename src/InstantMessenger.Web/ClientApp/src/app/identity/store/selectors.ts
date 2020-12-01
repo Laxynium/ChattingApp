@@ -20,9 +20,9 @@ export const currentUser = createSelector(
 
 export const nicknameSelector = createSelector(
   currentUser,
-  (s: CurrentUserInterface): string => s.nickname
+  (s: CurrentUserInterface): string => s?.nickname
 );
 
 export const avatarSelector = createSelector(currentUser, (s): string =>
-  s.avatar ? `${s.avatar}` : 'assets/profile-placeholder.png'
+  s?.avatar ? `${s.avatar}` : 'assets/profile-placeholder.png'
 );

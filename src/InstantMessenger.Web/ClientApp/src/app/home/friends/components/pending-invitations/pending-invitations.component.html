@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">From</th>
+      <th scope="col">From/To</th>
       <th scope="col">Type</th>
       <th scope="col">Created at</th>
       <th scope="col"></th>
@@ -10,16 +10,24 @@
   </thead>
   <tbody>
     <tr *ngFor="let invitation of $invitations | async;">
-      <td>{{invitation.status}}</td><!-- <img class="friend-icon" src="{{invitation.icon }}" /> -->
-      <td>{{invitation.senderId}}</td>
+      <td>
+        <img class="friend-icon"
+          src="{{invitation.type == 'Outgoing'? invitation.receiver.avatar : invitation.sender.avatar}}" />
+      </td>
+      <td>{{invitation.type == 'Outgoing'?invitation.receiver.nickname:invitation.sender.nickname}}</td>
       <td>
         {{invitation.type}}
       </td>
-      <td>{{invitation.createdAt}}</td>
+      <td>{{invitation.createdAt | date: 'yyyy/MM/dd HH:mm'}}</td>
       <td>
         <div class="d-flex justify-content-end">
-          <button class="btn btn-sm btn-success mr-1">Accept</button>
-          <button class="btn btn-sm btn-danger mr-1">Reject</button>
+          <div *ngIf="invitation.type == 'Incoming'">
+            <button class="btn btn-sm btn-success mr-1">Accept</button>
+            <button class="btn btn-sm btn-danger mr-1">Reject</button>
+          </div>
+          <div *ngIf="invitation.type == 'Outgoing'">
+            <button class="btn btn-sm btn-danger mr-1">Cancel</button>
+          </div>
         </div>
       </td>
     </tr>

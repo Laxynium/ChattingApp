@@ -1,5 +1,8 @@
 import {createAction, props} from '@ngrx/store';
-import {InvitationInterface} from 'src/app/home/friends/types/invitation.interface';
+import {
+  InvitationFullInterface,
+  InvitationInterface,
+} from 'src/app/home/friends/types/invitation.interface';
 
 export enum ActionTypes {
   SEND_INVITATION = '[Friends] Send invitation',
@@ -30,7 +33,7 @@ export const getPendingInvitationsAction = createAction(
 
 export const getPendingInvitationsSuccessAction = createAction(
   ActionTypes.GET_PENDING_INVITATION_SUCCESS,
-  props<{invitations: InvitationInterface[]}>()
+  props<{invitations: InvitationFullInterface[]}>()
 );
 
 export const getPendingInvitationsFailureAction = createAction(

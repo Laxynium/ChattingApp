@@ -19,5 +19,20 @@ export const arePendingInvitationsLoadingSelector = createSelector(
 
 export const pendingInvitationsSelector = createSelector(
   friendsFeatureSelector,
-  (state: FriendsStateInterface) => state.pendingInvitations
+  (state: FriendsStateInterface) =>
+    state.pendingInvitations.map((x) => ({
+      ...x,
+      receiver: {
+        ...x.receiver,
+        avatar: x.receiver.avatar
+          ? x.receiver.avatar
+          : 'assets/profile-placeholder.png',
+      },
+      sender: {
+        ...x.sender,
+        avatar: x.sender.avatar
+          ? x.sender.avatar
+          : 'assets/profile-placeholder.png',
+      },
+    }))
 );

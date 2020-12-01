@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using InstantMessenger.Identity.Api.Features.ChangeAvatar;
 using InstantMessenger.Identity.Api.Features.ChangeNickname;
 using InstantMessenger.Identity.Api.Features.PasswordReset;
@@ -93,5 +94,11 @@ namespace InstantMessenger.Identity.Api
             return Ok(result);
         }
 
+        [HttpGet("users/{userId}")]
+        public async Task<IActionResult> GetUsers(Guid userId)
+        {
+            var result = await _queryDispatcher.QueryAsync(new GetUserByIdQuery(userId));
+            return Ok(result);
+        }
     }
 }
