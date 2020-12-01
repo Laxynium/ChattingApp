@@ -1,6 +1,5 @@
 $projects = @(
-    @{project="Identity";context="IdentityContext"}
-    @{project="Profiles";context="ProfilesContext"}
+    @{project="Identity";context="IdentityContext"}    
     @{project="Friendships";context="FriendshipsContext"}
     @{project="PrivateMessages";context="PrivateMessagesContext"},
     @{project="Groups";context="GroupsContext"}

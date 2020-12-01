@@ -2,12 +2,12 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {switchMap, catchError, map, tap} from 'rxjs/operators';
-import {ProfileService} from 'src/app/home/profile/services/profile.service';
+import {IdentityService} from 'src/app/identity/services/identity.service';
+import {} from 'src/app/identity/store/actions/signIn.actions';
 import {
   uploadAvatar,
   uploadAvatarSuccess,
-} from 'src/app/home/profile/store/actions/uploadAvatar.actions';
-import {} from 'src/app/identity/store/actions/signIn.actions';
+} from 'src/app/identity/store/actions/uploadAvatar.actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
 import {ToastService} from 'src/app/shared/toasts/toast.service';
 
@@ -17,8 +17,8 @@ export class UploadAvatarEffect {
     this.actions$.pipe(
       ofType(uploadAvatar),
       switchMap((action) =>
-        this.profilesService.uploadAvatar(action.request).pipe(
-          map((r) => uploadAvatarSuccess({profile: r})),
+        this.identityService.uploadAvatar(action.request).pipe(
+          map((r) => uploadAvatarSuccess({user: r})),
           catchError((response) =>
             of(
               requestFailedAction({
@@ -51,6 +51,6 @@ export class UploadAvatarEffect {
   constructor(
     private actions$: Actions,
     private toastService: ToastService,
-    private profilesService: ProfileService
+    private identityService: IdentityService
   ) {}
 }

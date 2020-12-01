@@ -20,6 +20,8 @@ import {ResetPasswordComponent} from './components/reset-password/reset-password
 import {getMetaReducers} from 'src/app/identity/store/meta.reducers';
 import {LogoutEffect} from 'src/app/identity/store/effects/logout.effect';
 import {ChangeNicknameEffect} from 'src/app/identity/store/effects/changeNickname.effect';
+import {UploadAvatarEffect} from 'src/app/identity/store/effects/uploadAvatar.effect';
+import {GetProfileEffect} from 'src/app/identity/store/effects/getCurrentUser.effect';
 
 const routes = [
   {path: 'sign-in', component: LoginComponent},
@@ -52,6 +54,8 @@ const routes = [
       ForgotPasswordEffect,
       LogoutEffect,
       ChangeNicknameEffect,
+      UploadAvatarEffect,
+      GetProfileEffect,
     ]),
   ],
   providers: [IdentityService, PersistanceService],

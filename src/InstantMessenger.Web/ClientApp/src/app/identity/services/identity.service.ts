@@ -5,11 +5,12 @@ import {map, mergeMap} from 'rxjs/operators';
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {environment} from 'src/environments/environment';
 import {SignUpRequestInterface} from '../types/signUpRequest.interface';
-import {ActivateRequestInterface} from '../types/ActivateRequest.interface';
+import {ActivateRequestInterface} from '../types/activateRequest.interface';
 import {SignInRequestInterface} from 'src/app/identity/types/signInRequest.interface';
 import {SignInResponseInterface} from '../../shared/types/signIn.response';
 import {ForgotPasswordRequestInterface} from '../types/forgotPasswordRequest.interface';
 import {ResetPasswordRequestInterface} from '../types/resetPasswordRequest.interface';
+import {UploadAvatarRequest} from 'src/app/identity/types/uploadAvatar.request';
 
 @Injectable()
 export class IdentityService {
@@ -60,5 +61,19 @@ export class IdentityService {
   changeNickname(nickname: string): Observable<string> {
     const url = `${environment.apiUrl}/identity/nickname`;
     return this.http.put(url, {nickname: nickname}).pipe(map(() => nickname));
+  }
+
+  uploadAvatar(request: UploadAvatarRequest): Observable<CurrentUserInterface> {
+    const url = `${environment.apiUrl}/identity/avatar`;
+    const data = new FormData();
+    data.append('image', request.file, request.file.name);
+    return this.http
+      .post(url, data)
+      .pipe(mergeMap(() => this.getCurrentUser()));
+  }
+
+  getCurrentUser() {
+    const url = `${environment.apiUrl}/identity/me`;
+    return this.http.get<CurrentUserInterface>(url);
   }
 }

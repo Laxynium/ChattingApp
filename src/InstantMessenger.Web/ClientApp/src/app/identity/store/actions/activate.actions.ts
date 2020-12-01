@@ -1,7 +1,7 @@
 import {createAction, props} from '@ngrx/store';
 
 import {ActionTypes} from '../actionTypes';
-import {ActivateRequestInterface} from '../../types/ActivateRequest.interface';
+import {ActivateRequestInterface} from '../../types/activateRequest.interface';
 
 export const activateAction = createAction(
   ActionTypes.ACTIVATE,

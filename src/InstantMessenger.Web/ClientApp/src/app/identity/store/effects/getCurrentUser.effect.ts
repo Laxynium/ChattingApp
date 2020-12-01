@@ -2,11 +2,11 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {switchMap, catchError, map, tap} from 'rxjs/operators';
-import {ProfileService} from 'src/app/home/profile/services/profile.service';
+import {IdentityService} from 'src/app/identity/services/identity.service';
 import {
-  getProfile,
-  getProfileSuccess,
-} from 'src/app/home/profile/store/actions/getProfile.actions';
+  getCurrentUser,
+  getCurrentUserSuccess,
+} from 'src/app/identity/store/actions/getCurrentUser.actions';
 import {} from 'src/app/identity/store/actions/signIn.actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
 import {mapToError} from 'src/app/shared/types/error.response';
@@ -15,10 +15,10 @@ import {mapToError} from 'src/app/shared/types/error.response';
 export class GetProfileEffect {
   $getProfile = createEffect(() =>
     this.actions$.pipe(
-      ofType(getProfile),
+      ofType(getCurrentUser),
       switchMap(() =>
-        this.profilesService.getProfile().pipe(
-          map((p) => getProfileSuccess({profile: p})),
+        this.identityService.getCurrentUser().pipe(
+          map((u) => getCurrentUserSuccess({user: u})),
           catchError((response) =>
             of(requestFailedAction({error: mapToError(response)}))
           )
@@ -28,6 +28,6 @@ export class GetProfileEffect {
   );
   constructor(
     private actions$: Actions,
-    private profilesService: ProfileService
+    private identityService: IdentityService
   ) {}
 }

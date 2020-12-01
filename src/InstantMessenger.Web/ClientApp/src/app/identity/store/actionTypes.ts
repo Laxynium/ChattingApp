@@ -25,4 +25,12 @@ export enum ActionTypes {
 
   CHANGE_NICKNAME = '[Identity] Change nickname',
   CHANGE_NICKNAME_SUCCESS = '[Identity] Change nickname success',
+
+  UPLOAD_AVATAR = '[Identity] Upload avatar',
+  UPLOAD_AVATAR_SUCCESS = '[Identity] Upload avatar success',
+  UPLOAD_AVATAR_FAILURE = '[Identity] Upload avatar failure',
+
+  GET_CURRENT_USER = '[Identity] Get current user',
+  GET_CURRENT_USER_SUCCESS = '[Identity] Get current user success',
+  GET_CURRENT_USER_FAILURE = '[Identity] Get current user success',
 }

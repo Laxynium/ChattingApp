@@ -25,8 +25,8 @@
       </div>
       <div class="flex-grow-0">
         <div class="bottom pl-2">
-          <img src="https://via.placeholder.com/40" alt="" class="rounded-circle user-img" />
-          <span class="nickname">Nickname</span>
+          <img src="{{$avatar|async}}" alt="" class="rounded-circle user-img" />
+          <span class="nickname">{{$nickname|async}}</span>
           <button class="btn btn-secondary" (click)="logout()">
             <i class="sign-out fas fa-sign-out-alt">Logout</i>
           </button>

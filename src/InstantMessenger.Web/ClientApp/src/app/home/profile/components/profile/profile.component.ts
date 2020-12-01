@@ -4,13 +4,13 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {requiredFileType} from 'src/app/home/profile/components/profile/validators';
-import {getProfile} from 'src/app/home/profile/store/actions/getProfile.actions';
-import {uploadAvatar} from 'src/app/home/profile/store/actions/uploadAvatar.actions';
+import {changeNicknameAction} from 'src/app/identity/store/actions/changeNickname.actions';
+import {getCurrentUser} from 'src/app/identity/store/actions/getCurrentUser.actions';
+import {uploadAvatar} from 'src/app/identity/store/actions/uploadAvatar.actions';
 import {
   avatarSelector,
   nicknameSelector,
-} from 'src/app/home/profile/store/selectors';
-import {changeNicknameAction} from 'src/app/identity/store/actions/changeNickname.actions';
+} from 'src/app/identity/store/selectors';
 
 @Component({
   selector: 'app-profile',
@@ -35,7 +35,7 @@ export class ProfileComponent implements OnInit {
     this.initializeValues();
   }
   initializeValues() {
-    this.store.dispatch(getProfile());
+    this.store.dispatch(getCurrentUser());
   }
   initializeForm() {
     this.avatarForm = this.fb.group({
@@ -52,6 +52,7 @@ export class ProfileComponent implements OnInit {
     });
   }
   uploadAvatar(files: File[]) {
+    if (files.length == 0) return;
     this.store.dispatch(
       uploadAvatar({
         request: {
@@ -69,8 +70,12 @@ export class ProfileComponent implements OnInit {
     this.modalService
       .open(content, {ariaLabelledBy: 'modal-basic-title'})
       .result.then(
-        () => {},
-        () => {}
+        () => {
+          this.avatarForm.setValue({avatar: ''});
+        },
+        () => {
+          this.avatarForm.setValue({avatar: ''});
+        }
       );
   }
   get avatar() {
