@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace InstantMessenger.Friendships.Domain
+namespace InstantMessenger.Friendships.Domain.Repositories
 {
     public interface IInvitationRepository
     {

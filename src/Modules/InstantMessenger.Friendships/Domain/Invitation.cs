@@ -38,9 +38,10 @@ namespace InstantMessenger.Friendships.Domain
         public Friendship AcceptInvitation(Person acceptor, IClock clock)
         {
             if (acceptor.Id != ReceiverId)
-            {
                 throw new PersonNotFoundException();
-            }
+
+            if(Status != InvitationStatus.Pending)
+                throw new InvalidInvitationStateException();
 
             Status = InvitationStatus.Accepted;
 
@@ -50,11 +51,23 @@ namespace InstantMessenger.Friendships.Domain
         public void RejectInvitation(Person rejecter)
         {
             if (rejecter.Id != ReceiverId)
-            {
                 throw new PersonNotFoundException();
-            }
+
+            if (Status != InvitationStatus.Pending)
+                throw new InvalidInvitationStateException();
 
             Status = InvitationStatus.Rejected;
+        }
+
+        public void CancelInvitation(Person sender)
+        {
+            if (sender.Id != SenderId)
+                throw new PersonNotFoundException();
+
+            if (Status != InvitationStatus.Pending)
+                throw new InvalidInvitationStateException();
+
+            Status = InvitationStatus.Canceled;
         }
     }
 }

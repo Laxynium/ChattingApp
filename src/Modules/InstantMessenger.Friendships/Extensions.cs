@@ -1,5 +1,6 @@
 ﻿using InstantMessenger.Friendships.Api;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Friendships.Infrastructure;
 using InstantMessenger.Friendships.Infrastructure.Database;

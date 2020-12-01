@@ -2,6 +2,7 @@
 using InstantMessenger.Friendships.Api.Features.SendInvitation.ExternalQuery;
 using InstantMessenger.Friendships.Domain;
 using InstantMessenger.Friendships.Domain.Exceptions;
+using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Modules;
@@ -13,6 +14,7 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
     {
         private readonly IPersonRepository _personRepository;
         private readonly IInvitationRepository _invitationRepository;
+        private readonly IFriendshipRepository _friendshipRepository;
         private readonly IUniquePendingInvitationRule _rule;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClock _clock;
@@ -21,6 +23,7 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
         public SendFriendshipInvitationHandler(
             IPersonRepository personRepository, 
             IInvitationRepository invitationRepository,
+            IFriendshipRepository friendshipRepository,
             IUniquePendingInvitationRule rule,
             IUnitOfWork unitOfWork,
             IClock clock,
@@ -28,6 +31,7 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
         {
             _personRepository = personRepository;
             _invitationRepository = invitationRepository;
+            _friendshipRepository = friendshipRepository;
             _rule = rule;
             _unitOfWork = unitOfWork;
             _clock = clock;
@@ -43,6 +47,9 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
                 throw new PersonNotFoundException();
 
             var receiver = await _personRepository.GetAsync(receiverDto.Id) ?? throw new PersonNotFoundException();
+
+            if (await _friendshipRepository.ExistsBetweenAsync(sender.Id, receiver.Id))
+                throw new InvalidInvitationException();
 
             var invitation = await Invitation.Create(sender, receiver, _rule, _clock);
 

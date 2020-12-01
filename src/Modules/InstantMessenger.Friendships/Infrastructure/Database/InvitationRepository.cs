@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Repositories;
 
 namespace InstantMessenger.Friendships.Infrastructure.Database
 {

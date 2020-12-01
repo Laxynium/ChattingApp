@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
 using InstantMessenger.Friendships.Domain.Exceptions;
+using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MessageBrokers;
 using NodaTime;
@@ -35,6 +36,8 @@ namespace InstantMessenger.Friendships.Api.Features.AcceptInvitation
         {
             var invitation = await _invitationRepository.GetAsync(command.InvitationId) ?? throw new FriendshipInvitationNotFound();
             var person = await _personRepository.GetAsync(command.ReceiverId) ?? throw new PersonNotFoundException();
+            if(await _friendshipRepository.ExistsBetweenAsync(invitation.SenderId, invitation.ReceiverId))
+                throw new InvalidInvitationException();
 
             var friendship = invitation.AcceptInvitation(person, _clock);
 

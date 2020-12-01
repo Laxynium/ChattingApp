@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Api.Features.AcceptInvitation;
+using InstantMessenger.Friendships.Api.Features.CancelInvitation;
 using InstantMessenger.Friendships.Api.Features.RejectInvitation;
 using InstantMessenger.Friendships.Api.Features.SendInvitation;
 using InstantMessenger.Friendships.Api.Queries;
@@ -48,6 +49,15 @@ namespace InstantMessenger.Friendships.Api
                 new RejectFriendshipInvitationCommand(request.InvitationId, User.GetUserId()));
             return Ok();
         }
+
+        [HttpPost("invitations/cancel")]
+        public async Task<IActionResult> Post(CancelFriendshipInvitationApiRequest request)
+        {
+            await _commandDispatcher.SendAsync(
+                new CancelFriendshipInvitationCommand(request.InvitationId, User.GetUserId()));
+            return Ok();
+        }
+
 
         [HttpGet("invitations/pending")]
         public async Task<IActionResult> GetPending()

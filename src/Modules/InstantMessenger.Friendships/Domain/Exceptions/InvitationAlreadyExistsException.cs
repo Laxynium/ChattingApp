@@ -1,6 +1,4 @@
-﻿using InstantMessenger.Friendships.Domain.Exceptions;
-
-namespace InstantMessenger.Friendships.Api
+﻿namespace InstantMessenger.Friendships.Domain.Exceptions
 {
     public sealed class InvitationAlreadyExistsException : DomainException
     {
