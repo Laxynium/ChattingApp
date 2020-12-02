@@ -13,16 +13,16 @@ export const isSubmittingSelector = createSelector(
   (identityState: IdentityStateInterface) => identityState.isSubmitting
 );
 
-export const currentUser = createSelector(
+export const currentUserSelector = createSelector(
   identityFeatureSelector,
   (state: IdentityStateInterface): CurrentUserInterface => state.currentUser
 );
 
 export const nicknameSelector = createSelector(
-  currentUser,
+  currentUserSelector,
   (s: CurrentUserInterface): string => s?.nickname
 );
 
-export const avatarSelector = createSelector(currentUser, (s): string =>
+export const avatarSelector = createSelector(currentUserSelector, (s): string =>
   s?.avatar ? `${s.avatar}` : 'assets/profile-placeholder.png'
 );

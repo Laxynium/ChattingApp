@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using InstantMessenger.Identity.Api;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
@@ -36,13 +37,11 @@ namespace InstantMessenger.Identity
                 c =>
                 {
                     c.AddDefaultPolicy(
-                        x =>
-                        {
-                            x.AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowAnyOrigin()
-                                .SetIsOriginAllowedToAllowWildcardSubdomains();
-                        }
+                        x => x
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                            .WithOrigins("http://localhost:4200")//TODO: move it to appSettings
                     );
                 }
             );
@@ -63,6 +62,21 @@ namespace InstantMessenger.Identity
                         IssuerSigningKey = new SymmetricSecurityKey(options.Key),
                         ValidateIssuer = false,
                         ValidateAudience = false
+                    };
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrWhiteSpace(accessToken) && (path.StartsWithSegments("/api/friendships/hub"))) //TODO move to appsettings paths to hubs
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                            ;
+                        }
                     };
                 }
             );

@@ -4,7 +4,7 @@ import {ToastService} from '../../../shared/toasts/toast.service';
 import {select, Store} from '@ngrx/store';
 import {signInAction} from '../../store/actions/signIn.actions';
 import {Observable} from 'rxjs';
-import {isSubmittingSelector, currentUser} from '../../store/selectors';
+import {isSubmittingSelector, currentUserSelector} from '../../store/selectors';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    store.pipe(select(currentUser)).subscribe((x) => {
+    store.pipe(select(currentUserSelector)).subscribe((x) => {
       if (x) {
         this.router.navigateByUrl('/');
       }

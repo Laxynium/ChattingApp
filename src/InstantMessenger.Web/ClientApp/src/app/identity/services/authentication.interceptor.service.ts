@@ -7,7 +7,6 @@ import {
 } from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {PersistanceService} from '../../shared/services/persistance.service';
-import {currentUser} from '../store/selectors';
 import {CurrentUserInterface} from '../../shared/types/currentUser.interface';
 
 @Injectable()

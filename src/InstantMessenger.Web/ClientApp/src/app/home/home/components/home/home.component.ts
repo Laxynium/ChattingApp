@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {tap} from 'rxjs/operators';
 import {logoutActiion} from 'src/app/identity/store/actions/logout.actions';
 import {faBars} from '@fortawesome/free-solid-svg-icons';
 import {getCurrentUser} from 'src/app/identity/store/actions/getCurrentUser.actions';
@@ -10,6 +9,7 @@ import {
   avatarSelector,
   nicknameSelector,
 } from 'src/app/identity/store/selectors';
+import {HubService} from 'src/app/shared/services/hub.service';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +28,11 @@ export class HomeComponent implements OnInit {
   isMenuVisible = true;
   $nickname: Observable<string>;
   $avatar: Observable<string>;
-  constructor(public router: Router, private store: Store) {
+  constructor(
+    public router: Router,
+    private store: Store,
+    private hubService: HubService // there injection is required in order to start all connections to hub
+  ) {
     this.$nickname = this.store.pipe(select(nicknameSelector));
     this.$avatar = this.store.pipe(select(avatarSelector));
   }

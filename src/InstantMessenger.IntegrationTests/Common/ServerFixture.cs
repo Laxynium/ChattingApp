@@ -7,6 +7,7 @@ using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using InstantMessenger.Shared.MailKit;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +35,16 @@ namespace InstantMessenger.IntegrationTests.Common
 
         public TService GetService<TService>() => _testServer.Services.GetRequiredService<TService>();
         public IServiceProvider Services => _testServer.Services;
+
+        public HubConnection GetHubConnection(string hubPath, string token) => new HubConnectionBuilder()
+            .WithUrl(
+                $"http://localhost/{hubPath}",
+                o =>
+                {
+                    o.HttpMessageHandlerFactory = _ => _testServer.CreateHandler();
+                    o.AccessTokenProvider = () => Task.FromResult(token);
+                }
+            ).Build();
 
         public async Task InitializeAsync()
         {

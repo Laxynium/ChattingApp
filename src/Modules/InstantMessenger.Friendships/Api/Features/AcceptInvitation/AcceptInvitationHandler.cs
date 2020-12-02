@@ -45,7 +45,7 @@ namespace InstantMessenger.Friendships.Api.Features.AcceptInvitation
             await _unitOfWork.Commit();
 
             await _messageBroker.PublishAsync(new FriendshipCreatedEvent(friendship.Id, friendship.FirstPerson,
-                friendship.SecondPerson));
+                friendship.SecondPerson, friendship.CreatedAt));
         }
     }
 }

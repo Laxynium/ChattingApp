@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
       nickname: ['', Validators.required],
     });
     this.nickname$.subscribe((n) => {
-      this.nicknameForm.setValue({nickname: n});
+      this.nicknameForm.setValue({nickname: n ?? ''});
     });
   }
   uploadAvatar(files: File[]) {

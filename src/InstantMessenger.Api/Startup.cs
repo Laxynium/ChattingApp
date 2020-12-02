@@ -1,4 +1,5 @@
 using InstantMessenger.Friendships;
+using InstantMessenger.Friendships.Api.Hubs;
 using InstantMessenger.Groups;
 using InstantMessenger.Identity;
 using InstantMessenger.PrivateMessages;
@@ -22,6 +23,11 @@ namespace InstantMessenger.Api
                 .AddPrivateMessagesModule()
                 .AddGroupsModule()
                 .AddSharedModule();
+            services.AddSignalR(
+                x =>
+                {
+                    x.EnableDetailedErrors = true;
+                }).AddNewtonsoftJsonProtocol();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -42,6 +48,7 @@ namespace InstantMessenger.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<FriendshipsHub>("/api/friendships/hub");
             });
         }
     }

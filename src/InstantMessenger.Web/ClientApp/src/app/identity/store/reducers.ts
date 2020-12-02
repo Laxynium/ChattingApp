@@ -28,7 +28,6 @@ import {
 import {changeNicknameSuccessAction} from 'src/app/identity/store/actions/changeNickname.actions';
 import {uploadAvatarSuccess} from 'src/app/identity/store/actions/uploadAvatar.actions';
 import {getCurrentUserSuccess} from 'src/app/identity/store/actions/getCurrentUser.actions';
-import {currentUser} from 'src/app/identity/store/selectors';
 
 const initialState: IdentityStateInterface = {
   isSubmitting: false,
@@ -165,7 +164,13 @@ const identityReducer = createReducer(
     getCurrentUserSuccess,
     (state, action): IdentityStateInterface => ({
       ...state,
-      currentUser: action.user,
+      currentUser: {
+        ...state.currentUser,
+        id: action.user.id,
+        email: action.user.email,
+        nickname: action.user.nickname,
+        avatar: action.user.avatar,
+      },
     })
   )
 );

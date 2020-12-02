@@ -8,7 +8,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import {currentUser} from 'src/app/identity/store/selectors';
+import {currentUserSelector} from 'src/app/identity/store/selectors';
 import {map, tap} from 'rxjs/operators';
 
 @Injectable({
@@ -17,7 +17,7 @@ import {map, tap} from 'rxjs/operators';
 export class AuthGuard implements CanActivate {
   $currentUser: Observable<CurrentUserInterface | null>;
   constructor(private router: Router, private store: Store) {
-    this.$currentUser = this.store.pipe(select(currentUser));
+    this.$currentUser = this.store.pipe(select(currentUserSelector));
   }
 
   canActivate(

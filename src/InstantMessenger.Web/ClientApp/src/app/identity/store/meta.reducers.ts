@@ -1,7 +1,7 @@
 import {Action, ActionReducer, INIT, MetaReducer} from '@ngrx/store';
 import {mergeDeepRight, mergeRight, pick} from 'ramda';
 import {PersistanceService} from 'src/app/shared/services/persistance.service';
-import {currentUser} from './selectors';
+import {currentUserSelector} from './selectors';
 import {CurrentUserInterface} from '../../shared/types/currentUser.interface';
 import {AppStateInterface} from '../../shared/types/appState.interface';
 

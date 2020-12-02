@@ -10,6 +10,7 @@ import {ProfilesModule} from 'src/app/home/profile/profiles.module';
 import {FriendsComponent} from './friends/components/friends/friends.component';
 import {FriendsModule} from 'src/app/home/friends/friends.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {HubService} from 'src/app/shared/services/hub.service';
 
 const routes = [
   {
@@ -37,6 +38,6 @@ const routes = [
     ProfilesModule,
     FriendsModule,
   ],
-  providers: [],
+  providers: [HubService],
 })
 export class HomeModule {}
