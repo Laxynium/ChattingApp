@@ -1,6 +1,6 @@
 ﻿namespace InstantMessenger.Shared.Queries
 {
-    public interface IPagedQuery : IQuery
+    public interface IPagedQuery<TResult> : IQuery<TResult>
     {
         int Page { get; }
         int Results { get; }

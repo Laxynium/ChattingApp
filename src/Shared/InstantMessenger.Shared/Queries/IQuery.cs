@@ -4,6 +4,7 @@
     {
 
     }
+
     public interface IQuery<TResult> :IQuery
     {
         
