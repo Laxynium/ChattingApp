@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Events;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Shared.Commands;
@@ -46,6 +47,9 @@ namespace InstantMessenger.Friendships.Api.Features.AcceptInvitation
 
             await _messageBroker.PublishAsync(new FriendshipCreatedEvent(friendship.Id, friendship.FirstPerson,
                 friendship.SecondPerson, friendship.CreatedAt));
+            await _messageBroker.PublishAsync(
+                new FriendshipInvitationAcceptedEvent(invitation.Id, invitation.SenderId, invitation.ReceiverId, invitation.CreatedAt)
+            );
         }
     }
 }

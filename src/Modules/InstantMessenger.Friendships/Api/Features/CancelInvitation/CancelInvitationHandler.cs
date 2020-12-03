@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Events;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MessageBrokers;
-using NodaTime;
 
 namespace InstantMessenger.Friendships.Api.Features.CancelInvitation
 {
@@ -12,24 +12,18 @@ namespace InstantMessenger.Friendships.Api.Features.CancelInvitation
     {
         private readonly IInvitationRepository _invitationRepository;
         private readonly IPersonRepository _personRepository;
-        private readonly IFriendshipRepository _friendshipRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMessageBroker _messageBroker;
-        private readonly IClock _clock;
 
         public CancelInvitationHandler(IInvitationRepository invitationRepository,
             IPersonRepository personRepository,
-            IFriendshipRepository friendshipRepository,
             IUnitOfWork unitOfWork,
-            IMessageBroker messageBroker,
-            IClock clock)
+            IMessageBroker messageBroker)
         {
             _invitationRepository = invitationRepository;
             _personRepository = personRepository;
-            _friendshipRepository = friendshipRepository;
             _unitOfWork = unitOfWork;
             _messageBroker = messageBroker;
-            _clock = clock;
         }
 
         public async Task HandleAsync(CancelFriendshipInvitationCommand command)
@@ -40,6 +34,10 @@ namespace InstantMessenger.Friendships.Api.Features.CancelInvitation
             invitation.CancelInvitation(person);
 
             await _unitOfWork.Commit();
+
+            await _messageBroker.PublishAsync(
+                new FriendshipInvitationCanceledEvent(invitation.Id, invitation.SenderId, invitation.ReceiverId, invitation.CreatedAt)
+            );
         }
     }
 }

@@ -24,6 +24,7 @@ namespace InstantMessenger.Identity.Api.Features.SignIn
                 {
                     new Claim(ClaimTypes.Name, userId.ToString("N")),
                     new Claim(ClaimTypes.Role, "user"),
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString("N")), 
                 }),
                 Expires = DateTime.UtcNow.AddDays(_options.ExpirationDays),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_options.Key),

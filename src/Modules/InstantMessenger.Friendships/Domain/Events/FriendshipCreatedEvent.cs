@@ -2,7 +2,7 @@
 using InstantMessenger.Shared.Events;
 using InstantMessenger.Shared.Modules;
 
-namespace InstantMessenger.Friendships.Domain
+namespace InstantMessenger.Friendships.Domain.Events
 {
     [ProccessAlsoInternally]
     public class FriendshipCreatedEvent : IEvent

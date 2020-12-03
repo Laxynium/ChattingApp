@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Api.Hubs;
-using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Events;
 using InstantMessenger.Shared.Events;
 using Microsoft.AspNetCore.SignalR;
 
@@ -16,18 +16,9 @@ namespace InstantMessenger.Friendships.Api.EventHandlers
         }
         public async Task HandleAsync(FriendshipCreatedEvent @event)
         {
-            //TODO: Updated it to correct logic
-            await _hubContext.Clients.All.OnFriendshipCreated(new FriendshipDto(
-                @event.FriendshipId,
-                @event.FirstPerson,
-                @event.SecondPerson,
-                @event.CreatedAt
-            ));
-            //await _hubContext.Clients.All.OnFriendshipCreated(
-            //    new FriendshipDto(@event.FriendshipId, @event.FirstPerson, @event.SecondPerson, @event.CreatedAt)
-            //);
-            //await _hubContext.Clients.Users(@event.FirstPerson.ToString(), @event.SecondPerson.ToString())
-            //    .OnFriendshipCreated(new FriendshipDto(@event.FriendshipId, @event.FirstPerson, @event.SecondPerson, @event.CreatedAt));
+            await _hubContext.Clients
+                .Users(@event.FirstPerson.ToString("N"), @event.SecondPerson.ToString("N"))
+                .OnFriendshipCreated(new FriendshipDto(@event.FriendshipId, @event.FirstPerson, @event.SecondPerson, @event.CreatedAt));
         }
     }
 }

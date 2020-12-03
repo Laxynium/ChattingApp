@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace InstantMessenger.Friendships.Api.Hubs
 {
-    [Authorize]
     public class FriendshipDto
     {
         public Guid Id { get; }
@@ -21,10 +20,33 @@ namespace InstantMessenger.Friendships.Api.Hubs
             CreatedAt = createdAt;
         }
     }
+
+    public class InvitationDto
+    {
+        public Guid Id { get; }
+        public Guid SenderId { get; }
+        public Guid ReceiverId { get; }
+        public DateTimeOffset CreatedAt { get; }
+
+        public InvitationDto(Guid id, Guid senderId, Guid receiverId, DateTimeOffset createdAt)
+        {
+            Id = id;
+            SenderId = senderId;
+            ReceiverId = receiverId;
+            CreatedAt = createdAt;
+        }
+    }
+
     public interface IFriendshipsInterface
     {
         Task OnFriendshipCreated(FriendshipDto friendship);
+        Task OnFriendshipInvitationCreated(InvitationDto friendship);
+        Task OnFriendshipInvitationAccepted(InvitationDto friendship);
+        Task OnFriendshipInvitationRejected(InvitationDto friendship);
+        Task OnFriendshipInvitationCanceled(InvitationDto friendship);
     }
+
+    [Authorize]
     public class FriendshipsHub : Hub<IFriendshipsInterface>
     {
     }

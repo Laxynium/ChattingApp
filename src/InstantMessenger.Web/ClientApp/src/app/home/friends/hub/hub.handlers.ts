@@ -1,5 +1,9 @@
 import {Store} from '@ngrx/store';
-import {acceptInvitationSuccessAction} from 'src/app/home/friends/store/actions';
+import {
+  acceptInvitationSuccessAction,
+  getFriendsAction,
+  getPendingInvitationsAction,
+} from 'src/app/home/friends/store/actions';
 import {
   Hub,
   HubHandlersProvider,
@@ -20,37 +24,36 @@ interface FriendshipInvitationHubDto {
 }
 
 const onFriendshipCreated: HubMethod<FriendshipHubDto> = (store, data) => {
-  //store.dispatch(acceptInvitationSuccessAction({id: '1'}));
-  console.log('Handling friendship created', data);
+  store.dispatch(getFriendsAction());
 };
-const onFriendshipInvitationSent: HubMethod<FriendshipInvitationHubDto> = (
+const onFriendshipInvitationCreated: HubMethod<FriendshipInvitationHubDto> = (
   store,
   data
 ) => {
-  store.dispatch(acceptInvitationSuccessAction({id: '1'}));
+  store.dispatch(getPendingInvitationsAction());
 };
 const onFriendshipInvitationAccepted: HubMethod<FriendshipInvitationHubDto> = (
   store,
   data
 ) => {
-  store.dispatch(acceptInvitationSuccessAction({id: '1'}));
+  store.dispatch(getPendingInvitationsAction());
 };
 const onFriendshipInvitationRejected: HubMethod<FriendshipInvitationHubDto> = (
   store,
   data
 ) => {
-  store.dispatch(acceptInvitationSuccessAction({id: '1'}));
+  store.dispatch(getPendingInvitationsAction());
 };
 const onFriendshipInvitationCanceled: HubMethod<FriendshipInvitationHubDto> = (
   store,
   data
 ) => {
-  store.dispatch(acceptInvitationSuccessAction({id: '1'}));
+  store.dispatch(getPendingInvitationsAction());
 };
 
 const hubProvider: HubHandlersProvider = () => ({
   onFriendshipCreated: onFriendshipCreated,
-  onFriendshipInvitationSent: onFriendshipInvitationSent,
+  onFriendshipInvitationCreated: onFriendshipInvitationCreated,
   onFriendshipInvitationAccepted: onFriendshipInvitationAccepted,
   onFriendshipInvitationRejected: onFriendshipInvitationRejected,
   onFriendshipInvitationCanceled: onFriendshipInvitationCanceled,

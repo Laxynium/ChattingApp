@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Api.Features.SendInvitation.ExternalQuery;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Events;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.MessageBrokers;
 using InstantMessenger.Shared.Modules;
 using NodaTime;
 
@@ -19,6 +21,7 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClock _clock;
         private readonly IModuleClient _moduleClient;
+        private readonly IMessageBroker _messageBroker;
 
         public SendFriendshipInvitationHandler(
             IPersonRepository personRepository, 
@@ -27,7 +30,8 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
             IUniquePendingInvitationRule rule,
             IUnitOfWork unitOfWork,
             IClock clock,
-            IModuleClient moduleClient)
+            IModuleClient moduleClient,
+            IMessageBroker messageBroker)
         {
             _personRepository = personRepository;
             _invitationRepository = invitationRepository;
@@ -36,6 +40,7 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
             _unitOfWork = unitOfWork;
             _clock = clock;
             _moduleClient = moduleClient;
+            _messageBroker = messageBroker;
         }
 
         public async Task HandleAsync(SendFriendshipInvitationCommand command)
@@ -56,6 +61,10 @@ namespace InstantMessenger.Friendships.Api.Features.SendInvitation
             await _invitationRepository.AddAsync(invitation);
 
             await _unitOfWork.Commit();
+
+            await _messageBroker.PublishAsync(
+                new FriendshipInvitationCreatedEvent(invitation.Id, invitation.SenderId, invitation.ReceiverId, invitation.CreatedAt)
+            );
         }
     }
 }

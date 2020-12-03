@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Events;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Shared.Commands;
-using NodaTime;
+using InstantMessenger.Shared.MessageBrokers;
 
 namespace InstantMessenger.Friendships.Api.Features.RejectInvitation
 {
@@ -11,19 +12,18 @@ namespace InstantMessenger.Friendships.Api.Features.RejectInvitation
     {
         private readonly IInvitationRepository _invitationRepository;
         private readonly IPersonRepository _personRepository;
-        private readonly IFriendshipRepository _friendshipRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMessageBroker _messageBroker;
 
         public RejectInvitationHandler(IInvitationRepository invitationRepository,
             IPersonRepository personRepository,
-            IFriendshipRepository friendshipRepository,
             IUnitOfWork unitOfWork,
-            IClock clock)
+            IMessageBroker messageBroker)
         {
             _invitationRepository = invitationRepository;
             _personRepository = personRepository;
-            _friendshipRepository = friendshipRepository;
             _unitOfWork = unitOfWork;
+            _messageBroker = messageBroker;
         }
 
         public async Task HandleAsync(RejectFriendshipInvitationCommand command)
@@ -34,6 +34,10 @@ namespace InstantMessenger.Friendships.Api.Features.RejectInvitation
             invitation.RejectInvitation(person);
 
             await _unitOfWork.Commit();
+
+            await _messageBroker.PublishAsync(
+                new FriendshipInvitationRejectedEvent(invitation.Id, invitation.SenderId, invitation.ReceiverId, invitation.CreatedAt)
+            );
         }
     }
 }
