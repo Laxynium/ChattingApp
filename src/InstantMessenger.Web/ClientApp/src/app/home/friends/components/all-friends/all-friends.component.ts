@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, pipe} from 'rxjs';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {changeConversationAction} from 'src/app/home/conversations/store/actions';
 import {getFriendsAction} from 'src/app/home/friends/store/actions';
 import {
   areFriendsLoadingSelector as areFriendshipsLoadingSelector,
@@ -15,29 +16,6 @@ interface Friend {
   nickname: string;
   since: string;
 }
-
-const FRIENDS: Friend[] = [
-  {
-    icon: 'assets/profile-placeholder.png',
-    nickname: 'user2',
-    since: '2020/09/01',
-  },
-  {
-    icon: 'assets/profile-placeholder.png',
-    nickname: 'user2',
-    since: '2020/10/01',
-  },
-  {
-    icon: 'assets/profile-placeholder.png',
-    nickname: 'user3',
-    since: '2020/11/01',
-  },
-  {
-    icon: 'assets/profile-placeholder.png',
-    nickname: 'user4',
-    since: '2020/12/01',
-  },
-];
 
 @Component({
   selector: 'app-all-friends',
@@ -70,6 +48,12 @@ export class AllFriendsComponent implements OnInit {
 
   refreshFriends() {
     this.store.dispatch(getFriendsAction());
+  }
+
+  goToConversation(conversationId: string) {
+    this.store.dispatch(
+      changeConversationAction({conversationId: conversationId})
+    );
   }
 
   private paginate(friends: FriendshipInterface[]): FriendshipInterface[] {

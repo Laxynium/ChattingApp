@@ -7,7 +7,7 @@ import {
   InvitationFullInterface,
   InvitationInterface,
 } from 'src/app/home/friends/types/invitation.interface';
-import {UserInterface} from 'src/app/home/friends/types/user.interface';
+import {UserInterface} from 'src/app/shared/types/user.interface';
 import {environment} from 'src/environments/environment';
 
 interface FriendshipDto {

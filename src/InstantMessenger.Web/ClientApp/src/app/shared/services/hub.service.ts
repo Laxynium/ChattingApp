@@ -7,13 +7,14 @@ import {
 } from '@microsoft/signalr';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
+import {conversationsHub} from 'src/app/home/conversations/hub/hub.handlers';
 import {friendshipsHub} from 'src/app/home/friends/hub/hub.handlers';
 import {currentUserSelector} from 'src/app/identity/store/selectors';
 import {Hub} from 'src/app/shared/hubs/hubHandlersProvider';
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {environment} from 'src/environments/environment';
 
-const hubs: Hub[] = [friendshipsHub];
+const hubs: Hub[] = [friendshipsHub, conversationsHub];
 
 @Injectable({
   providedIn: 'root',

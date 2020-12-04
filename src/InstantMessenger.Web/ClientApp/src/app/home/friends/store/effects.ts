@@ -32,8 +32,8 @@ export class GetFriendsData {
   $getPendingInvitations = createEffect(() =>
     this.actions$.pipe(
       ofType(getPendingInvitationsAction),
-      switchMap(() => {
-        return this.friendsService.getAllInvitations().pipe(
+      switchMap(() =>
+        this.friendsService.getAllInvitations().pipe(
           map((invitations) =>
             getPendingInvitationsSuccessAction({invitations: invitations})
           ),
@@ -43,8 +43,8 @@ export class GetFriendsData {
               requestFailedAction({error: mapToError(response)})
             )
           )
-        );
-      })
+        )
+      )
     )
   );
 
@@ -67,8 +67,7 @@ export class GetFriendsData {
 
   constructor(
     private actions$: Actions,
-    private friendsService: FriendsService,
-    private toastService: ToastService
+    private friendsService: FriendsService
   ) {}
 }
 

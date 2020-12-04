@@ -31,8 +31,8 @@ namespace InstantMessenger.PrivateMessages.Domain
             ReadAt = readAt;
         }
 
-        public static Message Create(MessageBody body, ConversationId conversationId, Participant @from, Participant to, IClock clock) =>
-            new Message(MessageId.Create(), 
+        public static Message Create(MessageId messageId, MessageBody body, ConversationId conversationId, Participant @from, Participant to, IClock clock) =>
+            new Message(messageId, 
                 body,
                 conversationId,
                 @from,

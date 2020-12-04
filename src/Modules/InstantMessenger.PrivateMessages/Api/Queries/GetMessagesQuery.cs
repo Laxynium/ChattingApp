@@ -40,7 +40,7 @@ namespace InstantMessenger.PrivateMessages.Api.Queries
             _context = context;
         }
         public async Task<IEnumerable<MessageDto>> HandleAsync(GetMessagesQuery query) => await _context.Messages.AsNoTracking()
-            .OrderByDescending(x=>x.CreatedAt)
+            .OrderBy(x=>x.CreatedAt)
             .Where(x => x.ConversationId == new ConversationId(query.ConversationId)
                         &&
                         (x.From == new Participant(query.Participant) || x.To == new Participant(query.Participant)))

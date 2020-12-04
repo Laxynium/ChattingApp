@@ -1,4 +1,5 @@
 ﻿using InstantMessenger.Friendships.Api;
+using InstantMessenger.Friendships.Api.Hubs;
 using InstantMessenger.Friendships.Domain;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
@@ -8,6 +9,7 @@ using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.Events;
 using InstantMessenger.Shared.Modules;
 using InstantMessenger.Shared.Queries;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +41,20 @@ namespace InstantMessenger.Friendships
                 .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IUniquePendingInvitationRule, UniquePendingInvitationRule>()
                 .AddSingleton<IClock>(x=>SystemClock.Instance);
+            services.AddSignalR(
+                x =>
+                {
+                    x.EnableDetailedErrors = true;
+                }).AddNewtonsoftJsonProtocol();
             return services;
+        }
+
+        public static IApplicationBuilder UseFriendshipsModule(this IApplicationBuilder app)
+        {
+            app.UseEndpoints(
+                x => { x.MapHub<FriendshipsHub>("/api/friendships/hub"); }
+            );
+            return app;
         }
     }
 }

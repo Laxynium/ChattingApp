@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Identity.Api;
 using InstantMessenger.Identity.Api.Features.SignIn;
@@ -27,8 +29,9 @@ namespace InstantMessenger.Identity
     {
         public static IServiceCollection AddIdentityModule(this IServiceCollection services)
         {
-            var options = services.GetOptions<IdentityOptions>(nameof(IdentityOptions));
-            services.AddSingleton(options);
+            var identityOptions = services.GetOptions<IdentityOptions>(nameof(IdentityOptions));
+            var hubPaths = services.GetOptions<List<string>>("HubEndpoints");
+            services.AddSingleton(identityOptions);
             services.AddControllers()
                 .AddControllersAsServices()
                 .AddNewtonsoftJson();
@@ -41,7 +44,7 @@ namespace InstantMessenger.Identity
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials()
-                            .WithOrigins("http://localhost:4200")//TODO: move it to appSettings
+                            .WithOrigins(identityOptions.ClientAppUrlBase)
                     );
                 }
             );
@@ -59,7 +62,7 @@ namespace InstantMessenger.Identity
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(options.Key),
+                        IssuerSigningKey = new SymmetricSecurityKey(identityOptions.Key),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
@@ -69,13 +72,14 @@ namespace InstantMessenger.Identity
                         {
                             var accessToken = context.Request.Query["access_token"];
                             var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrWhiteSpace(accessToken) && (path.StartsWithSegments("/api/friendships/hub"))) //TODO move to appsettings paths to hubs
+                            if (!string.IsNullOrWhiteSpace(accessToken))
                             {
-                                context.Token = accessToken;
+                                hubPaths.Where(hubPath => path.StartsWithSegments(hubPath))
+                                    .ToList()
+                                    .ForEach(x=>context.Token = accessToken);
                             }
-
+                            
                             return Task.CompletedTask;
-                            ;
                         }
                     };
                 }
@@ -110,7 +114,7 @@ namespace InstantMessenger.Identity
                 .AddTransient<IAuthTokenService, AuthTokenService>()
                 .AddTransient<IAuthTokensCache, AuthTokensCache>()
                 .AddScoped<LinkGenerator>()
-                .AddSingleton(options);
+                .AddSingleton(identityOptions);
 
             return services;
         }

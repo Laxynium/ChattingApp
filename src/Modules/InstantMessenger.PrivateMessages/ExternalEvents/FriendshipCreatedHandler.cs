@@ -24,7 +24,7 @@ namespace InstantMessenger.PrivateMessages.ExternalEvents
             {
                 return;
             }
-            var conversation = Conversation.Create(firstParticipant, secondParticipant);
+            var conversation = Conversation.Create(new ConversationId(@event.FriendshipId), firstParticipant, secondParticipant);
 
             await _conversationRepository.AddAsync(conversation);
             await _unitOfWork.Commit();

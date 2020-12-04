@@ -1,4 +1,4 @@
-import {UserInterface} from 'src/app/home/friends/types/user.interface';
+import {UserInterface} from 'src/app/shared/types/user.interface';
 
 export interface FriendshipInterface {
   id: string;

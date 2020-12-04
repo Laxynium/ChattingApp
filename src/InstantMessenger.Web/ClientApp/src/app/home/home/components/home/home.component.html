@@ -14,7 +14,7 @@
           </div>
           <div class="card-body">
             <!-- your navs bound to current route fragments -->
-            <ul ngbNav [activeId]="router.url" class="nav flex flex-column align-items-stretch h-100">
+            <ul ngbNav [activeId]="($currentPath | async)" class="nav flex flex-column align-items-stretch h-100">
               <li [ngbNavItem]="link.link" *ngFor="let link of links"
                 class="nav-item flex-grow-1 flex-shrink-1 flex-auto">
                 <a class="nav-link btn btn-outline-primary" ngbNavLink routerLink="{{link.link}}">{{ link.title }}</a>

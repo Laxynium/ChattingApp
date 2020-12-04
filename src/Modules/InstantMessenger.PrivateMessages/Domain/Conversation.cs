@@ -16,15 +16,15 @@ namespace InstantMessenger.PrivateMessages.Domain
             SecondParticipant = secondParticipant;
         }
 
-        public static Conversation Create(Participant firstParticipant, Participant secondParticipant) 
-            => new Conversation(ConversationId.Create(), firstParticipant,secondParticipant);
+        public static Conversation Create(ConversationId conversationId, Participant firstParticipant, Participant secondParticipant) 
+            => new Conversation(conversationId, firstParticipant,secondParticipant);
 
-        public Message Send(MessageBody message, Participant from, IClock clock)
+        public Message Send(MessageId messageId, MessageBody message, Participant from, IClock clock)
         {
             if (from != FirstParticipant && from != SecondParticipant)
                 throw new InvalidParticipantException();
 
-            return Message.Create(message, Id, from, GetAnotherParticipant(from), clock);
+            return Message.Create(messageId,message, Id, from, GetAnotherParticipant(from), clock);
         }
 
         private Participant GetAnotherParticipant(Participant participant) =>

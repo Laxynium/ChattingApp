@@ -2,6 +2,7 @@ import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {FriendsStateInterface} from 'src/app/home/friends/store/reducers';
 import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
 import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
+import {withDefaultAvatar} from 'src/app/shared/types/user.interface';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 
 export const friendsFeatureSelector = createFeatureSelector<
@@ -24,18 +25,8 @@ export const pendingInvitationsSelector = createSelector(
   (state: FriendsStateInterface): InvitationFullInterface[] =>
     state.pendingInvitations.map((x) => ({
       ...x,
-      receiver: {
-        ...x.receiver,
-        avatar: x.receiver.avatar
-          ? x.receiver.avatar
-          : 'assets/profile-placeholder.png',
-      },
-      sender: {
-        ...x.sender,
-        avatar: x.sender.avatar
-          ? x.sender.avatar
-          : 'assets/profile-placeholder.png',
-      },
+      receiver: withDefaultAvatar(x.receiver),
+      sender: withDefaultAvatar(x.sender),
     }))
 );
 

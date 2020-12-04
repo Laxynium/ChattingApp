@@ -25,6 +25,13 @@ namespace InstantMessenger.PrivateMessages.Api
             _queryDispatcher = queryDispatcher;
         }
 
+        [HttpGet("conversations/latest")]
+        public async Task<IActionResult> GetLatestConversations(int number=10)
+        {
+            var result = await _queryDispatcher.QueryAsync(new GetLatestConversationsQuery(User.GetUserId(), number));
+            return Ok(result);
+        }
+
         [HttpGet("conversations")]
         public async Task<IActionResult> GetConversations()
         {
@@ -32,11 +39,21 @@ namespace InstantMessenger.PrivateMessages.Api
             return Ok(result);
         }
 
+        [HttpGet("conversations/{conversationId}")]
+        public async Task<IActionResult> GetConversations(Guid conversationId)
+        {
+            var result = await _queryDispatcher.QueryAsync(new GetConversationQuery(conversationId));
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage(SendMessageApiRequest request)
         {
-            await _commandDispatcher.SendAsync(new SendMessageCommand(request.ConversationId, User.GetUserId(), request.Text));
-            return Ok();
+            var command = new SendMessageCommand(Guid.NewGuid(), request.ConversationId, User.GetUserId(), request.Text);
+            await _commandDispatcher.SendAsync(command);
+
+            var result = await _queryDispatcher.QueryAsync(new GetMessageQuery(command.MessageId));
+            return Ok(result);
         }
 
         [HttpPost("mark-as-read")]

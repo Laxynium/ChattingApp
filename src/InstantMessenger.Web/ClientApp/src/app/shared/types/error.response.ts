@@ -6,6 +6,7 @@ export interface ExpectedErrorInterface {
   statusCode: number;
 }
 function isExpectedError(object: any): object is ExpectedErrorInterface {
+  if (typeof object === 'undefined') return false;
   return 'code' in object && 'message' in object;
 }
 export interface UnexpectedErrorInterface {

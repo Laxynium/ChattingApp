@@ -1,0 +1,41 @@
+<div class="chat-wrapper">
+  <div class="chat">
+    <div class="header">
+      <div class="avatar-wrapper">
+        <img class="avatar rounded-circle"
+          *ngIf="($conversation | async) && ($me | async).id == ($conversation | async).firstParticipant?.id"
+          src="{{($conversation | async)?.secondParticipant?.avatar}}" />
+        <img class="avatar rounded-circle"
+          *ngIf="($conversation | async) && ($me | async).id == ($conversation | async).secondParticipant?.id"
+          src="{{($conversation | async)?.firstParticipant?.avatar}}" />
+      </div>
+      <div class="nickname">
+        <h4 *ngIf="($conversation | async) && ($me | async).id == ($conversation | async).firstParticipant?.id">
+          {{($conversation | async).secondParticipant?.nickname}}</h4>
+        <h4 *ngIf="($conversation | async) && ($me | async).id == ($conversation | async).secondParticipant?.id">
+          {{($conversation | async).firstParticipant?.nickname}}</h4>
+      </div>
+    </div>
+    <div class="messages-wrapper">
+      <div class="messages">
+        <div class="body" #scrollMe scroll-to-bottom>
+          <div class="message"
+            [ngClass]="{me: message.fromUserId == ($me | async).id, friend: message.toUserId == ($me | async).id}"
+            *ngFor="let message of $messages | async">
+            <p>{{message.body}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-area">
+      <div class="input">
+        <textarea name="content" class="text-area" [(ngModel)]="content" #msgContent (keyup.control.enter)="send()">
+          </textarea>
+      </div>
+      <div class="send">
+        <button class="btn btn-primary w-100 h-50 align-self-center" [disabled]="!msgContent.value.trim()"
+          (click)="send()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

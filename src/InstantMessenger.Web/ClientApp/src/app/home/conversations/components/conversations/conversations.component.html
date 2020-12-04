@@ -1,0 +1,27 @@
+<div class="scrollable-content-wrapper">
+  <div class="scrollable-content">
+    <div class="header">
+      <h2>Conversations</h2>
+    </div>
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="body">
+          <ul class="list-group conversations-body">
+            <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-action"
+              (click)="changeConversation(c.id)" *ngFor="let c of $latestConversations | async">
+              <span *ngIf="($meId | async) == c.firstParticipant.id">
+                <span><img class="rounded-circle avatar" src="{{c.secondParticipant.avatar}}" /></span>
+                <span class="nickname">{{c.secondParticipant.nickname}}</span>
+              </span>
+              <span *ngIf="($meId | async) == c.secondParticipant.id">
+                <span><img src="{{c.firstParticipant.avatar}}" /></span>
+                <span>{{c.firstParticipant.nickname}}</span>
+              </span>
+              <span class="badge badge-primary badge-pill">14</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

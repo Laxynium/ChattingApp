@@ -11,6 +11,9 @@ import {FriendsComponent} from './friends/components/friends/friends.component';
 import {FriendsModule} from 'src/app/home/friends/friends.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {HubService} from 'src/app/shared/services/hub.service';
+import {ConversationsModule} from 'src/app/home/conversations/privateMessages.module';
+import {ConversationsComponent} from 'src/app/home/conversations/components/conversations/conversations.component';
+import {ConversationComponent} from 'src/app/home/conversations/components/conversation/conversation.component';
 
 const routes = [
   {
@@ -21,6 +24,16 @@ const routes = [
       {path: '', component: ProfileComponent, canActivate: [AuthGuard]},
       {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
       {path: 'friends', component: FriendsComponent, canActivate: [AuthGuard]},
+      {
+        path: 'conversations/:id',
+        component: ConversationComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'conversations',
+        component: ConversationsComponent,
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {path: '**', redirectTo: '/'},
@@ -37,6 +50,7 @@ const routes = [
 
     ProfilesModule,
     FriendsModule,
+    ConversationsModule,
   ],
   providers: [HubService],
 })

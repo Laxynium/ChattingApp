@@ -1,0 +1,48 @@
+@import '~bootstrap/scss/bootstrap';
+
+.avatar {
+  width: 64px;
+  height: 64px;
+}
+.nickname {
+  font-size: 2rem;
+}
+.list-group li {
+  cursor: pointer;
+}
+
+.scrollable-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  .header {
+    flex-grow: 5;
+    display: flex;
+    justify-content: center;
+  }
+  .content-wrapper {
+    position: relative;
+    flex-grow: 95;
+  }
+  .content {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+    p {
+      margin: 0;
+    }
+    .body {
+      overflow-y: auto;
+      flex-grow: 1;
+      flex-direction: column;
+      display: flex;
+    }
+  }
+  &-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+}
