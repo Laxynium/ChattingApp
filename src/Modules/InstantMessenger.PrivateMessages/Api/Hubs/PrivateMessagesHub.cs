@@ -24,10 +24,30 @@ namespace InstantMessenger.PrivateMessages.Api.Hubs
             CreatedAt = createdAt;
         }
     }
-    
+
+    public class MessageMarkedAsReadDto
+    {
+        public Guid MessageId { get; }
+        public Guid ConversationId { get; }
+        public Guid SenderId { get; }
+        public Guid ReceiverId { get; }
+
+        public DateTimeOffset ReadAt { get; }
+
+        public MessageMarkedAsReadDto(Guid messageId, Guid conversationId, Guid senderId, Guid receiverId, DateTimeOffset readAt)
+        {
+            MessageId = messageId;
+            ConversationId = conversationId;
+            ReadAt = readAt;
+            SenderId = senderId;
+            ReceiverId = receiverId;
+        }
+    }
+
     public interface IPrivateMessagesHubContract
     {
         Task OnMessageCreated(MessageDto message);
+        Task OnMessageRead(MessageMarkedAsReadDto message);
     }
 
     [Authorize]

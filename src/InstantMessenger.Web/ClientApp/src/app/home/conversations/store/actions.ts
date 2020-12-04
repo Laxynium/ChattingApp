@@ -1,9 +1,8 @@
 import {createAction, props} from '@ngrx/store';
-import {ConversationsStateInterface} from 'src/app/home/conversations/store/reducers';
 import {ConversationResponseInterface} from 'src/app/home/conversations/types/responseTypes/conversation.response';
 import {
-  ConversationInterface,
   ConversationMessageInterface,
+  LatestConversationInterface,
 } from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
 
 export enum ActionTypes {
@@ -22,6 +21,10 @@ export enum ActionTypes {
   RECEIVE_MESSAGE = '[Conversations] Receive message',
   RECEIVE_MESSAGE_SUCCESS = '[Conversations] Receive message success',
   RECEIVE_MESSAGE_FAILURE = '[Conversations] Receive message failure',
+
+  MARK_AS_READ = '[Conversations] Mark as read',
+  MARK_AS_READ_SUCCESS = '[Conversations] Mark as read success',
+  MARK_AS_READ_FAILURE = '[Conversations] Mark as read failure',
 }
 
 export const getLatestConversationsAction = createAction(
@@ -31,7 +34,7 @@ export const getLatestConversationsAction = createAction(
 
 export const getLatestConversationsSuccessAction = createAction(
   ActionTypes.GET_LATEST_CONVERSATIONS_SUCCESS,
-  props<{conversations: ConversationInterface[]}>()
+  props<{conversations: LatestConversationInterface[]}>()
 );
 
 export const getLatestConversationsFailureAction = createAction(
@@ -70,4 +73,17 @@ export const receiveMessageSuccessAction = createAction(
 );
 export const receiveMessageFailureAction = createAction(
   ActionTypes.RECEIVE_MESSAGE_FAILURE
+);
+
+export const markAsReadAction = createAction(
+  ActionTypes.MARK_AS_READ,
+  props<{unread: string[]}>()
+);
+
+export const markAsReadActionSuccessAction = createAction(
+  ActionTypes.MARK_AS_READ_SUCCESS,
+  props<{marked: {messageId: string; readAt: string}[]}>()
+);
+export const markAsReadActionFailureAction = createAction(
+  ActionTypes.MARK_AS_READ_FAILURE
 );

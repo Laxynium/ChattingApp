@@ -25,23 +25,25 @@ namespace InstantMessenger.PrivateMessages
                 .AddEventHandlers()
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
-                .AddDbContext<PrivateMessagesContext>(o =>
-                {
-                    using var provider = services.BuildServiceProvider();
-                    using var scope = provider.CreateScope();
-                    var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
-                        .GetConnectionString("InstantMessengerDb");
-                    o.UseSqlServer(connectionString,
-                        x => x.MigrationsHistoryTable("__EFMigrationsHistory", "PrivateMessages"));
-                })
+                .AddDbContext<PrivateMessagesContext>(
+                    o =>
+                    {
+                        using var provider = services.BuildServiceProvider();
+                        using var scope = provider.CreateScope();
+                        var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
+                            .GetConnectionString("InstantMessengerDb");
+                        o.UseSqlServer(
+                            connectionString,
+                            x => x.MigrationsHistoryTable("__EFMigrationsHistory", "PrivateMessages")
+                        );
+                    }
+                )
                 .AddScoped<IConversationRepository, ConversationRepository>()
-                .AddScoped<IMessageRepository,MessageRepository>()
-                .AddScoped<IUnitOfWork,UnitOfWork>();
+                .AddScoped<IMessageRepository, MessageRepository>()
+                .AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSignalR(
-                x =>
-                {
-                    x.EnableDetailedErrors = true;
-                }).AddNewtonsoftJsonProtocol();
+                x => { x.EnableDetailedErrors = true; }
+            ).AddNewtonsoftJsonProtocol();
             return services;
         }
 
@@ -51,7 +53,6 @@ namespace InstantMessenger.PrivateMessages
                 x => x.MapHub<PrivateMessagesHub>("/api/privateMessages/hub")
             );
             return app;
-
         }
     }
 }

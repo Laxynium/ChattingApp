@@ -7,7 +7,7 @@ import {
   getLatestConversationsAction,
 } from 'src/app/home/conversations/store/actions';
 import {latestConversationsSelector} from 'src/app/home/conversations/store/selectors';
-import {ConversationInterface} from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
+import {LatestConversationInterface} from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
 import {currentUserSelector} from 'src/app/identity/store/selectors';
 
 @Component({
@@ -16,7 +16,7 @@ import {currentUserSelector} from 'src/app/identity/store/selectors';
   styleUrls: ['./conversations.component.scss'],
 })
 export class ConversationsComponent implements OnInit {
-  $latestConversations: Observable<ConversationInterface[]>;
+  $latestConversations: Observable<LatestConversationInterface[]>;
   $meId: Observable<string>;
   constructor(private store: Store) {
     this.$latestConversations = this.store.pipe(

@@ -5,6 +5,7 @@ export interface ConversationResponseInterface {
   firstParticipant: UserInterface;
   secondParticipant: UserInterface;
   messages: MessageResponseInterface[];
+  unreadMessagesCount: number | null;
 }
 export interface MessageResponseInterface {
   messageId: string;

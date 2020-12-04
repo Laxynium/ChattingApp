@@ -41,6 +41,7 @@ export class ConversationsService {
                   firstParticipant: x[0],
                   secondParticipant: x[1],
                   messages: [],
+                  unreadMessagesCount: c.unreadMessagesCount,
                 })
               )
             );
@@ -93,6 +94,15 @@ export class ConversationsService {
         })
       );
   }
+
+  markAsRead(messages: string[]): Observable<Object> {
+    const requests = messages.map((m) => {
+      return this.http.post(`${this.privateMessagesUrl}/mark-as-read`, {
+        messageId: m,
+      });
+    });
+    return forkJoin(requests);
+  }
 }
 
 function toConversationResponse(
@@ -104,6 +114,7 @@ function toConversationResponse(
     firstParticipant: x[0],
     secondParticipant: x[1],
     messages: x[2].map((m) => toMessageResponse(m)),
+    unreadMessagesCount: c.unreadMessagesCount,
   };
 }
 
@@ -122,6 +133,7 @@ interface ConversationDto {
   conversationId: string;
   firstParticipant: string;
   secondParticipant: string;
+  unreadMessagesCount: number | null;
 }
 
 interface MessageDto {

@@ -30,9 +30,26 @@ export const currentConversationMessagesSelector = createSelector(
 export const latestConversationsSelector = createSelector(
   conversationsFeatureSelector,
   (state: ConversationsStateInterface) =>
-    state.latestConversations.map((c) => ({
+    state.latestConversations?.map((c) => ({
       ...c,
       firstParticipant: withDefaultAvatar(c.firstParticipant),
       secondParticipant: withDefaultAvatar(c.secondParticipant),
-    }))
+      unreadCount: c.unreadCount,
+    })) ?? []
 );
+
+export const unreadMessagesSelector = createSelector(
+  conversationsFeatureSelector,
+  (state: ConversationsStateInterface) => (
+    conversationId: string,
+    meId: string
+  ) =>
+    state.currentConversation?.messages
+      .filter((x) => x.conversationId == conversationId)
+      .filter((x) => x.toUserId == meId)
+      .filter((x) => isNullOrWhitespace(x.readAt)) ?? []
+);
+
+function isNullOrWhitespace(input: string) {
+  return !input || !input.trim();
+}

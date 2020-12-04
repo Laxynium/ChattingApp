@@ -9,11 +9,12 @@ import {
   changeConversationSuccessAction,
   getLatestConversationsAction,
   getLatestConversationsSuccessAction,
+  markAsReadAction,
+  receiveMessageSuccessAction,
   sendMessageAction,
   sendMessageSuccessAction,
 } from 'src/app/home/conversations/store/actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
-import {ToastService} from 'src/app/shared/toasts/toast.service';
 import {mapToError} from 'src/app/shared/types/error.response';
 
 @Injectable()
@@ -30,6 +31,7 @@ export class ConversationsEffects {
                 firstParticipant: x.firstParticipant,
                 secondParticipant: x.secondParticipant,
                 messages: [],
+                unreadCount: x.unreadMessagesCount,
               })),
             })
           ),
@@ -92,6 +94,26 @@ export class ConversationsEffects {
       )
     )
   );
+
+  $markAsRead = createEffect(() =>
+    this.actions$.pipe(
+      ofType(markAsReadAction),
+      switchMap((x) =>
+        this.conversationsService.markAsRead(x.unread).pipe(
+          map((_) => getLatestConversationsAction({count: 10})),
+          catchError((r) => of(requestFailedAction({error: mapToError(r)})))
+        )
+      )
+    )
+  );
+
+  $receiveMessage = createEffect(() =>
+    this.actions$.pipe(
+      ofType(receiveMessageSuccessAction),
+      switchMap(() => of(getLatestConversationsAction({count: 10})))
+    )
+  );
+
   constructor(
     private actions$: Actions,
     private conversationsService: ConversationsService,

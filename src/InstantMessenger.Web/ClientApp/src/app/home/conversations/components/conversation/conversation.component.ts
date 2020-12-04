@@ -1,15 +1,17 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, Params} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Observable, zip} from 'rxjs';
 import {filter, first, map, tap} from 'rxjs/operators';
 import {
   changeConversationAction,
+  markAsReadAction,
   sendMessageAction,
 } from 'src/app/home/conversations/store/actions';
 import {
   currentConversationMessagesSelector,
   currentConversationSelector,
+  unreadMessagesSelector,
 } from 'src/app/home/conversations/store/selectors';
 import {
   ConversationInterface,
@@ -53,13 +55,13 @@ export class ConversationComponent implements OnInit {
         if (this.scrollMe) {
           this.scrollMe.scrollToBottom();
         }
+        this.markAsRead();
       })
     );
     this.$me = this.store.pipe(select(currentUserSelector));
-    this.$conversation.subscribe((x) => {
-      console.log(x);
-    });
+    this.markAsRead();
   }
+
   send() {
     this.$conversation.pipe(first()).subscribe((x) => {
       this.store.dispatch(
@@ -68,7 +70,23 @@ export class ConversationComponent implements OnInit {
       this.content = '';
     });
   }
-  onKeyPress(event) {
-    console.log(event);
+
+  private markAsRead() {
+    zip(
+      this.$conversation,
+      this.$me,
+      this.store.pipe(select(unreadMessagesSelector))
+    )
+      .pipe(
+        map(([c, me, unread]) => {
+          return {unread: unread(c.id, me.id)};
+        }),
+        first()
+      )
+      .subscribe((r) => {
+        this.store.dispatch(
+          markAsReadAction({unread: r.unread.map((x) => x.id)})
+        );
+      });
   }
 }

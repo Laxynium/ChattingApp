@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using InstantMessenger.PrivateMessages.Domain;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
@@ -10,7 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.PrivateMessages.Api.Queries
 {
-    public class GetLatestConversationsQuery : IQuery<IEnumerable<ConversationDto>>
+    public class GetLatestConversationsResponseItem
+    {
+        public Guid ConversationId { get; set; }
+        public Guid FirstParticipant { get; set; }
+        public Guid SecondParticipant { get; set; }
+        public int UnreadMessagesCount { get; set; }
+    }
+
+    public class GetLatestConversationsQuery : IQuery<IEnumerable<GetLatestConversationsResponseItem>>
     {
         public Guid ParticipantId { get; }
         public int Number { get; }
@@ -22,7 +29,7 @@ namespace InstantMessenger.PrivateMessages.Api.Queries
         }
     }
 
-    public class GetLatestConversationsQueryHandler : IQueryHandler<GetLatestConversationsQuery, IEnumerable<ConversationDto>>
+    public class GetLatestConversationsQueryHandler : IQueryHandler<GetLatestConversationsQuery, IEnumerable<GetLatestConversationsResponseItem>>
     {
         private readonly PrivateMessagesContext _context;
 
@@ -31,10 +38,8 @@ namespace InstantMessenger.PrivateMessages.Api.Queries
             _context = context;
         }
 
-        public async Task<IEnumerable<ConversationDto>> HandleAsync(GetLatestConversationsQuery query)
+        public async Task<IEnumerable<GetLatestConversationsResponseItem>> HandleAsync(GetLatestConversationsQuery query)
         {
-
-
             var conversations = _context.Conversations.AsNoTracking()
                 .Where(
                     x => x.FirstParticipant == new Participant(query.ParticipantId) ||
@@ -49,21 +54,24 @@ namespace InstantMessenger.PrivateMessages.Api.Queries
                     {
                         conversationId = g.Key,
                         updatedAt = g.Max(x => x.CreatedAt),
-                        unreadCount = g.Count(x=>x.ReadAt == null)
                     }
                 );
 
             var result = await conversations.Join(messages, x => x.Id, x => x.conversationId, 
-                (x, y) => new {conversation = x, updatedAt = y.updatedAt})
+                (x, y) => new {conversation = x, y.updatedAt})
                 .OrderByDescending(x=>x.updatedAt)
-                .Select(x=>x.conversation)
+                .Select(x=>new {x.conversation})
                 .Take(query.Number)
                 .Select(
-                    x => new ConversationDto
+                    x => new GetLatestConversationsResponseItem
                     {
-                        ConversationId = x.Id.Value,
-                        FirstParticipant = x.FirstParticipant.Id,
-                        SecondParticipant = x.SecondParticipant.Id
+                        ConversationId = x.conversation.Id.Value,
+                        FirstParticipant = x.conversation.FirstParticipant.Id,
+                        SecondParticipant = x.conversation.SecondParticipant.Id,
+                        UnreadMessagesCount = _context.Messages
+                            .AsNoTracking()
+                            .Where(y=>y.ReadAt == null)
+                            .Count(y => y.ConversationId == x.conversation.Id && y.To == new Participant(query.ParticipantId))
                     }
                 )
                 .ToListAsync();

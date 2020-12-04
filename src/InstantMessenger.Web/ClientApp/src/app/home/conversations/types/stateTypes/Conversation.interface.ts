@@ -1,5 +1,9 @@
 import {UserInterface} from 'src/app/shared/types/user.interface';
 
+export type LatestConversationInterface = ConversationInterface & {
+  unreadCount: number;
+};
+
 export interface ConversationInterface {
   id: string;
   firstParticipant: ConversationParticipantInterface;
