@@ -1,26 +1,37 @@
 using System;
-using CSharpFunctionalExtensions;
+using InstantMessenger.Identity.Domain.Events;
+using InstantMessenger.Shared.BuildingBlocks;
 
 namespace InstantMessenger.Identity.Domain.Entities
 {
-    public class ActivationLink : Entity<Guid>
+    public class ActivationLinkId : EntityId
+    {
+        public ActivationLinkId(Guid value) : base(value)
+        {
+        }
+        public static ActivationLinkId Create()=>new ActivationLinkId(Guid.NewGuid());
+    }
+    public class ActivationLink : Entity<ActivationLinkId>
     {
         public string Token { get; }
         
-        public Guid UserId { get; }
+        public UserId UserId { get; }
         
         public DateTimeOffset CreatedAt { get; }
 
-        private ActivationLink(Guid id, string token, Guid userId, DateTimeOffset createdAt) :base(id)
+        private ActivationLink(){}
+
+        private ActivationLink(ActivationLinkId id, string token, UserId userId, DateTimeOffset createdAt) :base(id)
         {
             Token = token;
             UserId = userId;
             CreatedAt = createdAt;
+            Apply(new ActivationLinkCreatedDomainEvent(Id, Token, userId, CreatedAt));
         }
 
-        public static ActivationLink Create(Guid userId, string token)
+        public static ActivationLink Create(UserId userId, string token)
         {
-            return new ActivationLink(Guid.NewGuid(), token, userId, DateTimeOffset.UtcNow);
+            return new ActivationLink(ActivationLinkId.Create(), token, userId, DateTimeOffset.UtcNow);
         }
 
         public bool Verify(string token) 

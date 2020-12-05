@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.BuildingBlocks;
+using InstantMessenger.Shared.Messages.Queries;
 
 namespace InstantMessenger.Identity.Api.Queries
 {
@@ -14,7 +16,7 @@ namespace InstantMessenger.Identity.Api.Queries
         }
         public async Task<UserDto> HandleAsync(MeQuery query)
         {
-            var user = await _userRepository.GetAsync(query.UserId);
+            var user = await _userRepository.GetAsync( new UserId(query.UserId));
             return new UserDto
             {
                 Id = user.Id,

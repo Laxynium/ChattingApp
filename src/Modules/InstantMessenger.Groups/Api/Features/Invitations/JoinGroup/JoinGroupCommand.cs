@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Shared.Commands;
-using InstantMessenger.Shared.Events;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Events;
 using NodaTime;
 
 namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
@@ -29,16 +28,16 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
         private readonly IInvitationRepository _invitationRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClock _clock;
-        private readonly IEventDispatcher _eventDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
 
         public JoinGroupHandler(IGroupRepository groupRepository, IInvitationRepository invitationRepository, IUnitOfWork unitOfWork, IClock clock,
-            IEventDispatcher eventDispatcher)
+            IDomainEventDispatcher domainEventDispatcher)
         {
             _groupRepository = groupRepository;
             _invitationRepository = invitationRepository;
             _unitOfWork = unitOfWork;
             _clock = clock;
-            _eventDispatcher = eventDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
         }
         public async Task HandleAsync(JoinGroupCommand command)
         {
@@ -50,7 +49,7 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
 
             await _unitOfWork.Commit();
 
-            await _eventDispatcher.PublishAsync(new InvitationUsedEvent(command.UserId, invitation.Id.Value, invitation.GroupId.Value));
+            await _domainEventDispatcher.PublishAsync(new InvitationUsedDomainEvent(command.UserId, invitation.Id.Value, invitation.GroupId.Value));
         }
     }
 }

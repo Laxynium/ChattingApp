@@ -1,4 +1,4 @@
-﻿using InstantMessenger.Shared.Commands;
+﻿using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Identity.Api.Features.SendPasswordReset
 {

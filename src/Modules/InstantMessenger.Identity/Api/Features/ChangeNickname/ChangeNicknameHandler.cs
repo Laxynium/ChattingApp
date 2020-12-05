@@ -2,7 +2,8 @@
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.Rules;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.BuildingBlocks;
+using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Identity.Api.Features.ChangeNickname
 {
@@ -18,7 +19,7 @@ namespace InstantMessenger.Identity.Api.Features.ChangeNickname
         }
         public async Task HandleAsync(ChangeNicknameCommand command)
         {
-            var user = await _repository.GetAsync(command.UserId) ?? throw new UserNotFoundException();
+            var user = await _repository.GetAsync(new UserId(command.UserId)) ?? throw new UserNotFoundException();
 
             await user.Change(Nickname.Create(command.Nickname),_rule);
         }

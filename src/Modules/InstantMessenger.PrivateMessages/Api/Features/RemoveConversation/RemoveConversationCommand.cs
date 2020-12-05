@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using InstantMessenger.PrivateMessages.Domain;
 using InstantMessenger.PrivateMessages.Domain.Events;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.PrivateMessages.Domain.ValueObjects;
 using InstantMessenger.Shared.MessageBrokers;
+using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.PrivateMessages.Api.Features.RemoveConversation
 {
@@ -20,14 +21,10 @@ namespace InstantMessenger.PrivateMessages.Api.Features.RemoveConversation
     internal sealed class RemoveConversationCommandHandler : ICommandHandler<RemoveConversationCommand>
     {
         private readonly IConversationRepository _conversationRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMessageBroker _messageBroker;
 
-        public RemoveConversationCommandHandler(IConversationRepository conversationRepository, IUnitOfWork unitOfWork, IMessageBroker messageBroker)
+        public RemoveConversationCommandHandler(IConversationRepository conversationRepository)
         {
             _conversationRepository = conversationRepository;
-            _unitOfWork = unitOfWork;
-            _messageBroker = messageBroker;
         }
         public async Task HandleAsync(RemoveConversationCommand command)
         {
@@ -35,11 +32,9 @@ namespace InstantMessenger.PrivateMessages.Api.Features.RemoveConversation
             if (conversation is null)
                 return;
 
+            conversation.Remove();
+
             await _conversationRepository.RemoveAsync(conversation);
-            await _unitOfWork.Commit();
-            await _messageBroker.PublishAsync(
-                new ConversationRemovedEvent(conversation.Id, conversation.FirstParticipant, conversation.SecondParticipant)
-            );
         }
     }
 }

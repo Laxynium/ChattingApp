@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.ValueObjects;
+using InstantMessenger.Shared.BuildingBlocks;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Identity.Infrastructure.Database
@@ -20,9 +22,9 @@ namespace InstantMessenger.Identity.Infrastructure.Database
             await _context.Users.AddAsync(user);
         }
 
-        public async Task<User> GetAsync(Guid userId)
+        public async Task<User> GetAsync(UserId userId)
         {
-            return await _context.Users.FindAsync(userId);
+            return await _context.Users.FirstOrDefaultAsync(x=>x.Id == userId) ?? _context.Users.Local.FirstOrDefault(x=>x.Id == userId);
         }
 
         public async Task<User> GetAsync(string email)

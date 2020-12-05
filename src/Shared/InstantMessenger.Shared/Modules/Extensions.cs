@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Shared.Events;
+using InstantMessenger.Shared.IntegrationEvents;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -34,7 +34,7 @@ namespace InstantMessenger.Shared.Modules
                 .GetAssemblies()
                 .Where(a => a.FullName.Contains(AppName))
                 .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsClass && typeof(IEvent).IsAssignableFrom(t))
+                .Where(t => t.IsClass && typeof(IIntegrationEvent).IsAssignableFrom(t))
                 .ToList();
             services.AddSingleton<IModuleRegistry>(
                 provider =>
@@ -48,11 +48,11 @@ namespace InstantMessenger.Shared.Modules
                             eventType,
                             (sp, @event) =>
                             {
-                                var dispatcher = sp.GetService<IEventDispatcher>();
-                                return (Task) dispatcher.GetType()
+                                var dispatcher = sp.GetService<IIntegrationEventDispatcher>();
+                                return (Task)dispatcher.GetType()
                                     .GetMethod(nameof(dispatcher.PublishAsync))
                                     .MakeGenericMethod(eventType)
-                                    .Invoke(dispatcher, new[] {@event});
+                                    .Invoke(dispatcher, new[] { @event });
                             }
                         );
                     }

@@ -6,9 +6,9 @@ using InstantMessenger.Friendships.Api.Features.RejectInvitation;
 using InstantMessenger.Friendships.Api.Features.RemoveFromFriendships;
 using InstantMessenger.Friendships.Api.Features.SendInvitation;
 using InstantMessenger.Friendships.Api.Queries;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Mvc;
-using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

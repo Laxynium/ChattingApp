@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries

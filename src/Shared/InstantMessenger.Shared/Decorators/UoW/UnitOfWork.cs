@@ -1,35 +1,23 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using InstantMessenger.Shared.Events;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Shared.Decorators.UoW
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork<TDbContext> where TDbContext:DbContext
     {
-        private readonly DbContext _context;
-        private readonly IDomainEventsAccessor _accessor;
-        private readonly IEventDispatcher _eventDispatcher;
+        private readonly TDbContext _context;
+        private readonly DomainEventPublisher<TDbContext> _publisher;
 
-        public UnitOfWork(DbContext context, IDomainEventsAccessor accessor, IEventDispatcher eventDispatcher)
+        public UnitOfWork(TDbContext context, DomainEventPublisher<TDbContext> publisher)
         {
             _context = context;
-            _accessor = accessor;
-            _eventDispatcher = eventDispatcher;
+            _publisher = publisher;
         }
         public async Task Commit()
         {
-            await PublishDomainEvents();
+            await _publisher.Publish();
 
             await _context.SaveChangesAsync();
-        }
-
-        private async Task PublishDomainEvents()
-        {
-            var domainEvents = _accessor.Events.ToList();
-            _accessor.ClearAllDomainEvents();
-            var tasks = domainEvents.Select(e => _eventDispatcher.PublishAsync(e));
-            await Task.WhenAll(tasks);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Infrastructure.Database;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Identity.Api.Queries

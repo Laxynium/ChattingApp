@@ -1,5 +1,4 @@
 ﻿using System;
-using InstantMessenger.Shared.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Members.AssignRole
 {

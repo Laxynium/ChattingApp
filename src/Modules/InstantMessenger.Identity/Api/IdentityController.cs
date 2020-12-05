@@ -8,9 +8,9 @@ using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Api.Features.VerifyUser;
 using InstantMessenger.Identity.Api.Queries;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Mvc;
-using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using InstantMessenger.PrivateMessages.Api.Features.MarkMessageAsRead;
 using InstantMessenger.PrivateMessages.Api.Features.SendMessage;
 using InstantMessenger.PrivateMessages.Api.Queries;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Mvc;
-using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

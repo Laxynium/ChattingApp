@@ -1,5 +1,4 @@
 using InstantMessenger.Friendships;
-using InstantMessenger.Friendships.Api.Hubs;
 using InstantMessenger.Groups;
 using InstantMessenger.Identity;
 using InstantMessenger.PrivateMessages;
@@ -18,7 +17,8 @@ namespace InstantMessenger.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityModule()
+            services
+                .AddIdentityModule()
                 .AddFriendshipsModule()
                 .AddPrivateMessagesModule()
                 .AddGroupsModule()
@@ -37,7 +37,8 @@ namespace InstantMessenger.Api
             }
 
             app.UseRouting();
-            app.UseIdentityModule()
+            app
+                .UseIdentityModule()
                 .UseFriendshipsModule()
                 .UsePrivateMessagesModule()
                 .UseSharedModule();

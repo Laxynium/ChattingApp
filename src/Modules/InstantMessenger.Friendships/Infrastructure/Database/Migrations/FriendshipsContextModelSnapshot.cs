@@ -20,7 +20,7 @@ namespace InstantMessenger.Friendships.Infrastructure.Database.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Friendship", b =>
+            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Entities.Friendship", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnName("FriendshipId")
@@ -38,14 +38,10 @@ namespace InstantMessenger.Friendships.Infrastructure.Database.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Friendships");
 
-                    b.HasIndex("FirstPerson");
-
-                    b.HasIndex("SecondPerson");
-
                     b.ToTable("Friendships");
                 });
 
-            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Invitation", b =>
+            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Entities.Invitation", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnName("InvitationId")
@@ -67,57 +63,7 @@ namespace InstantMessenger.Friendships.Infrastructure.Database.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Invitations");
 
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
                     b.ToTable("Invitations");
-                });
-
-            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnName("PersonId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id")
-                        .HasName("PK_Persons");
-
-                    b.ToTable("Persons");
-                });
-
-            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Friendship", b =>
-                {
-                    b.HasOne("InstantMessenger.Friendships.Domain.Person", null)
-                        .WithMany()
-                        .HasForeignKey("FirstPerson")
-                        .HasConstraintName("FK_FirstPerson_Friendships_Persons")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("InstantMessenger.Friendships.Domain.Person", null)
-                        .WithMany()
-                        .HasForeignKey("SecondPerson")
-                        .HasConstraintName("FK_SecondPerson_Friendships_Persons")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("InstantMessenger.Friendships.Domain.Invitation", b =>
-                {
-                    b.HasOne("InstantMessenger.Friendships.Domain.Person", null)
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .HasConstraintName("FK_Receiver_Invitations_Persons")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("InstantMessenger.Friendships.Domain.Person", null)
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .HasConstraintName("FK_Sender_Invitations_Persons")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

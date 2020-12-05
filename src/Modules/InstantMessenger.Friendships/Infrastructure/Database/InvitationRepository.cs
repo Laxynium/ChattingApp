@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using InstantMessenger.Friendships.Domain;
+﻿using System.Threading.Tasks;
+using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.Repositories;
+using InstantMessenger.Friendships.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Friendships.Infrastructure.Database
 {
@@ -15,7 +16,7 @@ namespace InstantMessenger.Friendships.Infrastructure.Database
         public async Task AddAsync(Invitation invitation) 
             => await _context.AddAsync(invitation);
 
-        public async Task<Invitation> GetAsync(Guid invitationId) 
-            => await _context.Invitations.FindAsync(invitationId);
+        public async Task<Invitation> GetAsync(InvitationId invitationId) 
+            => await _context.Invitations.FirstOrDefaultAsync(x=>x.Id == invitationId);
     }
 }

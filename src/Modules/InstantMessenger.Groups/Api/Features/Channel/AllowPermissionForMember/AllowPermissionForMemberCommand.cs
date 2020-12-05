@@ -1,5 +1,5 @@
 ﻿using System;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForMember
 {

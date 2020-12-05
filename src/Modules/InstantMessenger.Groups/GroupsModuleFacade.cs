@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using InstantMessenger.Shared.Commands;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Queries;
 
 namespace InstantMessenger.Groups
 {

@@ -2,7 +2,7 @@
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Exceptions;
 using InstantMessenger.Identity.Domain.Repositories;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
 using Microsoft.AspNetCore.Identity;
 
 namespace InstantMessenger.Identity.Api.Features.SignIn

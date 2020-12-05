@@ -1,5 +1,5 @@
-﻿using InstantMessenger.Shared.Events;
-using InstantMessenger.Shared.MessageBrokers;
+﻿using InstantMessenger.Shared.MessageBrokers;
+using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +11,7 @@ namespace InstantMessenger.Shared
         public static IServiceCollection AddSharedModule(this IServiceCollection services)
         {
             services
-                .AddEventDispatcher()
+                .AddDomainEventDispatcher()
                 .AddModuleRequests();
 
             services.AddTransient<IMessageBroker, MessageBroker>();

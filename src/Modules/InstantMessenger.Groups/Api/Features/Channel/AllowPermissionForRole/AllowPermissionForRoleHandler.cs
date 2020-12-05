@@ -3,7 +3,7 @@ using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForRole
 {

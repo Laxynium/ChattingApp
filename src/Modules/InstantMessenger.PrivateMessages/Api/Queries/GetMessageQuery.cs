@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.PrivateMessages.Domain;
+using InstantMessenger.PrivateMessages.Domain.ValueObjects;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.PrivateMessages.Api.Queries

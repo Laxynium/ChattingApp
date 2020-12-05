@@ -6,7 +6,7 @@ using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
 using NodaTime;
 
 namespace InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode

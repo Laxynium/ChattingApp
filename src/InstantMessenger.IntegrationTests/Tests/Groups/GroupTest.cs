@@ -29,7 +29,7 @@ namespace InstantMessenger.IntegrationTests.Tests.Groups
             var user = await _fixture.LoginAsUser("user@test.com","user");
             var user2 = await _fixture.LoginAsUser("user2@test.com","user2");
             var sut = _fixture.GetClient<IGroupsApi>();
-            var createGroup = new CreateGroupApiRequest(Guid.NewGuid(), Guid.NewGuid(), "test");
+            var createGroup = new CreateGroupApiRequest(Guid.NewGuid(), "test");
 
             var result = await sut.CreateGroup(user.BearerToken(), createGroup);
 

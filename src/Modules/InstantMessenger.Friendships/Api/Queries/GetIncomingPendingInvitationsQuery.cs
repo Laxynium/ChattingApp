@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.ValueObjects;
 using InstantMessenger.Friendships.Infrastructure.Database;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Friendships.Api.Queries

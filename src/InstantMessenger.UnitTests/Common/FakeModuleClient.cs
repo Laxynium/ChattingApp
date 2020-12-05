@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.Create.ExternalQueries;
+using InstantMessenger.Shared.IntegrationEvents;
+using InstantMessenger.Shared.MessageBrokers;
 using InstantMessenger.Shared.Modules;
 
 namespace InstantMessenger.UnitTests.Common
@@ -32,6 +34,19 @@ namespace InstantMessenger.UnitTests.Common
         }
 
         public Task PublishAsync(object moduleBroadcast)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    internal sealed class FakeMessageBroker : IMessageBroker
+    {
+        public Task PublishAsync(IIntegrationEvent @event)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task PublishAsync(IEnumerable<IIntegrationEvent> events)
         {
             return Task.CompletedTask;
         }

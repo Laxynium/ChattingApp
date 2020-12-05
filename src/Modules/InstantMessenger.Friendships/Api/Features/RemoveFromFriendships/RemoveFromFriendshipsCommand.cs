@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.Friendships.Domain;
-using InstantMessenger.Friendships.Domain.Events;
+using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
-using InstantMessenger.Shared.Commands;
-using InstantMessenger.Shared.MessageBrokers;
+using InstantMessenger.Friendships.Domain.ValueObjects;
+using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Friendships.Api.Features.RemoveFromFriendships
 {
@@ -24,24 +23,18 @@ namespace InstantMessenger.Friendships.Api.Features.RemoveFromFriendships
     internal sealed class RemoveFromFriendshipsHandler : ICommandHandler<RemoveFromFriendshipsCommand>
     {
         private readonly IFriendshipRepository _friendshipRepository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMessageBroker _messageBroker;
 
-        public RemoveFromFriendshipsHandler(IFriendshipRepository friendshipRepository, IUnitOfWork unitOfWork, IMessageBroker messageBroker)
+        public RemoveFromFriendshipsHandler(IFriendshipRepository friendshipRepository)
         {
             _friendshipRepository = friendshipRepository;
-            _unitOfWork = unitOfWork;
-            _messageBroker = messageBroker;
         }
         public async Task HandleAsync(RemoveFromFriendshipsCommand command)
         {
-            var friendship = await _friendshipRepository.GetAsync(command.FriendshipsId) ?? throw new FriendshipNotFoundException(command.FriendshipsId);
+            var friendship = await _friendshipRepository.GetAsync(new FriendshipId(command.FriendshipsId)) ?? throw new FriendshipNotFoundException(command.FriendshipsId);
 
-            friendship.Remove(new Person(command.UserId));
+            friendship.Remove(new PersonId(command.UserId));
 
             await _friendshipRepository.RemoveAsync(friendship);
-            await _unitOfWork.Commit();
-            await _messageBroker.PublishAsync(new FriendshipRemovedEvent(friendship.Id, friendship.FirstPerson, friendship.SecondPerson, friendship.CreatedAt));
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.Repositories;
+using InstantMessenger.Friendships.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Friendships.Infrastructure.Database
@@ -19,7 +21,7 @@ namespace InstantMessenger.Friendships.Infrastructure.Database
             await _context.Friendships.AddAsync(friendship);
         }
 
-        public Task<bool> ExistsBetweenAsync(Guid senderId, Guid receiverId)
+        public Task<bool> ExistsBetweenAsync(PersonId senderId, PersonId receiverId)
         {
             return _context.Friendships.AnyAsync(
                 x => 
@@ -28,7 +30,7 @@ namespace InstantMessenger.Friendships.Infrastructure.Database
             );
         }
 
-        public async Task<Friendship> GetAsync(Guid friendshipId)
+        public async Task<Friendship> GetAsync(FriendshipId friendshipId)
         {
             return await _context.Friendships.FirstOrDefaultAsync(x => x.Id == friendshipId);
         }

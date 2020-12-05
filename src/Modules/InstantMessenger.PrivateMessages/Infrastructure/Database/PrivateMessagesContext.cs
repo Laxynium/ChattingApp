@@ -1,4 +1,6 @@
 ﻿using InstantMessenger.PrivateMessages.Domain;
+using InstantMessenger.PrivateMessages.Domain.Entities;
+using InstantMessenger.PrivateMessages.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

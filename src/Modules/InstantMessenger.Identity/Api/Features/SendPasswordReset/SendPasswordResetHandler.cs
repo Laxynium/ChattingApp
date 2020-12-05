@@ -3,9 +3,9 @@ using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
-using InstantMessenger.Shared.Commands;
 using InstantMessenger.Shared.MailKit;
 using InstantMessenger.Shared.MailKit.Builders;
+using InstantMessenger.Shared.Messages.Commands;
 using MimeKit;
 
 namespace InstantMessenger.Identity.Api.Features.SendPasswordReset

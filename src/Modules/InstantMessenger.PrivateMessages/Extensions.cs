@@ -1,12 +1,15 @@
-﻿using InstantMessenger.PrivateMessages.Api;
-using InstantMessenger.PrivateMessages.Api.Hubs;
+﻿using InstantMessenger.PrivateMessages.Api.Hubs;
+using InstantMessenger.PrivateMessages.Api.IntegrationEvents;
 using InstantMessenger.PrivateMessages.Domain;
 using InstantMessenger.PrivateMessages.Infrastructure;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;
-using InstantMessenger.Shared.Commands;
-using InstantMessenger.Shared.Events;
+using InstantMessenger.PrivateMessages.Infrastructure.Decorators;
+using InstantMessenger.Shared.Decorators.UoW;
+using InstantMessenger.Shared.IntegrationEvents;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Events;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
-using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,11 +21,15 @@ namespace InstantMessenger.PrivateMessages
     {
         public static IServiceCollection AddPrivateMessagesModule(this IServiceCollection services)
         {
-            services.AddCommandHandlers()
+            services
+                .AddCommandHandlers(typeof(TransactionCommandHandlerDecorator<>))
                 .AddCommandDispatcher()
+                .AddDomainEventHandlers(typeof(PublishDomainEventsEventHandlerDecorator<>))
+                .AddDomainEventDispatcher()
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
-                .AddEventHandlers()
+                .AddIntegrationEventHandlers()
+                .AddIntegrationEventDispatcher()
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<PrivateMessagesContext>(
@@ -38,9 +45,10 @@ namespace InstantMessenger.PrivateMessages
                         );
                     }
                 )
+                .AddUnitOfWork<PrivateMessagesContext,DomainEventMapper>()
                 .AddScoped<IConversationRepository, ConversationRepository>()
-                .AddScoped<IMessageRepository, MessageRepository>()
-                .AddScoped<IUnitOfWork, UnitOfWork>();
+                .AddScoped<IMessageRepository, MessageRepository>();
+                
             services.AddSignalR(
                 x => { x.EnableDetailedErrors = true; }
             ).AddNewtonsoftJsonProtocol();

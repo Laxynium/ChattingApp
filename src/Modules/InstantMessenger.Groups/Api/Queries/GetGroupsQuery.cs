@@ -7,7 +7,7 @@ using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure;
 using InstantMessenger.Groups.Infrastructure.Database;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries

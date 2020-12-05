@@ -1,20 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Identity.Api;
 using InstantMessenger.Identity.Api.Features.SignIn;
 using InstantMessenger.Identity.Api.Features.SignUp;
+using InstantMessenger.Identity.Api.IntegrationEvents;
 using InstantMessenger.Identity.Api.Queries;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.Rules;
 using InstantMessenger.Identity.Infrastructure;
 using InstantMessenger.Identity.Infrastructure.Database;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Identity.Infrastructure.Decorators;
+using InstantMessenger.Shared.Decorators.UoW;
+using InstantMessenger.Shared.IntegrationEvents;
 using InstantMessenger.Shared.MailKit;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Events;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
 using InstantMessenger.Shared.Mvc;
-using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -85,11 +89,14 @@ namespace InstantMessenger.Identity
                 }
             );
             services
-                .AddCommandHandlers()
-                .Decorate(typeof(ICommandHandler<>),typeof(CommandHandlerTransactionDecorator<>))
+                .AddCommandHandlers(typeof(TransactionCommandHandlerDecorator<>))
                 .AddCommandDispatcher()
+                .AddDomainEventHandlers(typeof(PublishDomainEventsEventHandlerDecorator<>))
+                .AddDomainEventDispatcher()
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
+                .AddIntegrationEventHandlers()
+                .AddIntegrationEventDispatcher()
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddMailKit()
@@ -104,11 +111,11 @@ namespace InstantMessenger.Identity
                         o.UseSqlServer(connectionString, x=>x.MigrationsHistoryTable("__EFMigrationsHistory", "Identity"));
                     }
                 )
+                .AddUnitOfWork<IdentityContext,DomainEventMapper>()
                 .AddScoped<IUniqueEmailRule, UniqueEmailRule>()
                 .AddScoped<IUniqueNicknameRule, UniqueNicknameRule>()
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IActivationLinkRepository, ActivationLinkRepository>()
-                .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddSingleton<RandomStringGenerator>()
                 .AddSingleton<IPasswordHasher<User>>(s => new PasswordHasher<User>())
                 .AddTransient<IAuthTokenService, AuthTokenService>()

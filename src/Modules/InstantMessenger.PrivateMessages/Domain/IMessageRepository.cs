@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using InstantMessenger.PrivateMessages.Domain.Entities;
+using InstantMessenger.PrivateMessages.Domain.ValueObjects;
 
 namespace InstantMessenger.PrivateMessages.Domain
 {

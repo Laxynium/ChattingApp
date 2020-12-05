@@ -1,5 +1,5 @@
 ﻿using System;
-using InstantMessenger.Shared.Queries;
+using InstantMessenger.Shared.Messages.Queries;
 
 namespace InstantMessenger.Identity.Api.Queries
 {

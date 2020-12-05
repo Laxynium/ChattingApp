@@ -1,4 +1,5 @@
 using InstantMessenger.Identity.Domain.Entities;
+using InstantMessenger.Shared.BuildingBlocks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,11 +23,13 @@ namespace InstantMessenger.Identity.Infrastructure.Database
 
         private static void Build(EntityTypeBuilder<ActivationLink> builder)
         {
-            builder.Property(x => x.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ActivationLinkId");
             builder.HasKey(x => x.Id)
                 .HasName("PK_ActivationLinks");
+            builder.Property(x => x.Id)
+                .ValueGeneratedNever()
+                .HasConversion(x=>x.Value, x=>new ActivationLinkId(x))
+                .HasColumnName("ActivationLinkId");
+            
             builder.Property(x => x.Token).IsRequired();
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.UserId).IsRequired();
@@ -40,12 +43,14 @@ namespace InstantMessenger.Identity.Infrastructure.Database
 
         private static void Build(EntityTypeBuilder<User> builder)
         {
+            builder
+                .HasKey(x => x.Id)
+                .HasName("PK_Users");
             builder.Property(x=>x.Id)
                 .ValueGeneratedNever()
+                .HasConversion(x=>x.Value,x=>new UserId(x))
                 .HasColumnName("UserId");
-            builder
-                .HasKey(x=>x.Id)
-                .HasName("PK_Users");
+
             builder.OwnsOne(x => x.Email, e =>
             {
                 e.Property(x => x.Value).HasColumnName("Email").IsRequired();

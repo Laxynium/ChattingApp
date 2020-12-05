@@ -4,6 +4,7 @@ using FluentAssertions;
 using InstantMessenger.Friendships.Api.Features.AcceptInvitation;
 using InstantMessenger.Friendships.Api.Features.SendInvitation;
 using InstantMessenger.Friendships.Domain;
+using InstantMessenger.Friendships.Domain.ValueObjects;
 using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
 using Xunit;

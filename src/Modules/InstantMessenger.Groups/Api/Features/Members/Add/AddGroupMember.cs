@@ -4,7 +4,7 @@ using InstantMessenger.Groups.Api.Features.Group.Create.ExternalQueries;
 using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Modules;
 using NodaTime;
 

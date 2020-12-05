@@ -6,7 +6,7 @@ using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Shared.Commands;
+using InstantMessenger.Shared.Messages.Commands;
 using NodaTime;
 
 namespace InstantMessenger.Groups.Api.Features.Messages.SendMessage

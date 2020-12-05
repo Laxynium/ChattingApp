@@ -1,6 +1,7 @@
 ﻿using System;
 using InstantMessenger.Groups;
 using InstantMessenger.Groups.Infrastructure.Database;
+using InstantMessenger.Shared.MessageBrokers;
 using InstantMessenger.Shared.Modules;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ namespace InstantMessenger.UnitTests.Common
                     services.AddGroupsModule()
                         .RemoveDbContext<GroupsContext>()
                         .AddDbContext<GroupsContext>(o => o.UseInMemoryDatabase(dbName))
+                        .Replace<IMessageBroker, FakeMessageBroker>(ServiceLifetime.Transient)
                         .AddSingleton(typeof(ILogger<>),typeof(NullLogger<>));
                 }
             );

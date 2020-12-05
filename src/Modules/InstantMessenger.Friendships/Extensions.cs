@@ -1,14 +1,16 @@
-﻿using InstantMessenger.Friendships.Api;
-using InstantMessenger.Friendships.Api.Hubs;
-using InstantMessenger.Friendships.Domain;
+﻿using InstantMessenger.Friendships.Api.Hubs;
+using InstantMessenger.Friendships.Api.IntegrationEvents;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Friendships.Infrastructure;
 using InstantMessenger.Friendships.Infrastructure.Database;
-using InstantMessenger.Shared.Commands;
-using InstantMessenger.Shared.Events;
+using InstantMessenger.Friendships.Infrastructure.Decorators;
+using InstantMessenger.Shared.Decorators.UoW;
+using InstantMessenger.Shared.IntegrationEvents;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Events;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
-using InstantMessenger.Shared.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,11 +23,15 @@ namespace InstantMessenger.Friendships
     {
         public static IServiceCollection AddFriendshipsModule(this IServiceCollection services)
         {
-            services.AddCommandHandlers()
+            services
+                .AddCommandHandlers(typeof(CommandHandlerTransactionDecorator<>))
                 .AddCommandDispatcher()
+                .AddDomainEventHandlers(typeof(PublishDomainEventsEventHandlerDecorator<>))
+                .AddDomainEventDispatcher()
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
-                .AddEventHandlers()
+                .AddIntegrationEventHandlers()
+                .AddIntegrationEventDispatcher()
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<FriendshipsContext>(x =>
@@ -35,10 +41,9 @@ namespace InstantMessenger.Friendships
                     var connectionString = scope.ServiceProvider.GetService<IConfiguration>().GetConnectionString("InstantMessengerDb");
                     x.UseSqlServer(connectionString, x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Friendships"));
                 })
-                .AddScoped<IPersonRepository, PersonRepository>()
+                .AddUnitOfWork<FriendshipsContext, DomainEventsMapper>()
                 .AddScoped<IInvitationRepository, InvitationRepository>()
                 .AddScoped<IFriendshipRepository, FriendshipRepository>()
-                .AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<IUniquePendingInvitationRule, UniquePendingInvitationRule>()
                 .AddSingleton<IClock>(x=>SystemClock.Instance);
             services.AddSignalR(

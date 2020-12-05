@@ -1,14 +1,18 @@
 ﻿using InstantMessenger.Groups.Api;
+using InstantMessenger.Groups.Api.IntegrationEvents;
 using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Infrastructure;
 using InstantMessenger.Groups.Infrastructure.Database;
-using InstantMessenger.Shared.Commands;
-using InstantMessenger.Shared.Events;
+using InstantMessenger.Groups.Infrastructure.Decorators;
+using InstantMessenger.Shared.Decorators.UoW;
+using InstantMessenger.Shared.IntegrationEvents;
+using InstantMessenger.Shared.Messages.Commands;
+using InstantMessenger.Shared.Messages.Events;
+using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
-using InstantMessenger.Shared.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,12 +25,14 @@ namespace InstantMessenger.Groups
         public static IServiceCollection AddGroupsModule(this IServiceCollection services)
         {
             services
-                .AddCommandHandlers()
+                .AddCommandHandlers(typeof(TransactionCommandHandlerDecorator<>))
                 .AddCommandDispatcher()
+                .AddDomainEventHandlers(typeof(PublishDomainEventsEventHandlerDecorator<>))
+                .AddDomainEventDispatcher()
                 .AddQueryHandlers()
                 .AddQueryDispatcher()
-                .AddEventHandlers()
-                .AddEventDispatcher()
+                .AddIntegrationEventHandlers()
+                .AddIntegrationEventDispatcher()
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<GroupsContext>(
@@ -42,6 +48,7 @@ namespace InstantMessenger.Groups
                         );
                     }
                 )
+                .AddUnitOfWork<GroupsContext, DomainEventsMapper>()
                 .AddTransient<GroupsModuleFacade>()
                 .AddScoped<IGroupRepository, GroupRepository>()
                 .AddScoped<IInvitationRepository, InvitationRepository>()
@@ -49,7 +56,8 @@ namespace InstantMessenger.Groups
                 .AddScoped<IChannelRepository, ChannelRepository>()
                 .AddScoped<IMessageRepository, MessageRepository>()
                 .AddScoped<IUnitOfWork,UnitOfWork>()
-                .AddSingleton<IClock>(x => SystemClock.Instance); ;
+                .AddSingleton<IClock>(x => SystemClock.Instance);
+
             return services;
         }
     }
