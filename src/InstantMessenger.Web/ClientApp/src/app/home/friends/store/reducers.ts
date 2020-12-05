@@ -18,6 +18,7 @@ import {
   getFriendsAction,
   getFriendsSuccessAction,
   getFriendsFailureAction,
+  removeFriendSuccessAction,
 } from 'src/app/home/friends/store/actions';
 import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
 import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
@@ -168,6 +169,13 @@ const friendReducer = createReducer(
     cancelInvitationFailureAction,
     (state): FriendsStateInterface => ({
       ...state,
+    })
+  ),
+  on(
+    removeFriendSuccessAction,
+    (state, action): FriendsStateInterface => ({
+      ...state,
+      friendships: state.friendships.filter((x) => x.id != action.friendshipId),
     })
   )
 );

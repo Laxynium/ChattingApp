@@ -22,5 +22,11 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database
 
         public async Task<Conversation> GetAsync(ConversationId id) 
             => await _context.Conversations.FindAsync(id);
+
+        public Task RemoveAsync(Conversation conversation)
+        {
+            _context.Conversations.Remove(conversation);
+            return Task.CompletedTask;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Friendships.Domain.Exceptions;
 using NodaTime;
 
 namespace InstantMessenger.Friendships.Domain
@@ -21,6 +22,12 @@ namespace InstantMessenger.Friendships.Domain
         public static Friendship Create(Guid firstPerson, Guid secondPerson, IClock clock)
         {
             return new Friendship(Guid.NewGuid(), firstPerson, secondPerson,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+        }
+
+        public void Remove(Person person)
+        {
+            if(FirstPerson != person.Id && SecondPerson != person.Id)
+                throw new FriendshipNotFoundException(Id);
         }
     }
 }

@@ -1,5 +1,5 @@
-import {HubMessage} from '@microsoft/signalr';
 import {
+  conversationRemovedAction,
   markAsReadActionSuccessAction,
   receiveMessageSuccessAction,
 } from 'src/app/home/conversations/store/actions';
@@ -24,6 +24,12 @@ interface MessageReadHubDto {
   senderId: string;
   receiverId: string;
   readAt: string;
+}
+
+interface ConversationDto {
+  conversationId: string;
+  firstParticipantId: string;
+  secondParticipantId: string;
 }
 
 const onMessageCreated: HubMethod<MessageHubDto> = (store, data) => {
@@ -55,9 +61,16 @@ const onMessageRead: HubMethod<MessageReadHubDto> = (store, data) => {
   );
 };
 
+const onConversationRemoved: HubMethod<ConversationDto> = (store, data) => {
+  store.dispatch(
+    conversationRemovedAction({conversationId: data.conversationId})
+  );
+};
+
 const hubProvider: HubHandlersProvider = () => ({
   onMessageCreated: onMessageCreated,
   onMessageRead: onMessageRead,
+  onConversationRemoved: onConversationRemoved,
 });
 
 export const conversationsHub: Hub = {

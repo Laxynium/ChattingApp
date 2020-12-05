@@ -27,5 +27,16 @@ namespace InstantMessenger.Friendships.Infrastructure.Database
                      x.FirstPerson == receiverId && x.SecondPerson == senderId
             );
         }
+
+        public async Task<Friendship> GetAsync(Guid friendshipId)
+        {
+            return await _context.Friendships.FirstOrDefaultAsync(x => x.Id == friendshipId);
+        }
+
+        public Task RemoveAsync(Friendship friendship)
+        {
+            _context.Remove(friendship);
+            return Task.CompletedTask;
+        }
     }
 }

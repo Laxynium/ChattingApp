@@ -42,6 +42,9 @@ export class FriendsService {
       invitationId: invitationId,
     });
   }
+  removeFriend(friendshipId: string) {
+    return this.http.delete(`${this.friendsUrl}/${friendshipId}`);
+  }
   getAllInvitations(): Observable<InvitationFullInterface[]> {
     return this.http
       .get<InvitationInterface[]>(`${this.friendsUrl}/invitations/pending`)

@@ -6,19 +6,19 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace InstantMessenger.Friendships.Api.EventHandlers
 {
-    public class FriendshipCreatedEventHandler : IEventHandler<FriendshipCreatedEvent>
+    public class FriendshipRemovedEventHandler : IEventHandler<FriendshipRemovedEvent>
     {
         private readonly IHubContext<FriendshipsHub, IFriendshipsContract> _hubContext;
 
-        public FriendshipCreatedEventHandler(IHubContext<FriendshipsHub,IFriendshipsContract> hubContext)
+        public FriendshipRemovedEventHandler(IHubContext<FriendshipsHub,IFriendshipsContract> hubContext)
         {
             _hubContext = hubContext;
         }
-        public async Task HandleAsync(FriendshipCreatedEvent @event)
+        public async Task HandleAsync(FriendshipRemovedEvent @event)
         {
             await _hubContext.Clients
                 .Users(@event.FirstPerson.ToString("N"), @event.SecondPerson.ToString("N"))
-                .OnFriendshipCreated(new FriendshipDto(@event.FriendshipId, @event.FirstPerson, @event.SecondPerson, @event.CreatedAt));
+                .OnFriendshipRemoved(new FriendshipDto(@event.FriendshipId, @event.FirstPerson, @event.SecondPerson, @event.CreatedAt));
         }
     }
 }

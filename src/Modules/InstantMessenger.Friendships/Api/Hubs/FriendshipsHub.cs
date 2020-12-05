@@ -37,17 +37,18 @@ namespace InstantMessenger.Friendships.Api.Hubs
         }
     }
 
-    public interface IFriendshipsInterface
+    public interface IFriendshipsContract
     {
         Task OnFriendshipCreated(FriendshipDto friendship);
         Task OnFriendshipInvitationCreated(InvitationDto friendship);
         Task OnFriendshipInvitationAccepted(InvitationDto friendship);
         Task OnFriendshipInvitationRejected(InvitationDto friendship);
         Task OnFriendshipInvitationCanceled(InvitationDto friendship);
+        Task OnFriendshipRemoved(FriendshipDto friendship);
     }
 
     [Authorize]
-    public class FriendshipsHub : Hub<IFriendshipsInterface>
+    public class FriendshipsHub : Hub<IFriendshipsContract>
     {
     }
 }

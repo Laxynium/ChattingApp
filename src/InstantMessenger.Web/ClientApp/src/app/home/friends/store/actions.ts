@@ -26,6 +26,10 @@ export enum ActionTypes {
   CANCEL_INVITATION = '[Friends] Cancel invitation',
   CANCEL_INVITATION_SUCCESS = '[Friends] Cancel invitation success',
   CANCEL_INVITATION_FAILURE = '[Friends] Cancel invitation failure',
+
+  REMOVE_FRIEND = '[Friends] Remove friend',
+  REMOVE_FRIEND_SUCCESS = '[Friends] Remove friend success',
+  REMOVE_FRIEND_FAILURE = '[Friends] Remove friend failure',
 }
 
 export const getPendingInvitationsAction = createAction(
@@ -105,4 +109,18 @@ export const cancelInvitationSuccessAction = createAction(
 
 export const cancelInvitationFailureAction = createAction(
   ActionTypes.CANCEL_INVITATION_FAILURE
+);
+
+export const removeFriendAction = createAction(
+  ActionTypes.REMOVE_FRIEND,
+  props<{friendshipId: string}>()
+);
+
+export const removeFriendSuccessAction = createAction(
+  ActionTypes.REMOVE_FRIEND_SUCCESS,
+  props<{friendshipId: string}>()
+);
+
+export const removeFriendFailureAction = createAction(
+  ActionTypes.REMOVE_FRIEND_FAILURE
 );

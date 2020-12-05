@@ -15,8 +15,9 @@ import {
   CancelInvitationEffect,
   GetFriendsData,
   RejectInvitationEffect,
+  RemoveFriendEffect,
   SendInvitationEffect,
-} from 'src/app/home/friends/store/effects';
+} from 'src/app/home/friends/store/effects/effects';
 import {FriendsService} from 'src/app/home/friends/services/friends.service';
 
 @NgModule({
@@ -39,6 +40,7 @@ import {FriendsService} from 'src/app/home/friends/services/friends.service';
       AcceptInvitationEffect,
       RejectInvitationEffect,
       CancelInvitationEffect,
+      RemoveFriendEffect,
     ]),
   ],
   providers: [FriendsService],

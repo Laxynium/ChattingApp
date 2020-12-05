@@ -25,6 +25,8 @@ export enum ActionTypes {
   MARK_AS_READ = '[Conversations] Mark as read',
   MARK_AS_READ_SUCCESS = '[Conversations] Mark as read success',
   MARK_AS_READ_FAILURE = '[Conversations] Mark as read failure',
+
+  CONVERSATION_REMOVED = '[Conversations] Conversation removed',
 }
 
 export const getLatestConversationsAction = createAction(
@@ -86,4 +88,9 @@ export const markAsReadActionSuccessAction = createAction(
 );
 export const markAsReadActionFailureAction = createAction(
   ActionTypes.MARK_AS_READ_FAILURE
+);
+
+export const conversationRemovedAction = createAction(
+  ActionTypes.CONVERSATION_REMOVED,
+  props<{conversationId: string}>()
 );

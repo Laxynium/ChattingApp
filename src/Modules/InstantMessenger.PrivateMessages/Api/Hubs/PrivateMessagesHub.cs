@@ -44,10 +44,25 @@ namespace InstantMessenger.PrivateMessages.Api.Hubs
         }
     }
 
+    public class ConversationDto
+    {
+        public Guid ConversationId { get; }
+        public Guid FirstParticipantId { get; }
+        public Guid SecondParticipantId { get; }
+
+        public ConversationDto(Guid conversationId, Guid firstParticipantId, Guid secondParticipantId)
+        {
+            ConversationId = conversationId;
+            FirstParticipantId = firstParticipantId;
+            SecondParticipantId = secondParticipantId;
+        }
+    }
+
     public interface IPrivateMessagesHubContract
     {
         Task OnMessageCreated(MessageDto message);
         Task OnMessageRead(MessageMarkedAsReadDto message);
+        Task OnConversationRemoved(ConversationDto conversation);
     }
 
     [Authorize]

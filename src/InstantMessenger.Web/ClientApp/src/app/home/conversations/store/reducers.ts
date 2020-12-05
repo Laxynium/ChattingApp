@@ -2,6 +2,7 @@ import {Action, createReducer, on} from '@ngrx/store';
 import {
   changeConversationAction,
   changeConversationSuccessAction,
+  conversationRemovedAction,
   getLatestConversationsSuccessAction,
   markAsReadActionSuccessAction,
   receiveMessageSuccessAction,
@@ -92,6 +93,19 @@ const conversationsReducer = createReducer(
           (a, b) => a.id == b.id
         ),
       },
+    })
+  ),
+  on(
+    conversationRemovedAction,
+    (s, a): ConversationsStateInterface => ({
+      ...s,
+      latestConversations: s.latestConversations.filter(
+        (x) => x.id != a.conversationId
+      ),
+      currentConversation:
+        s.currentConversation.id == a.conversationId
+          ? null
+          : s.currentConversation,
     })
   )
 );

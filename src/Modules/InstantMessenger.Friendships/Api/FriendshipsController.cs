@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using InstantMessenger.Friendships.Api.Features.AcceptInvitation;
 using InstantMessenger.Friendships.Api.Features.CancelInvitation;
 using InstantMessenger.Friendships.Api.Features.RejectInvitation;
+using InstantMessenger.Friendships.Api.Features.RemoveFromFriendships;
 using InstantMessenger.Friendships.Api.Features.SendInvitation;
 using InstantMessenger.Friendships.Api.Queries;
 using InstantMessenger.Shared.Commands;
@@ -55,6 +57,14 @@ namespace InstantMessenger.Friendships.Api
         {
             await _commandDispatcher.SendAsync(
                 new CancelFriendshipInvitationCommand(request.InvitationId, User.GetUserId()));
+            return Ok();
+        }
+
+        [HttpDelete("{friendshipId}")]
+        public async Task<IActionResult> Delete(Guid friendshipId)
+        {
+            await _commandDispatcher.SendAsync(
+                new RemoveFromFriendshipsCommand(User.GetUserId(), friendshipId));
             return Ok();
         }
 

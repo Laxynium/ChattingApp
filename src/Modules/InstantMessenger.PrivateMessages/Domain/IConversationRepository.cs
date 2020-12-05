@@ -8,5 +8,6 @@ namespace InstantMessenger.PrivateMessages.Domain
         Task AddAsync(Conversation conversation);
         Task<bool> ExistsAsync(Participant firstParticipant, Participant secondParticipant);
         Task<Conversation> GetAsync(ConversationId id);
+        Task RemoveAsync(Conversation conversation);
     }
 }

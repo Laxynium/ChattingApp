@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {createEffect, ofType, Actions} from '@ngrx/effects';
-import {of} from 'rxjs';
+import {EMPTY, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {FriendsService} from 'src/app/home/friends/services/friends.service';
 import {
@@ -19,6 +19,9 @@ import {
   rejectInvitationAction,
   rejectInvitationFailureAction,
   rejectInvitationSuccessAction,
+  removeFriendAction,
+  removeFriendFailureAction,
+  removeFriendSuccessAction,
   sendInvitationAction,
   sendInvitationFailureAction,
   sendInvitationSuccessAction,
@@ -203,6 +206,42 @@ export class CancelInvitationEffect {
         ofType(cancelInvitationSuccessAction),
         tap(() => {
           this.toastService.showSuccess('Friendship request has been rejected');
+        })
+      ),
+    {dispatch: false}
+  );
+
+  constructor(
+    private actions$: Actions,
+    private friendsService: FriendsService,
+    private toastService: ToastService
+  ) {}
+}
+
+@Injectable()
+export class RemoveFriendEffect {
+  $removeFriend = createEffect(() =>
+    this.actions$.pipe(
+      ofType(removeFriendAction),
+      switchMap((request) => {
+        return this.friendsService.removeFriend(request.friendshipId).pipe(
+          switchMap((r) => EMPTY),
+          catchError((response) =>
+            of(
+              removeFriendFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+  $removeFriendSuccess = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(removeFriendSuccessAction),
+        tap(() => {
+          this.toastService.showSuccess('Friendship has been removed');
         })
       ),
     {dispatch: false}

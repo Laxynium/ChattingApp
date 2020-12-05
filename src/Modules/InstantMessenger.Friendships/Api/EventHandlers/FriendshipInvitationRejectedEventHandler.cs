@@ -8,9 +8,9 @@ namespace InstantMessenger.Friendships.Api.EventHandlers
 {
     public class FriendshipInvitationRejectedEventHandler : IEventHandler<FriendshipInvitationRejectedEvent>
     {
-        private readonly IHubContext<FriendshipsHub, IFriendshipsInterface> _hubContext;
+        private readonly IHubContext<FriendshipsHub, IFriendshipsContract> _hubContext;
 
-        public FriendshipInvitationRejectedEventHandler(IHubContext<FriendshipsHub, IFriendshipsInterface> hubContext)
+        public FriendshipInvitationRejectedEventHandler(IHubContext<FriendshipsHub, IFriendshipsContract> hubContext)
         {
             _hubContext = hubContext;
         }

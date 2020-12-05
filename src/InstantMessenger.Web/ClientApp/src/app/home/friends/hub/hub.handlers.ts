@@ -1,8 +1,7 @@
-import {Store} from '@ngrx/store';
 import {
-  acceptInvitationSuccessAction,
   getFriendsAction,
   getPendingInvitationsAction,
+  removeFriendSuccessAction,
 } from 'src/app/home/friends/store/actions';
 import {
   Hub,
@@ -23,32 +22,32 @@ interface FriendshipInvitationHubDto {
   createdAt: string;
 }
 
-const onFriendshipCreated: HubMethod<FriendshipHubDto> = (store, data) => {
+const onFriendshipCreated: HubMethod<FriendshipHubDto> = (store) => {
   store.dispatch(getFriendsAction());
 };
 const onFriendshipInvitationCreated: HubMethod<FriendshipInvitationHubDto> = (
-  store,
-  data
+  store
 ) => {
   store.dispatch(getPendingInvitationsAction());
 };
 const onFriendshipInvitationAccepted: HubMethod<FriendshipInvitationHubDto> = (
-  store,
-  data
+  store
 ) => {
   store.dispatch(getPendingInvitationsAction());
 };
 const onFriendshipInvitationRejected: HubMethod<FriendshipInvitationHubDto> = (
-  store,
-  data
+  store
 ) => {
   store.dispatch(getPendingInvitationsAction());
 };
 const onFriendshipInvitationCanceled: HubMethod<FriendshipInvitationHubDto> = (
-  store,
-  data
+  store
 ) => {
   store.dispatch(getPendingInvitationsAction());
+};
+
+const onFriendshipRemoved: HubMethod<FriendshipHubDto> = (store, data) => {
+  store.dispatch(removeFriendSuccessAction({friendshipId: data.id}));
 };
 
 const hubProvider: HubHandlersProvider = () => ({
@@ -57,6 +56,7 @@ const hubProvider: HubHandlersProvider = () => ({
   onFriendshipInvitationAccepted: onFriendshipInvitationAccepted,
   onFriendshipInvitationRejected: onFriendshipInvitationRejected,
   onFriendshipInvitationCanceled: onFriendshipInvitationCanceled,
+  onFriendshipRemoved: onFriendshipRemoved,
 });
 
 export const friendshipsHub: Hub = {
