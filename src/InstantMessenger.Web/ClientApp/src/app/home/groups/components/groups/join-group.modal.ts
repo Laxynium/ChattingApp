@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {Store} from '@ngrx/store';
+import {joinGroupAction} from 'src/app/home/groups/store/actions';
 
 @Component({
   selector: 'ngbd-modal-confirm',
@@ -62,7 +64,11 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 })
 export class JoinGroupModal implements OnInit {
   form: FormGroup;
-  constructor(public modal: NgbActiveModal, private fb: FormBuilder) {
+  constructor(
+    public modal: NgbActiveModal,
+    private fb: FormBuilder,
+    private store: Store
+  ) {
     this.form = this.fb.group({
       invitationCode: ['', Validators.required],
     });
@@ -74,7 +80,7 @@ export class JoinGroupModal implements OnInit {
   }
 
   joinGroup() {
-    console.log('abc');
-    this.modal.close();
+    const invitationCode = this.form.value.invitationCode;
+    this.store.dispatch(joinGroupAction({invitationCode}));
   }
 }

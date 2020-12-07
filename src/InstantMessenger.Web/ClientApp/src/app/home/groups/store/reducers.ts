@@ -141,7 +141,7 @@ const groupsReducer = createReducer(
   })),
   on(generateInvitationFailureAction, (s, a) => ({
     ...s,
-    invitation: {
+    generatedInvitation: {
       ...s.generatedInvitation,
       isBeingGenerated: false,
       code: null,

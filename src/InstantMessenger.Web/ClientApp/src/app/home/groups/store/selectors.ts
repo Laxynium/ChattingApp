@@ -45,3 +45,8 @@ export const invitationsSelector = createSelector(
   groupsFeatureSelector,
   (s: GroupsStateInterface): InvitationDto[] => s.invitations
 );
+
+export const isInvitationBeingGeneratedSelector = createSelector(
+  groupsFeatureSelector,
+  (s: GroupsStateInterface): boolean => s.generatedInvitation.isBeingGenerated
+);

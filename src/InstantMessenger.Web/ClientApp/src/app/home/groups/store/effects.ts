@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
@@ -26,6 +27,9 @@ import {
   getInvitationsAction,
   getInvitationsFailureAction,
   getInvitationsSuccessAction,
+  joinGroupAction,
+  joinGroupFailureAction,
+  joinGroupSuccessAction,
   removeChannelAction,
   removeChannelFailureAction,
   removeChannelSuccessAction,
@@ -37,6 +41,7 @@ import {
   revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
+import {mapToError} from 'src/app/shared/types/error.response';
 import {v4 as guid} from 'uuid';
 
 @Injectable()
@@ -51,13 +56,39 @@ export class GroupsEffects {
         };
         return this.groupsService.createGroup(request).pipe(
           map((r) => createGroupSuccessAction({group: r})),
-          catchError((response) =>
+          catchError((response: HttpErrorResponse) =>
             of(
               createGroupFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );
+      })
+    )
+  );
+
+  $joinGroup = createEffect(() =>
+    this.actions$.pipe(
+      ofType(joinGroupAction),
+      switchMap((r) => {
+        return this.groupsService.joinGroup(r).pipe(
+          map((_) => joinGroupSuccessAction()),
+          catchError((response) =>
+            of(
+              joinGroupFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $joinGroupSuccess = createEffect(() =>
+    this.actions$.pipe(
+      ofType(joinGroupSuccessAction),
+      switchMap((r) => {
+        return of(getGroupsAction());
       })
     )
   );
@@ -71,7 +102,7 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               removeGroupFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );
@@ -101,7 +132,7 @@ export class GroupsEffects {
             catchError((response) =>
               of(
                 generateInvitationFailureAction(),
-                requestFailedAction({error: response})
+                requestFailedAction({error: mapToError(response)})
               )
             )
           );
@@ -120,7 +151,7 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               revokeInvitationFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );
@@ -137,7 +168,7 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               getInvitationsFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );
@@ -152,7 +183,10 @@ export class GroupsEffects {
         return this.groupsService.getGroups().pipe(
           map((r) => getGroupsSuccessAction({groups: r})),
           catchError((response) =>
-            of(getGroupsFailureAction(), requestFailedAction({error: response}))
+            of(
+              getGroupsFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
           )
         );
       })
@@ -187,7 +221,7 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               createChannelFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );
@@ -206,7 +240,7 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               removeChannelFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );
@@ -223,7 +257,7 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               getChannelsFailureAction(),
-              requestFailedAction({error: response})
+              requestFailedAction({error: mapToError(response)})
             )
           )
         );

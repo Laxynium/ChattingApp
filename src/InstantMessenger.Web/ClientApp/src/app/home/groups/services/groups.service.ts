@@ -36,6 +36,13 @@ export class GroupsService {
       );
   }
 
+  public joinGroup(request: {invitationCode: string}): Observable<Object> {
+    return this.http.post(
+      `${this.groupApi}/join/${request.invitationCode}`,
+      {}
+    );
+  }
+
   public removeGroup(request: {groupId: string}): Observable<Object> {
     return this.http.delete(`${this.groupApi}/${request.groupId}`);
   }
