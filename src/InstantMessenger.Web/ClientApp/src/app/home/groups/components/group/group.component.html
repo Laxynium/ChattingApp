@@ -1,0 +1,61 @@
+<div class="scrollable-content-wrapper">
+  <div class="scrollable-content">
+    <div class="header">
+      <h2>{{($currentGroup | async)?.name}}</h2>
+    </div>
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="body">
+          <div class="group-layout">
+            <div class="left-pannel">
+              <div class="left-pannel-header">
+                <span><strong>Channels</strong></span>
+                <button class="btn btn-primary" (click)="openCreateChannelModal()">
+                  <fa-icon [icon]="['fas','plus']"></fa-icon>
+                </button>
+              </div>
+              <div class="left-pannel-body">
+                <div class="left-pannel-body-wrapper">
+                  <div class="left-pannel-body-scrollable">
+                    <div class="d-flex">
+                      <ul ngbNav #nav="ngbNav" class="nav-pills w-100" orientation="vertical">
+                        <li *ngFor="let channel of $channels | async" ngbNavItem="{{channel.channelId}}">
+                          <a ngbNavLink class="d-flex justify-content-between">
+                            <span>{{channel.channelName}}</span>
+                            <div ngbDropdown class="d-inline-block" placement="left-top"
+                              (click)="channelDropdownChange($event)">
+                              <button id="dropdownBasic1" class="btn btn-outline-secondary" ngbDropdownToggle>
+                                <fa-icon [icon]="['fas', 'ellipsis-h']" size="1x"></fa-icon>
+                              </button>
+                              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
+                                <button ngbDropdownItem (click)="removeChannel(channel.channelId)">Remove
+                                  channel</button>
+                              </div>
+                            </div>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <p>{{channel.channelId}}</p>
+                          </ng-template>
+                        </li>
+                        <li style="display: none;" [ngbNavItem]="1">
+                          <!--Without this selecting is not working, idk why-->
+                          <a ngbNavLink class="d-flex justify-content-between">
+                          </a>
+                          <ng-template ngbNavContent>
+                          </ng-template>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="main-pannel">
+              <div [ngbNavOutlet]="nav" class="ml-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

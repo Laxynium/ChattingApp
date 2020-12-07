@@ -40,6 +40,14 @@ namespace InstantMessenger.Groups.Domain.Entities
             return group;
         }
 
+        public void Remove(UserId userId)
+        {
+            var member = GetMember(userId);
+            if(!member.IsOwner)
+                throw new InsufficientPermissionsException(userId);
+        }
+
+
         public void AddRole(UserId userId, RoleId roleId, RoleName roleName)
         {
             if (!CanAddRole(userId))
@@ -509,5 +517,6 @@ namespace InstantMessenger.Groups.Domain.Entities
 
             return false;
         }
+
     }
 }

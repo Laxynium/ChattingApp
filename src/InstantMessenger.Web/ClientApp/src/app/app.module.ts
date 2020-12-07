@@ -18,7 +18,27 @@ import {AuthInterceptor} from './identity/services/authentication.interceptor.se
 import {PersistanceService} from './shared/services/persistance.service';
 import {HomeModule} from './home/home.module';
 import {RequestFailedEffect} from 'src/app/shared/store/api-request.error';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {
+  FaIconLibrary,
+  FontAwesomeModule,
+} from '@fortawesome/angular-fontawesome';
+import {
+  faBan,
+  faCog,
+  faCogs,
+  faComments,
+  faEllipsisH,
+  faPlus,
+  faSignInAlt,
+  faSignOutAlt,
+  faSpinner,
+  faSync,
+  faUserCheck,
+  faUserMinus,
+  faUsers,
+  faUserTimes,
+} from '@fortawesome/free-solid-svg-icons';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, ToastsContainer],
@@ -29,6 +49,8 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     BrowserAnimationsModule,
     CommonModule,
     NgbModule,
+    FormsModule,
+    ReactiveFormsModule,
     FontAwesomeModule,
     StoreModule.forRoot([]),
     IdentityModule,
@@ -51,4 +73,23 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private library: FaIconLibrary) {
+    library.addIcons(
+      faUsers,
+      faComments,
+      faUserMinus,
+      faBan,
+      faUserCheck,
+      faUserTimes,
+      faCogs,
+      faCog,
+      faSpinner,
+      faSync,
+      faEllipsisH,
+      faSignInAlt,
+      faSignOutAlt,
+      faPlus
+    );
+  }
+}

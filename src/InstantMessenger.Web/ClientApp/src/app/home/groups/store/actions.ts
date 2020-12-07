@@ -1,0 +1,131 @@
+import {createAction, props} from '@ngrx/store';
+import {
+  ChannelDto,
+  GroupDto,
+} from 'src/app/home/groups/services/responses/group.dto';
+
+export enum ActionTypes {
+  GET_GROUPS = '[Groups] Get groups',
+  GET_GROUPS_SUCCESS = '[Groups] Get groups success',
+  GET_GROUPS_FAILURE = '[Groups] Get groups failure',
+
+  GET_CHANNELS = '[Groups] Get channels',
+  GET_CHANNELS_SUCCESS = '[Groups] Get channels success',
+  GET_CHANNELS_FAILURE = '[Groups] Get channels failure',
+
+  CREATE_GROUP = '[Groups] Create group',
+  CREATE_GROUP_SUCCESS = '[Groups] Create group success',
+  CREATE_GROUP_FAILURE = '[Groups] Create group failure',
+
+  REMOVE_GROUP = '[Groups] Remove group',
+  REMOVE_GROUP_SUCCESS = '[Groups] Remove group success',
+  REMOVE_GROUP_FAILURE = '[Groups] Remove group failure',
+
+  JOIN_GROUP = '[Groups] Join group',
+  JOIN_GROUP_SUCCESS = '[Groups] Join group success',
+  JOIN_GROUP_FAILURE = '[Groups] Join group failure',
+
+  CHANGE_CURRENT_GROUP = '[Groups] Change current group',
+  CHANGE_CURRENT_GROUP_SUCCESS = '[Groups] Change current group success',
+  CHANGE_CURRENT_GROUP_FAILURE = '[Groups] Change current group failure',
+
+  CREATE_CHANNEL = '[Groups] Create channel',
+  CREATE_CHANNEL_SUCCESS = '[Groups] Create channel success',
+  CREATE_CHANNEL_FAILURE = '[Groups] Create channel failure',
+
+  REMOVE_CHANNEL = '[Groups] Remove channel',
+  REMOVE_CHANNEL_SUCCESS = '[Groups] Remove channel success',
+  REMOVE_CHANNEL_FAILURE = '[Groups] Remove channel failure',
+}
+
+export const getGroupsAction = createAction(ActionTypes.GET_GROUPS);
+export const getGroupsSuccessAction = createAction(
+  ActionTypes.GET_GROUPS_SUCCESS,
+  props<{groups: GroupDto[]}>()
+);
+export const getGroupsFailureAction = createAction(
+  ActionTypes.GET_GROUPS_FAILURE
+);
+
+export const getChannelsAction = createAction(
+  ActionTypes.GET_CHANNELS,
+  props<{groupId: string}>()
+);
+export const getChannelsSuccessAction = createAction(
+  ActionTypes.GET_CHANNELS_SUCCESS,
+  props<{channels: ChannelDto[]}>()
+);
+export const getChannelsFailureAction = createAction(
+  ActionTypes.GET_CHANNELS_FAILURE
+);
+
+export const createGroupAction = createAction(
+  ActionTypes.CREATE_GROUP,
+  props<{groupName: string}>()
+);
+export const createGroupSuccessAction = createAction(
+  ActionTypes.CREATE_GROUP_SUCCESS,
+  props<{group: GroupDto}>()
+);
+export const createGroupFailureAction = createAction(
+  ActionTypes.CREATE_GROUP_FAILURE
+);
+
+export const removeGroupAction = createAction(
+  ActionTypes.REMOVE_GROUP,
+  props<{groupId: string}>()
+);
+export const removeGroupSuccessAction = createAction(
+  ActionTypes.REMOVE_GROUP_SUCCESS,
+  props<{groupId: string}>()
+);
+export const removeGroupFailureAction = createAction(
+  ActionTypes.REMOVE_GROUP_FAILURE
+);
+
+export const joinGroupAction = createAction(
+  ActionTypes.JOIN_GROUP,
+  props<{invitationCode: string}>()
+);
+export const joinGroupSuccessAction = createAction(
+  ActionTypes.JOIN_GROUP_SUCCESS
+);
+export const joinGroupFailureAction = createAction(
+  ActionTypes.JOIN_GROUP_FAILURE
+);
+
+export const changeCurrentGroupAction = createAction(
+  ActionTypes.CHANGE_CURRENT_GROUP,
+  props<{groupId: string}>()
+);
+export const changeCurrentGroupSuccessAction = createAction(
+  ActionTypes.CHANGE_CURRENT_GROUP_SUCCESS,
+  props<{groupId: string}>()
+);
+export const changeCurrentGroupFailureAction = createAction(
+  ActionTypes.CHANGE_CURRENT_GROUP_FAILURE
+);
+
+export const createChannelAction = createAction(
+  ActionTypes.CREATE_CHANNEL,
+  props<{groupId: string; channelName: string}>()
+);
+export const createChannelSuccessAction = createAction(
+  ActionTypes.CREATE_CHANNEL_SUCCESS,
+  props<{channel: ChannelDto}>()
+);
+export const createChannelFailureAction = createAction(
+  ActionTypes.CREATE_CHANNEL_FAILURE
+);
+
+export const removeChannelAction = createAction(
+  ActionTypes.REMOVE_CHANNEL,
+  props<{groupId: string; channelId: string}>()
+);
+export const removeChannelSuccessAction = createAction(
+  ActionTypes.REMOVE_CHANNEL_SUCCESS,
+  props<{channelId: string}>()
+);
+export const removeChannelFailureAction = createAction(
+  ActionTypes.REMOVE_CHANNEL_FAILURE
+);

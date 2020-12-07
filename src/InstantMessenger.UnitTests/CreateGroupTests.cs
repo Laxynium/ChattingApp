@@ -41,7 +41,8 @@ namespace InstantMessenger.UnitTests
             await sut.SendAsync(command);
 
             //then group with correct name is created
-            var groups = await sut.QueryAsync(new GetGroupsQuery(command.GroupId));
+            var groups = await sut.QueryAsync(
+                new GetGroupsQuery(command.UserId,command.GroupId));
             groups.Should().SatisfyRespectively(
                 x =>
                 {

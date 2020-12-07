@@ -14,8 +14,8 @@
                 <span class="nickname">{{c.secondParticipant.nickname}}</span>
               </span>
               <span *ngIf="($meId | async) == c.secondParticipant.id">
-                <span><img src="{{c.firstParticipant.avatar}}" /></span>
-                <span>{{c.firstParticipant.nickname}}</span>
+                <span><img class="rounded-circle avatar" src="{{c.firstParticipant.avatar}}" /></span>
+                <span class="nickname">{{c.firstParticipant.nickname}}</span>
               </span>
               <span class="badge badge-primary badge-pill">{{c.unreadCount}}</span>
             </li>

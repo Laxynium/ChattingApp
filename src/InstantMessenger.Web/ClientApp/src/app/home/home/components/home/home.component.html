@@ -28,7 +28,7 @@
           <img src="{{$avatar|async}}" alt="" class="rounded-circle user-img" />
           <span class="nickname">{{$nickname|async}}</span>
           <button class="btn btn-secondary" (click)="logout()">
-            <i class="sign-out fas fa-sign-out-alt">Logout</i>
+            <fa-icon [icon]="['fas','sign-out-alt']"></fa-icon>
           </button>
         </div>
       </div>

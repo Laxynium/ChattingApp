@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Groups.Infrastructure;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
@@ -20,25 +17,29 @@ namespace InstantMessenger.Groups.Api.Queries
     }
     public class GetGroupsQuery : IQuery<IEnumerable<GroupDto>>
     {
+        public Guid UserId { get; }
         public Guid? GroupId { get; }
 
-        public GetGroupsQuery(Guid? groupId = null)
+        public GetGroupsQuery(Guid userId, Guid? groupId = null)
         {
+            UserId = userId;
             GroupId = groupId;
         }
     }
 
-    public class GetGroupHandler : IQueryHandler<GetGroupsQuery, IEnumerable<GroupDto>>
+    public class GetGroupsHandler : IQueryHandler<GetGroupsQuery, IEnumerable<GroupDto>>
     {
         private readonly GroupsContext _context;
 
-        public GetGroupHandler(GroupsContext context)
+        public GetGroupsHandler(GroupsContext context)
         {
             _context = context;
         }
         public async Task<IEnumerable<GroupDto>> HandleAsync(GetGroupsQuery query)
         {
-            var groups = _context.Groups.AsNoTracking();
+            var groups = _context.Groups.AsNoTracking()
+                .Include(x=>x.Members)
+                .Where(x=>x.Members.Select(m=>m.UserId).Any(x=>x == UserId.From(query.UserId)));
             if (query.GroupId.HasValue)
             {
                 groups = groups.Where(x => x.Id == GroupId.From(query.GroupId.Value));

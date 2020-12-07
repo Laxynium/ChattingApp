@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {AuthGuard} from '../identity/guards/auth.guard';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,9 @@ import {HubService} from 'src/app/shared/services/hub.service';
 import {ConversationsModule} from 'src/app/home/conversations/privateMessages.module';
 import {ConversationsComponent} from 'src/app/home/conversations/components/conversations/conversations.component';
 import {ConversationComponent} from 'src/app/home/conversations/components/conversation/conversation.component';
+import {GroupsComponent} from './groups/components/groups/groups.component';
+import {GroupsModule} from 'src/app/home/groups/groups.module';
+import {GroupComponent} from 'src/app/home/groups/components/group/group.component';
 
 const routes = [
   {
@@ -34,6 +37,16 @@ const routes = [
         component: ConversationsComponent,
         canActivate: [AuthGuard],
       },
+      {
+        path: 'groups/:id',
+        component: GroupComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'groups',
+        component: GroupsComponent,
+        canActivate: [AuthGuard],
+      },
     ],
   },
   {path: '**', redirectTo: '/'},
@@ -43,14 +56,16 @@ const routes = [
   declarations: [HomeComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgbModule,
+    ReactiveFormsModule,
+    FormsModule,
     FontAwesomeModule,
 
     ProfilesModule,
     FriendsModule,
     ConversationsModule,
+    GroupsModule,
   ],
   providers: [HubService],
 })

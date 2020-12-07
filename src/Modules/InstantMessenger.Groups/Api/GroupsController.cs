@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.Create;
+using InstantMessenger.Groups.Api.Features.Group.Delete;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Invitations.JoinGroup;
 using InstantMessenger.Groups.Api.Features.Members.AssignRole;
@@ -38,7 +39,15 @@ namespace InstantMessenger.Groups.Api
         {
             await _facade.SendAsync(new CreateGroupCommand(User.GetUserId(),request.GroupId, request.GroupName));
             return Ok();
+        }   
+        
+        [HttpDelete("{groupId}")]
+        public async Task<IActionResult> Delete(Guid groupId)
+        {
+            await _facade.SendAsync(new RemoveGroupCommand(User.GetUserId(),groupId));
+            return Ok();
         }
+
         [HttpPost("{groupId}/leave")]
         public async Task<IActionResult> Post(Guid groupId)
         {
@@ -49,9 +58,17 @@ namespace InstantMessenger.Groups.Api
         [HttpGet("{groupId}")]
         public async Task<IActionResult> GetGroup([FromRoute] Guid groupId)
         {
-            var result = await _facade.QueryAsync(new GetGroupsQuery(groupId));
+            var result = await _facade.QueryAsync(new GetGroupsQuery(User.GetUserId(), groupId));
             return Ok(result.FirstOrDefault());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGroups()
+        {
+            var result = await _facade.QueryAsync(new GetGroupsQuery(User.GetUserId()));
+            return Ok(result);
+        }
+
 
         [HttpGet("{groupId}/owner")]
         public async Task<IActionResult> GetOwner([FromRoute] Guid groupId)
@@ -197,6 +214,5 @@ namespace InstantMessenger.Groups.Api
             await _facade.SendAsync(new JoinGroupCommand(User.GetUserId(),code));
             return Ok();
         }
-
     }
 }

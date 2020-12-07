@@ -41,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\Features\Group\Delete\" />
     <Folder Include="Api\Features\Group\ChangeName\" />
     <Folder Include="Api\Features\Group\ChangeAvatar\" />
     <Folder Include="Api\Features\Members\Ban\" />

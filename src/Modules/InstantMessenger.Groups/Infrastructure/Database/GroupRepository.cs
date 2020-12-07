@@ -20,6 +20,12 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             await _context.AddAsync(group);
         }
 
+        public Task RemoveAsync(Group group)
+        {
+            _context.Remove(group);
+            return Task.CompletedTask;
+        }
+
         public async Task<Group> GetAsync(GroupId id) 
             => await _context.Groups.FirstOrDefaultAsync(x=>x.Id == id);
 

@@ -16,8 +16,12 @@
       <td>{{friendship.createdAt | date: 'yyyy/MM/dd HH:mm'}}</td>
       <td>
         <div class="d-flex justify-content-end">
-          <button class="btn btn-sm btn-primary mr-1" (click)="goToConversation(friendship.id)">Chat</button>
-          <button class="btn btn-sm btn-danger mr-1" (click)="removeFriend(friendship.id)">Remove</button>
+          <button class="btn btn-sm btn-primary mr-1" (click)="goToConversation(friendship.id)">
+            <fa-icon [icon]="['fas','comments']"></fa-icon>
+          </button>
+          <button class="btn btn-sm btn-danger mr-1" (click)="removeFriend(friendship.id)">
+            <fa-icon [icon]="['fas','user-minus']"></fa-icon>
+          </button>
         </div>
       </td>
     </tr>

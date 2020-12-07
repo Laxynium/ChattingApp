@@ -1,0 +1,21 @@
+.group {
+  &-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  &-name {
+    font-size: 2rem;
+    padding-left: 1rem;
+  }
+}
+// .list-group li {
+//   cursor: pointer;
+// }
+.scrollable-content .header {
+  justify-content: space-between;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
