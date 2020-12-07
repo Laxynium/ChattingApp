@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
@@ -30,6 +31,11 @@ namespace InstantMessenger.Groups.Api.Queries
         }
         public async Task<IEnumerable<InvitationDto>> HandleAsync(GetInvitationsQuery query)
         {
+            var group = await _context.Groups.AsNoTracking().SingleOrDefaultAsync(x => x.Id == GroupId.From(query.GroupId));
+            if (!group?.CanAccessInvitations(UserId.From(query.UserId)) ?? false)
+            {
+                return new List<InvitationDto>();
+            }
             var result = await _context.Invitations
                 .Where(x => _context.Groups.Where(g => g.Id == GroupId.From(query.GroupId)).SelectMany(g => g.Members).Any(m => m.UserId == UserId.From(query.UserId)))
                 .Where(x => x.GroupId == GroupId.From(query.GroupId))

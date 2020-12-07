@@ -237,6 +237,18 @@ namespace InstantMessenger.Groups.Domain.Entities
             return message;
         }
 
+        public IEnumerable<Channel> GetChannels(UserId userId)
+        {
+            //select only those which should be visible to user
+            yield break;
+        }
+
+        public bool CanAccessInvitations(UserId userId)
+        {
+            return new Action.RevokeInvitation(GetMember(userId), GetMemberPermissions(userId))
+                .CanExecute();
+        }
+
         private Maybe<Role> GetRoleAbove(Role role) => 
             UserDefinedRoles.Skip(1)
             .Zip(UserDefinedRoles)
