@@ -62,6 +62,10 @@ namespace InstantMessenger.Groups.Domain.Entities
             UsageCounter = UsageCounter.Use();
         }
 
+        public void Revoke(UserId userId)
+        {
+        }
+
         private static async Task<InvitationCode> CreateInvitationCode(IUniqueInvitationCodeRule uniqueInvitationCodeRule)
         {
             InvitationCode code;

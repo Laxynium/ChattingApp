@@ -4,6 +4,7 @@ import {
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
+import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 
 export const groupsFeatureSelector = createFeatureSelector<
@@ -30,4 +31,17 @@ export const currentGroupSelector = createSelector(
 export const channelsSelector = createSelector(
   groupsFeatureSelector,
   (s: GroupsStateInterface): ChannelDto[] => s.channels
+);
+
+export const currentInvitationSelector = createSelector(
+  groupsFeatureSelector,
+  (s: GroupsStateInterface): {code: string; isBeingGenerated: boolean} => ({
+    code: s.generatedInvitation.code,
+    isBeingGenerated: s.generatedInvitation.isBeingGenerated,
+  })
+);
+
+export const invitationsSelector = createSelector(
+  groupsFeatureSelector,
+  (s: GroupsStateInterface): InvitationDto[] => s.invitations
 );

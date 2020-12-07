@@ -1,0 +1,42 @@
+<form [formGroup]="form" (ngSubmit)="generateInvitation()">
+  <div class="form-group">
+    <label for="channelName">Expiration time</label>
+    <select formControlName="expirationTimeType" name="expirationTimeType" class="form-control">
+      <option [ngValue]="ExpirationTimeType.INFINITE" value="ExpirationTimeType.INFINITE">
+        Infinite
+      </option>
+      <option [ngValue]="ExpirationTimeType.BOUNDED" value="ExpirationTimeType.BOUNDED">
+        Constrainted
+      </option>
+    </select>
+    <ngb-timepicker *ngIf="expirationTimeType.value == ExpirationTimeType.BOUNDED" [(ngModel)]="expirationTime"
+      formControlName="expirationTime">
+    </ngb-timepicker>
+  </div>
+
+  <div class="form-group">
+    <label for="channelName">Number of usages</label>
+    <select formControlName="usageType" name="usageType" class="form-control">
+      <option [ngValue]="UsageCounterType.INFINITE" value="UsageCounterType.INFINITE">
+        Infinite
+      </option>
+      <option [ngValue]="UsageCounterType.BOUNDED" value="UsageCounterType.BOUNDED">
+        Constrainted
+      </option>
+    </select>
+    <input *ngIf="usageType.value == UsageCounterType.BOUNDED" class="form-control" formControlName="usage" name="usage"
+      type="number" min="0" />
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit">Generate code</button>
+  </div>
+</form>
+<div class="form-group">
+  <span *ngIf="!($invitation | async).isBeingGenerated">
+    <label for="generatedCode">Generated code</label>
+    <input name="generatedCode" class="form-control" type="text" value="{{ ($invitation | async).code }}" readonly />
+  </span>
+  <div *ngIf="($invitation | async).isBeingGenerated" class="d-flex justify-content-center align-items-center">
+    <fa-icon [icon]="['fas', 'spinner']" spin="true"></fa-icon>
+  </div>
+</div>

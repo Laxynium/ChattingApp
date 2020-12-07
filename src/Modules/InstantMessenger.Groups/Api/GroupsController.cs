@@ -5,6 +5,7 @@ using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Features.Group.Delete;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Features.Invitations.JoinGroup;
+using InstantMessenger.Groups.Api.Features.Invitations.RevokeInvitation;
 using InstantMessenger.Groups.Api.Features.Members.AssignRole;
 using InstantMessenger.Groups.Api.Features.Members.Kick;
 using InstantMessenger.Groups.Api.Features.Members.LeaveGroup;
@@ -199,12 +200,32 @@ namespace InstantMessenger.Groups.Api
                 )
             );
             return Ok();
+        }        
+
+        [HttpDelete("{groupId}/invitations/{invitationId}")]
+        public async Task<IActionResult> RevokeInvitation(Guid groupId, Guid invitationId)
+        {
+            await _facade.SendAsync(
+                new RevokeInvitationCommand(
+                    User.GetUserId(),
+                    groupId,
+                    invitationId
+                )
+            );
+            return Ok();
         }
 
         [HttpGet("{groupId}/invitations/{invitationId}")]
-        public async Task<IActionResult> GenerateInvitation(Guid groupId, Guid invitationId)
+        public async Task<IActionResult> GetInvitation(Guid groupId, Guid invitationId)
         {
-            var result = await _facade.QueryAsync(new GetInvitationQuery(User.GetUserId(), invitationId));
+            var result = await _facade.QueryAsync(new GetInvitationQuery(User.GetUserId(), groupId, invitationId));
+            return Ok(result);
+        }
+
+        [HttpGet("{groupId}/invitations")]
+        public async Task<IActionResult> GetInvitations(Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetInvitationsQuery(User.GetUserId(), groupId));
             return Ok(result);
         }
 

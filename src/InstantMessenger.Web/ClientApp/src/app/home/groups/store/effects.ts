@@ -14,18 +14,27 @@ import {
   createGroupAction,
   createGroupFailureAction,
   createGroupSuccessAction,
+  generateInvitationAction,
+  generateInvitationFailureAction,
+  generateInvitationSuccessAction,
   getChannelsAction,
   getChannelsFailureAction,
   getChannelsSuccessAction,
   getGroupsAction,
   getGroupsFailureAction,
   getGroupsSuccessAction,
+  getInvitationsAction,
+  getInvitationsFailureAction,
+  getInvitationsSuccessAction,
   removeChannelAction,
   removeChannelFailureAction,
   removeChannelSuccessAction,
   removeGroupAction,
   removeGroupFailureAction,
   removeGroupSuccessAction,
+  revokeInvitationAction,
+  revokeInvitationFailureAction,
+  revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
 import {v4 as guid} from 'uuid';
@@ -62,6 +71,72 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               removeGroupFailureAction(),
+              requestFailedAction({error: response})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $generateInvitation = createEffect(() =>
+    this.actions$.pipe(
+      ofType(generateInvitationAction),
+      switchMap((request) => {
+        return this.groupsService
+          .generateInvitation({
+            groupId: request.groupId,
+            invitationId: guid(),
+            expirationTime: request.expirationTime,
+            usageCounter: request.usageCounter,
+          })
+          .pipe(
+            map((r) => {
+              return generateInvitationSuccessAction({
+                groupId: r.groupId,
+                invitationId: r.invitationId,
+                code: r.code,
+              });
+            }),
+            catchError((response) =>
+              of(
+                generateInvitationFailureAction(),
+                requestFailedAction({error: response})
+              )
+            )
+          );
+      })
+    )
+  );
+
+  $revokeInvitation = createEffect(() =>
+    this.actions$.pipe(
+      ofType(revokeInvitationAction),
+      switchMap((r) => {
+        return this.groupsService.revokeInvitation(r).pipe(
+          map(() =>
+            revokeInvitationSuccessAction({invitationId: r.invitationId})
+          ),
+          catchError((response) =>
+            of(
+              revokeInvitationFailureAction(),
+              requestFailedAction({error: response})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $getInvitations = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getInvitationsAction),
+      switchMap(({groupId}) => {
+        return this.groupsService.getInvitations({groupId}).pipe(
+          map((r) => getInvitationsSuccessAction({invitations: r})),
+          catchError((response) =>
+            of(
+              getInvitationsFailureAction(),
               requestFailedAction({error: response})
             )
           )

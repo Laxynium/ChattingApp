@@ -17,6 +17,10 @@ namespace InstantMessenger.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                .AddControllersAsServices()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
             services
                 .AddIdentityModule()
                 .AddFriendshipsModule()

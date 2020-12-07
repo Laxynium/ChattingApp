@@ -1,7 +1,18 @@
 <div class="scrollable-content-wrapper">
   <div class="scrollable-content">
-    <div class="header">
+    <div class="header d-flex justify-content-between">
       <h2>{{($currentGroup | async)?.name}}</h2>
+      <div class="group-settings">
+        <div ngbDropdown class="d-inline-block" placement="left-top">
+          <button id="dropdownBasic1" class="btn btn-primary" ngbDropdownToggle>
+            <fa-icon [icon]="['fas', 'cogs']" size="1x"></fa-icon>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
+            <button ngbDropdownItem (click)="openInvitationsModal()">Invite people</button>
+            <button ngbDropdownItem>View members</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="content-wrapper">
       <div class="content">

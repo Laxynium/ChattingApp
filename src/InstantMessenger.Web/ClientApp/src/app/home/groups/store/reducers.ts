@@ -13,12 +13,18 @@ import {
   createGroupAction,
   createGroupFailureAction,
   createGroupSuccessAction,
+  generateInvitationAction,
+  generateInvitationFailureAction,
+  generateInvitationSuccessAction,
   getChannelsAction,
   getChannelsFailureAction,
   getChannelsSuccessAction,
   getGroupsAction,
   getGroupsFailureAction,
   getGroupsSuccessAction,
+  getInvitationsAction,
+  getInvitationsFailureAction,
+  getInvitationsSuccessAction,
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
@@ -28,18 +34,29 @@ import {
   removeGroupAction,
   removeGroupFailureAction,
   removeGroupSuccessAction,
+  revokeInvitationAction,
+  revokeInvitationFailureAction,
+  revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/actions';
 import {
   CurrentGroup,
   EmptyCurrentGroup,
   ICurrentGroup,
 } from 'src/app/home/groups/store/types/currentGroup';
+import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 
 export interface GroupsStateInterface {
   groups: GroupDto[];
   groupsLoading: boolean;
   currentGroup: ICurrentGroup;
   channels: ChannelDto[];
+  generatedInvitation: {
+    groupId: string;
+    invitationId: string;
+    code: string;
+    isBeingGenerated: boolean;
+  };
+  invitations: InvitationDto[];
 }
 
 const initialState: GroupsStateInterface = {
@@ -47,6 +64,13 @@ const initialState: GroupsStateInterface = {
   groupsLoading: false,
   currentGroup: new EmptyCurrentGroup(),
   channels: [],
+  generatedInvitation: {
+    groupId: null,
+    invitationId: null,
+    code: null,
+    isBeingGenerated: false,
+  },
+  invitations: [],
 };
 
 const groupsReducer = createReducer(
@@ -95,6 +119,58 @@ const groupsReducer = createReducer(
     groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
   })),
   on(removeGroupFailureAction, (s, a) => ({
+    ...s,
+  })),
+
+  on(generateInvitationAction, (s, a) => ({
+    ...s,
+    generatedInvitation: {
+      ...s.generatedInvitation,
+      isBeingGenerated: true,
+    },
+  })),
+  on(generateInvitationSuccessAction, (s, a) => ({
+    ...s,
+    generatedInvitation: {
+      ...s.generatedInvitation,
+      isBeingGenerated: false,
+      code: a.code,
+      groupId: a.groupId,
+      invitationId: a.invitationId,
+    },
+  })),
+  on(generateInvitationFailureAction, (s, a) => ({
+    ...s,
+    invitation: {
+      ...s.generatedInvitation,
+      isBeingGenerated: false,
+      code: null,
+      groupId: null,
+      invitationId: null,
+    },
+  })),
+
+  on(revokeInvitationAction, (s, a) => ({
+    ...s,
+  })),
+  on(revokeInvitationSuccessAction, (s, a) => ({
+    ...s,
+    invitations: [
+      ...s.invitations.filter((i) => i.invitationId != a.invitationId),
+    ],
+  })),
+  on(revokeInvitationFailureAction, (s, a) => ({
+    ...s,
+  })),
+
+  on(getInvitationsAction, (s, a) => ({
+    ...s,
+  })),
+  on(getInvitationsSuccessAction, (s, a) => ({
+    ...s,
+    invitations: [...a.invitations],
+  })),
+  on(getInvitationsFailureAction, (s, a) => ({
     ...s,
   })),
 

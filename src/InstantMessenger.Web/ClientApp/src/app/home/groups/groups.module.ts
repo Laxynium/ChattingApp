@@ -14,6 +14,10 @@ import {GroupsEffects} from 'src/app/home/groups/store/effects';
 import {GroupsService} from 'src/app/home/groups/services/groups.service';
 import {GroupComponent} from './components/group/group.component';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
+import {InvitationsModal} from 'src/app/home/groups/components/group/invitations.modal';
+import {InvitationsComponent} from './components/invitations/invitations.component';
+import {GenerateInvitationComponent} from './components/generate-invitation/generate-invitation.component';
+import {TimepsanPipe} from 'src/app/home/groups/components/invitations/timespan.pipe';
 
 @NgModule({
   declarations: [
@@ -22,6 +26,10 @@ import {CreateChannelModal} from 'src/app/home/groups/components/group/create-ch
     JoinGroupModal,
     GroupComponent,
     CreateChannelModal,
+    InvitationsModal,
+    InvitationsComponent,
+    GenerateInvitationComponent,
+    TimepsanPipe,
   ],
   imports: [
     CommonModule,

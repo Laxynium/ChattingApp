@@ -31,6 +31,7 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCod
     public class ExpirationTimeCommandItem
     {
         public ExpirationTimeTypeCommandItem Type { get; }
+
         public TimeSpan? Period { get; }
 
         public ExpirationTimeCommandItem(ExpirationTimeTypeCommandItem type, TimeSpan? period = null)

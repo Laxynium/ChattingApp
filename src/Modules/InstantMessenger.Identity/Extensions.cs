@@ -36,10 +36,7 @@ namespace InstantMessenger.Identity
             var identityOptions = services.GetOptions<IdentityOptions>(nameof(IdentityOptions));
             var hubPaths = services.GetOptions<List<string>>("HubEndpoints");
             services.AddSingleton(identityOptions);
-            services.AddControllers()
-                .AddControllersAsServices()
-                .AddNewtonsoftJson();
-
+            
             services.AddCors(
                 c =>
                 {

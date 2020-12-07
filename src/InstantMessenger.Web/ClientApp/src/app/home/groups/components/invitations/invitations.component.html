@@ -1,0 +1,42 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Code</th>
+      <th scope="col">Generated at</th>
+      <th scope="col">Expiration time</th>
+      <th scope="col">Usage counter</th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let i of $invitations | async">
+      <td>
+        {{i.code}}
+      </td>
+      <td>
+        <div>
+          {{i.expirationTime.start | date:'yyyy/MM/dd HH:mm'}}
+        </div>
+      </td>
+      <td>
+        <div *ngIf="i.expirationTime.type == ExpirationType.INFINITE">
+          <fa-icon [icon]="['fas','infinity']"></fa-icon>
+        </div>
+        <div *ngIf="i.expirationTime.type == ExpirationType.BOUNDED">
+          {{i.expirationTime.period | timespan}}
+        </div>
+      </td>
+      <td>
+        <div *ngIf="i.usageCounter.type == CounterType.INFINITE">
+          <fa-icon [icon]="['fas','infinity']"></fa-icon>
+        </div>
+        <div *ngIf="i.usageCounter.type == CounterType.BOUNDED">
+          {{i.usageCounter.value | number}}
+        </div>
+      </td>
+      <td><button class="btn btn-outline-danger" (click)="revokeInvitation(i.groupId,i.invitationId)">
+          <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+        </button></td>
+    </tr>
+  </tbody>
+</table>

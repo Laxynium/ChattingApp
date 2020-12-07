@@ -5,6 +5,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
+import {InvitationsModal} from 'src/app/home/groups/components/group/invitations.modal';
 import {
   ChannelDto,
   GroupDto,
@@ -59,6 +60,15 @@ export class GroupComponent implements OnInit {
       this.store.dispatch(
         removeChannelAction({channelId: channelId, groupId: g.groupId})
       );
+    });
+  }
+
+  openInvitationsModal() {
+    this.modal.open(InvitationsModal, {
+      beforeDismiss: () => {
+        return false;
+      },
+      scrollable: true,
     });
   }
 }

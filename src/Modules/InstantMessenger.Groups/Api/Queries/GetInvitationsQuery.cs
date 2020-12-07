@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
@@ -9,62 +9,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public enum ExpirationTimeTypeDto
-    {
-        Infinite,Bounded
-    }
-    public class ExpirationTimeDto
-    {
-        public ExpirationTimeTypeDto Type { get; set; }
-        public DateTimeOffset Start { get; set; }
-        public TimeSpan? Period { get; set; }
-    }
-    public enum UsageCounterTypeDto
-    {
-        Infinite, Bounded
-    }
-    public class UsageCounterDto
-    {
-        public UsageCounterTypeDto Type { get; set; }
-        public int? Value { get; set; }
-    }
-    public class InvitationDto
-    {
-        public Guid GroupId { get; set; }
-        public Guid InvitationId { get; set; }
-        public string Code { get; set; }
-        public ExpirationTimeDto ExpirationTime { get; set; }
-        public UsageCounterDto UsageCounter { get; set; }
-
-    }
-    public class GetInvitationQuery : IQuery<InvitationDto>
+    public class GetInvitationsQuery : IQuery<IEnumerable<InvitationDto>>
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
-        public Guid InvitationId { get; }
 
-        public GetInvitationQuery(Guid userId, Guid groupId, Guid invitationId)
+        public GetInvitationsQuery(Guid userId, Guid groupId)
         {
             UserId = userId;
             GroupId = groupId;
-            InvitationId = invitationId;
         }
     }
-
-    public class GetInvitationHandler : IQueryHandler<GetInvitationQuery,InvitationDto>
+    public class GetInvitationsHandler : IQueryHandler<GetInvitationsQuery, IEnumerable<InvitationDto>>
     {
         private readonly GroupsContext _context;
 
-        public GetInvitationHandler(GroupsContext context)
+        public GetInvitationsHandler(GroupsContext context)
         {
             _context = context;
         }
-        public async Task<InvitationDto> HandleAsync(GetInvitationQuery query)
+        public async Task<IEnumerable<InvitationDto>> HandleAsync(GetInvitationsQuery query)
         {
             var result = await _context.Invitations
-                .Where(x=>_context.Groups.Where(g=>g.Id == GroupId.From(query.GroupId)).SelectMany(g=>g.Members).Any(m=>m.UserId == UserId.From(query.UserId)))
-                .Where(x=>x.GroupId == GroupId.From(query.GroupId))
-                .Where(x => x.Id == InvitationId.From(query.InvitationId))
+                .Where(x => _context.Groups.Where(g => g.Id == GroupId.From(query.GroupId)).SelectMany(g => g.Members).Any(m => m.UserId == UserId.From(query.UserId)))
+                .Where(x => x.GroupId == GroupId.From(query.GroupId))
                 .Select(
                     x => new
                     {
@@ -97,11 +65,12 @@ namespace InstantMessenger.Groups.Api.Queries
                     },
                     UsageCounter = new UsageCounterDto
                     {
-                        Type = (UsageCounterTypeDto) (int)x.UsageCounterType,
+                        Type = (UsageCounterTypeDto) (int) x.UsageCounterType,
                         Value = x.UsageCounter
                     }
                 }
-            ).FirstOrDefault();
+            ).ToList();
         }
     }
+
 }

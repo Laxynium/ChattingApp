@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
@@ -21,5 +22,16 @@ namespace InstantMessenger.Groups.Infrastructure.Database
 
         public async Task<Invitation> GetAsync(InvitationCode invitationCode) 
             => await _context.Invitations.FirstOrDefaultAsync(x => x.InvitationCode == invitationCode);
+
+        public async Task<Invitation> GetAsync(InvitationId id)
+        {
+            return await _context.Invitations.Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public Task RemoveAsync(Invitation invitation)
+        {
+            _context.Remove(invitation);
+            return Task.CompletedTask;
+        }
     }
 }

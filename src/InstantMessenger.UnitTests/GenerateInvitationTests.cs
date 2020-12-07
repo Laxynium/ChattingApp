@@ -82,7 +82,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(command);
 
-            var invitationDto = await sut.QueryAsync(new GetInvitationQuery(group.OwnerId, command.InvitationId));
+            var invitationDto = await sut.QueryAsync(new GetInvitationQuery(@group.OwnerId, command.GroupId,command.InvitationId));
             invitationDto.Code.Should().HaveLength(8).And.MatchRegex("[a-zA-Z0-9]{8,8}");
             invitationDto.GroupId.Should().Be(group.GroupId);
             invitationDto.InvitationId.Should().Be(command.InvitationId);
@@ -117,7 +117,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(command);
 
-            var invitationDto = await sut.QueryAsync(new GetInvitationQuery(group.OwnerId, command.InvitationId));
+            var invitationDto = await sut.QueryAsync(new GetInvitationQuery(@group.OwnerId, group.GroupId,command.InvitationId));
             invitationDto.Code.Should().HaveLength(8).And.MatchRegex("[a-zA-Z0-9]{8,8}");
             invitationDto.GroupId.Should().Be(group.GroupId);
             invitationDto.InvitationId.Should().Be(command.InvitationId);

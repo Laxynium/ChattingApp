@@ -37,6 +37,8 @@ import {
   faUserMinus,
   faUsers,
   faUserTimes,
+  faInfinity,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
@@ -89,7 +91,9 @@ export class AppModule {
       faEllipsisH,
       faSignInAlt,
       faSignOutAlt,
-      faPlus
+      faPlus,
+      faInfinity,
+      faTrashAlt
     );
   }
 }

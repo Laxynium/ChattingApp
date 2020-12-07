@@ -8,5 +8,7 @@ namespace InstantMessenger.Groups.Domain.Repositories
     {
         public Task AddAsync(Invitation invitation);
         Task<Invitation> GetAsync(InvitationCode invitationCode);
+        Task<Invitation> GetAsync(InvitationId id);
+        Task RemoveAsync(Invitation invitation);
     }
 }

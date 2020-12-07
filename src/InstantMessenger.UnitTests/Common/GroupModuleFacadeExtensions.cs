@@ -95,7 +95,7 @@ namespace InstantMessenger.UnitTests.Common
                         await _facade.SendAsync(
                             new GenerateInvitationCommand(_userIdContext, _group.GroupId, invitation.InvitationId, expirationTime, usageCounter)
                         );
-                        var invitationDto = await _facade.QueryAsync(new GetInvitationQuery(_userIdContext, invitation.InvitationId));
+                        var invitationDto = await _facade.QueryAsync(new GetInvitationQuery(_userIdContext, _group.GroupId,invitation.InvitationId));
                         invitation.Code = invitationDto.Code;
                     });
 

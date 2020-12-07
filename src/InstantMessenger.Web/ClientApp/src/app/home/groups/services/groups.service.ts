@@ -6,6 +6,10 @@ import {
   ChannelDto,
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
+import {
+  GenerateInvitationRequest,
+  InvitationDto,
+} from 'src/app/home/groups/store/types/invitation';
 import {environment} from 'src/environments/environment';
 
 @Injectable()
@@ -36,8 +40,39 @@ export class GroupsService {
     return this.http.delete(`${this.groupApi}/${request.groupId}`);
   }
 
+  public generateInvitation(
+    request: GenerateInvitationRequest
+  ): Observable<{groupId: string; invitationId: string; code: string}> {
+    return this.http
+      .post(`${this.groupApi}/${request.groupId}/invitations`, request)
+      .pipe(
+        concatMap((_) =>
+          this.http.get<{groupId: string; invitationId: string; code: string}>(
+            `${this.groupApi}/${request.groupId}/invitations/${request.invitationId}`
+          )
+        )
+      );
+  }
+
+  public revokeInvitation(request: {
+    groupId: string;
+    invitationId: string;
+  }): Observable<Object> {
+    return this.http.delete(
+      `${this.groupApi}/${request.groupId}/invitations/${request.invitationId}`
+    );
+  }
+
   public getGroups(): Observable<GroupDto[]> {
     return this.http.get<GroupDto[]>(this.groupApi);
+  }
+
+  public getInvitations(request: {
+    groupId: string;
+  }): Observable<InvitationDto[]> {
+    return this.http.get<InvitationDto[]>(
+      `${this.groupApi}/${request.groupId}/invitations`
+    );
   }
 
   public createChannel(request: {

@@ -161,6 +161,21 @@ namespace InstantMessenger.Groups.Domain.Entities
             return await Invitation.Create(invitationId, Id, expirationTime, usageCounter, uniqueInvitationCodeRule);
         }
 
+        public void RevokeInvitation(UserId userId, Invitation invitation)
+        {
+            var member = GetMember(userId);
+            if(!CanRevokeInvitation(member))
+                throw new InsufficientPermissionsException(userId);
+            invitation.Revoke(userId);
+        }
+
+        private bool CanRevokeInvitation(Member member)
+        {
+            if (member.IsOwner)
+                return true;
+            var permissions = GetMemberPermissions(member);
+            return permissions.Has(Permission.Administrator, Permission.Invite);
+        }
         public bool ContainsMember(UserId userId)
         {
             return _members.Any(x => x.UserId == userId);
