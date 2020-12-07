@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
-using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
+using InstantMessenger.Groups.Api.Features.Members.AssignRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Api.Queries;

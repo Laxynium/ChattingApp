@@ -9,6 +9,7 @@ using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using NodaTime;
+using Action = InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Actions.Action;
 
 namespace InstantMessenger.Groups.Domain.Entities
 {
@@ -40,20 +41,22 @@ namespace InstantMessenger.Groups.Domain.Entities
             return group;
         }
 
-        public void Remove(UserId userId)
+        public void Remove(UserId userId) => new Action.DeleteGroup(GetMember(userId))
+            .Execute();
+
+        public void LeaveGroup(UserId userId)
         {
             var member = GetMember(userId);
-            if(!member.IsOwner)
-                throw new InsufficientPermissionsException(userId);
+            if (member.IsOwner)
+                throw new OwnerCannotLeaveGroupException();
+            _members.Remove(member);
         }
 
 
-        public void AddRole(UserId userId, RoleId roleId, RoleName roleName)
+        public void AddRole(UserId userId, RoleId roleId, RoleName roleName) => new Action.AddRole(GetMember(userId),GetMemberPermissions(userId))
+        .Execute(() =>
         {
-            if (!CanAddRole(userId))
-                throw new InsufficientPermissionsException(userId);
-
-            if(roleName == RoleName.EveryOneRole)
+            if (roleName == RoleName.EveryOneRole)
                 throw new InvalidRoleNameException(roleName);
 
             var role = Role.Create(roleId, roleName, GetPriority());
@@ -67,256 +70,171 @@ namespace InstantMessenger.Groups.Domain.Entities
                 role1.IncrementPriority();
             }
             _roles.Add(role);
-        }
+        });
 
-        public void RemoveRole(UserId userId, RoleId roleId)
+        public void RemoveRole(UserId userId, RoleId roleId) => new Action.RemoveRole(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), GetRole(roleId))
+        .Execute(() =>
         {
-            if (!CanRemoveRole(userId, roleId))
-            {
-                throw new InsufficientPermissionsException(userId);
-            }
-
             var role = GetRole(roleId);
 
-            foreach (var member in _members)
+            foreach (var m in _members)
             {
-                member.RemoveRole(role);
+                m.RemoveRole(role);
             }
+
             _roles.Remove(role);
-        }
+        });
 
         public void AddMember(UserId userIdOfMember, MemberName memberName, IClock clock)
         {
             if(Exists(userIdOfMember))
                 throw new MemberAlreadyExistsException(userIdOfMember);
 
-            var everyoneRole = GetEverOneRole();
+            var everyoneRole = GetEveryoneRole();
             var newMember = Member.Create(userIdOfMember, memberName, everyoneRole, clock);
             _members.Add(newMember);
         }
 
-        public void AssignRole(UserId userId, UserId userIdOfMember, RoleId roleId)
-        {
-            if(!CanAssignOrRemoveRoleFromMember(userId, roleId))
-                throw new InsufficientPermissionsException(userId);
+        public void KickMember(UserId userId, UserId userIdOfMember) => new Action.KickMember(GetMember(userId), GetMemberPermissions(userId),GetRoles(userId),GetMember(userIdOfMember), GetRoles(userIdOfMember))
+            .Execute(() =>
+            {
+                _members.Remove(GetMember(userIdOfMember));
 
+            });
+
+        public bool ContainsMember(UserId userId)
+        {
+            return _members.Any(x => x.UserId == userId);
+        }
+
+        public void AssignRole(UserId userId, UserId userIdOfMember, RoleId roleId) => new Action.AssignRole(GetMember(userId),GetMemberPermissions(userId),GetRoles(userId),UserDefinedRoles, GetRole(roleId))
+        .Execute(() =>
+        {
             var member = GetMember(userIdOfMember);
-            var role = GetRole(roleId);
-            member.AddRole(role);
-        }
+            member.AddRole(GetRole(roleId));
+        });
 
-        public void RemoveRoleFromMember(UserId userId, UserId userIdOfMember, RoleId roleId)
+        public void RemoveRoleFromMember(UserId userId, UserId userIdOfMember, RoleId roleId) => new Action.RemoveRoleFromMember(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), UserDefinedRoles, GetRole(roleId))
+            .Execute(() =>
         {
-            if (!CanAssignOrRemoveRoleFromMember(userId, roleId))
-                throw new InsufficientPermissionsException(userId);
-
             var member = GetMember(userIdOfMember);
-            var role = GetRole(roleId);
-            member.RemoveRole(role);
-        }
+            member.RemoveRole(GetRole(roleId));
+        });
 
-        public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission)
+
+        public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission) => new Action.AddPermissionToRole(GetMember(userId), GetMemberPermissions(userId),GetRoles(userId),GetRole(roleId),permission)
+        .Execute(() =>
         {
-            if(!CanManagePermissions(userId, roleId, permission))
-                throw new InsufficientPermissionsException(userId);
+            GetRole(roleId).AddPermission(permission);
+        });
 
-            var role = GetRole(roleId);
-            role.AddPermission(permission);
-        }
-
-        public void RemovePermissionFromRole(UserId userId, RoleId roleId, Permission permission)
+        public void RemovePermissionFromRole(UserId userId, RoleId roleId, Permission permission) => new Action.RemovePermissionFromRole(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), GetRole(roleId), permission)
+        .Execute(() =>
         {
-            if(!CanManagePermissions(userId, roleId, permission))
-                throw new InsufficientPermissionsException(userId);
+            GetRole(roleId).RemovePermission(permission);
+        });
 
-            var role = GetRole(roleId);
-            role.RemovePermission(permission);
-        }
-
-        public void MoveUpRole(UserId userId, RoleId roleId) => MoveRole(userId,roleId,r =>
+        public void MoveUpRole(UserId userId, RoleId roleId) => new Action.MoveUpRoleInHierarchy(GetMember(userId),GetMemberPermissions(userId),GetRoles(userId),UserDefinedRoles, GetRole(roleId))
+        .Execute(() =>
         {
-            var roleAbove = GetRoleAbove(r);
+            var roleAbove = GetRoleAbove(GetRole(roleId));
             if (roleAbove.HasNoValue)//given role is the highest one
                 return;
-            r.IncrementPriority();
+            GetRole(roleId).IncrementPriority();
             roleAbove.Value.DecrementPriority();
         });
 
-        public void MoveDownRole(UserId userId, RoleId roleId) => MoveRole(userId, roleId, r =>
+        public void MoveDownRole(UserId userId, RoleId roleId) => new Action.MoveUpRoleInHierarchy(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), UserDefinedRoles, GetRole(roleId))
+        .Execute(() =>
         {
-            var roleBelow = GetRoleBelow(r);
+            var roleBelow = GetRoleBelow(GetRole(roleId));
             if (roleBelow.HasNoValue)//given role is the lowest one
                 return;
-            r.DecrementPriority();
+            GetRole(roleId).DecrementPriority();
             roleBelow.Value.IncrementPriority();
         });
 
         public async Task<Invitation> GenerateInvitation(UserId userId, InvitationId invitationId, ExpirationTime expirationTime,
             UsageCounter usageCounter, IUniqueInvitationCodeRule uniqueInvitationCodeRule)
         {
-            var member = GetMember(userId);
-            if(!CanGenerateInvitation(member))
-                throw new InsufficientPermissionsException(member.UserId);
-
+            new Action.GenerateInvitation(GetMember(userId),GetMemberPermissions(userId)).Execute();
+            
             return await Invitation.Create(invitationId, Id, expirationTime, usageCounter, uniqueInvitationCodeRule);
         }
 
-        public void RevokeInvitation(UserId userId, Invitation invitation)
+        public void RevokeInvitation(UserId userId, Invitation invitation) => 
+            new Action.RevokeInvitation(GetMember(userId), GetMemberPermissions(userId))
+        .Execute(
+        () =>
         {
-            var member = GetMember(userId);
-            if(!CanRevokeInvitation(member))
-                throw new InsufficientPermissionsException(userId);
             invitation.Revoke(userId);
-        }
-
-        private bool CanRevokeInvitation(Member member)
-        {
-            if (member.IsOwner)
-                return true;
-            var permissions = GetMemberPermissions(member);
-            return permissions.Has(Permission.Administrator, Permission.Invite);
-        }
-        public bool ContainsMember(UserId userId)
-        {
-            return _members.Any(x => x.UserId == userId);
-        }
-
-        public void LeaveGroup(UserId userId)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                throw new OwnerCannotLeaveGroupException();
-            _members.Remove(member);
-        }
-
-        public void KickMember(UserId userId, UserId userIdOfMember)
-        {
-            var asMember = GetMember(userId);
-            var onMember = GetMember(userIdOfMember);
-            if (!CanKickMember(asMember, onMember))
-                throw new InsufficientPermissionsException(userId);
-
-            _members.Remove(onMember);
-        }
+        });
 
         public Channel CreateChannel(UserId userId, ChannelId channelId, ChannelName channelName)
         {
-            if(!CanCreateChannel(userId))
-                throw new InsufficientPermissionsException(userId);
-
+            new Action.AddChannel(GetMember(userId), GetMemberPermissions(userId))
+                .Execute();
             var channel = new Channel(channelId,this.Id, channelName);
             return channel;
         }
 
-        public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
-        {
-            var asMember = GetMember(userId);
-            if(!CanApplyOverrideOnChannel(asMember, channel, permission))
-                throw new InsufficientPermissionsException(userId);
 
+        public void RemoveChannel(UserId userId, Channel channel) => new Action.RemoveChannel(GetMember(userId),GetMemberPermissions(userId),channel,GetEveryoneRole())
+            .Execute();
+
+        public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
+            .Execute(() =>
+        {
             var role = GetRole(roleId);
 
             channel.AllowPermission(role, permission);
-        }
-        public void DenyPermission(UserId userId, Channel channel, RoleId roleId, Permission permission)
-        {
-            var asMember = GetMember(userId);
-            if(!CanApplyOverrideOnChannel(asMember,channel, permission))
-                throw new InsufficientPermissionsException(userId);
+        });
 
+        public void DenyPermission(UserId userId, Channel channel, RoleId roleId, Permission permission) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
+            .Execute(() =>
+        {
             channel.DenyPermission(GetRole(roleId), permission);
-        }
+        });
 
-        public void DenyPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
+        public void RemoveOverride(UserId userId, Channel channel, Permission permission, RoleId roleId) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
+            .Execute(() =>
         {
-            var asMember = GetMember(userId);
-            if (!CanApplyOverrideOnChannel(asMember, channel, permission))
-                throw new InsufficientPermissionsException(userId);
+            channel.RemoveOverride(GetRole(roleId), permission);
+        });
 
-            channel.DenyPermission(GetMember(userIdOfMember), permission);
-        }
-
-        public void AllowPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission)
+        public void AllowPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission) 
+            => new Action.AllowPermissionForMember(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
+            .Execute(() =>
         {
-            var asMember = GetMember(userId);
-            if (!CanApplyOverrideOnChannel(asMember, channel, permission))
-                throw new InsufficientPermissionsException(userId);
-
             channel.AllowPermission(GetMember(userIdOfMember), permission);
-        }
+        });
 
-        public void RemoveChannel(UserId userId, Channel channel)
+        public void DenyPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission) 
+            => new Action.DenyPermissionForMember(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
+            .Execute(() =>
         {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return;
-            var permissions = GetMemberPermissions(member);
-            if (permissions.Has(Permission.Administrator))
-                return;
+            channel.DenyPermission(GetMember(userIdOfMember), permission);
+        });
 
-            var everyoneRole = GetEverOneRole();
-            permissions = channel.CalculatePermissions(permissions, member, everyoneRole.Id);
-
-
-            if (permissions.Has(Permission.ManageChannels))
-                return;
-
-            throw new InsufficientPermissionsException(userId);
-        }
-
-        public void RemoveOverride(UserId userId, Channel channel, Permission permission, UserId userIfOfMember)
+        public void RemoveOverride(UserId userId, Channel channel, Permission permission, UserId userIfOfMember) 
+            => new Action.RemoveOverrideForMember(
+                    GetMember(userId), 
+                    GetMemberPermissions(userId), 
+                    channel, 
+                    GetEveryoneRole(), 
+                    permission).Execute(() =>
         {
-            var asMember = GetMember(userId);
-            var onMember = GetMember(userIfOfMember);
+            channel.RemoveOverride(GetMember(userIfOfMember), permission);
+        });
 
-            if (!CanApplyOverrideOnChannel(asMember, channel,permission))
-                throw new InsufficientPermissionsException(userId);
-
-            channel.RemoveOverride(onMember, permission);
-        }
-        public void RemoveOverride(UserId userId, Channel channel, Permission permission, RoleId roleId)
+        public Message SendMessage(UserId userId, Channel channel, MessageId messageId, MessageContent content, IClock clock)
         {
-            var asMember = GetMember(userId);
-            var role = GetRole(roleId);
+            new Action.SendMessage(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole())
+                .Execute(()=>{});
 
-            if (!CanApplyOverrideOnChannel(asMember, channel, permission))
-                throw new InsufficientPermissionsException(userId);
+            var message = new Message(messageId, userId, channel.Id, content,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
 
-            channel.RemoveOverride(role, permission);
-        }
-
-        private bool CanApplyOverrideOnChannel(Member asMember, Channel channel, Permission permission)
-        {
-            if (asMember.IsOwner)
-                return true;
-
-            var memberPermissions = GetMemberPermissions(asMember);
-            if (memberPermissions.Has(Permission.Administrator))
-                return true;
-
-            if (channel.CalculatePermissions(asMember, GetEverOneRole().Id).Has(Permission.ManageRoles))
-                return true;
-
-            var calculatedPermissions = channel.CalculatePermissions(memberPermissions, asMember, GetEverOneRole().Id);
-
-            return calculatedPermissions.Has(permission) && permission != Permission.ManageRoles;
-        }
-
-        private bool CanGenerateInvitation(Member member)
-        {
-            if (member.IsOwner)
-                return true;
-            var permissions = GetMemberPermissions(member);
-            return permissions.Has(Permission.Administrator, Permission.Invite);
-        }
-
-        private void MoveRole(UserId userId, RoleId roleId, Action<Role> action)
-        {
-            if (!CanMoveRole(userId, roleId))
-                throw new InsufficientPermissionsException(userId);
-
-            var role = GetRole(roleId);
-            action(role);
+            return message;
         }
 
         private Maybe<Role> GetRoleAbove(Role role) => 
@@ -347,105 +265,20 @@ namespace InstantMessenger.Groups.Domain.Entities
         private Member GetMember(UserId userId) 
             => _members.FirstOrDefault(x => x.UserId == userId) ?? throw new MemberNotFoundException(userId);
 
-        private Role GetEverOneRole() 
+        private Role GetEveryoneRole() 
             => _roles.First(x => x.Name == RoleName.EveryOneRole);
 
-        private bool CanAssignOrRemoveRoleFromMember(UserId asUserId, RoleId roleId)
+
+        private Permissions GetMemberPermissions(UserId userId)
         {
-            var asMember = GetMember(asUserId);
-            if (asMember.IsOwner)
-                return true;
-            var permissions = GetMemberPermissions(asMember);
-            if(!permissions.Has(Permission.Administrator, Permission.ManageRoles))
-                return false;
-
-            var highestRole = GetRoleWithHighestPriority(asMember);
-            var role = GetRole(roleId);
-            return highestRole.Priority > role.Priority;
-
-        }
-
-        private bool CanAddRole(UserId userId)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return true;
-            var memberPermissions = GetMemberPermissions(member);
-            return memberPermissions.Has(Permission.Administrator, Permission.ManageRoles);
-        }
-
-        private bool CanRemoveRole(UserId userId, RoleId roleId)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return true;
-            var memberPermissions = GetMemberPermissions(member);
-            if(!memberPermissions.Has(Permission.Administrator, Permission.ManageRoles))
-                return false;
-
-            var memberHighestRole = GetRoleWithHighestPriority(member);
-            var role = GetRole(roleId);
-            if (role.Priority >= memberHighestRole.Priority)
-                return false;
-
-            return true;
-        }
-
-        private bool CanMoveRole(UserId userId, RoleId roleId)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return true;
-
-            var permissions = GetMemberPermissions(member);
-            if (!permissions.Has(Permission.Administrator, Permission.ManageRoles))
-                return false;
-
-            var memberHighestRole = GetRoleWithHighestPriority(member);
-            var role = GetRole(roleId);
-            if (role.Priority >= memberHighestRole.Priority)
-                return false;
-
-            return true;
-        }
-
-        private bool CanManagePermissions(UserId userId, RoleId roleId, Permission permission)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return true;
-
-            var permissions = GetMemberPermissions(member);
-            if (!permissions.Has(Permission.Administrator, Permission.ManageRoles))
-                return false;
-
-            var memberHighestRole = GetRoleWithHighestPriority(member);
-            var role = GetRole(roleId);
-            if (role.Priority >= memberHighestRole.Priority) 
-                return false;
-
-            if(!permissions.Has(Permission.Administrator) && !permissions.Has(permission))
-                return false;
-
-            return true;
-        }
-
-        private Role GetRoleWithHighestPriority(Member member)
-        {
-            var asMemberRoles = GetRoles(member);
-            var highestRole = asMemberRoles.OrderByDescending(x => x.Priority).First();
-            return highestRole;
-        }
-
-        private Permissions GetMemberPermissions(Member member)
-        {
-            var memberRoles = GetRoles(member);
+            var memberRoles = GetRoles(userId);
             var memberPermissions = memberRoles.Select(x => x.Permissions).Aggregate(Permissions.Empty(), (agg, p) => agg.Add(p));
             return memberPermissions;
         }
 
-        private IEnumerable<Role> GetRoles(Member member)
+        private IEnumerable<Role> GetRoles(UserId userId)
         {
+            var member = GetMember(userId);
             return _roles.Where(x => member.Roles.Contains(x.Id));
         }
 
@@ -468,70 +301,5 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             _members.Add(owner);
         }
-
-        private bool CanKickMember(Member asMember, Member onMember)
-        {
-            if (onMember.IsOwner)
-                return false;
-
-            if (asMember == onMember)
-                return false;
-
-            if (asMember.IsOwner)
-                return true;
-            
-            var permissions = GetMemberPermissions(asMember);
-            if (!permissions.Has(Permission.Administrator, Permission.Kick))
-                return false;
-
-            var asMemberHighestRole = GetRoleWithHighestPriority(asMember);
-            var onMemberHighestRole = GetRoleWithHighestPriority(onMember);
-
-            if (asMemberHighestRole.Priority <= onMemberHighestRole.Priority)
-                return false;
-
-            return true;
-        }
-
-        private bool CanCreateChannel(UserId userId)
-        {
-            var member = GetMember(userId);
-            if (member.IsOwner)
-                return true;
-
-            var permissions = GetMemberPermissions(member);
-            if (!permissions.Has(Permission.Administrator, Permission.ManageChannels))
-                return false;
-
-            return true;
-        }
-
-        public Message SendMessage(UserId userId, Channel channel, MessageId messageId, MessageContent content, IClock clock)
-        {
-            var member = GetMember(userId);
-            if(!CanSendMessage(member, channel))
-                throw new InsufficientPermissionsException(userId);
-
-            var message = new Message(messageId, userId, channel.Id, content,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
-
-            return message;
-        }
-
-        private bool CanSendMessage(Member member, Channel channel)
-        {
-            if (member.IsOwner)
-                return true;
-            var permissions = GetMemberPermissions(member);
-            if (permissions.Has(Permission.Administrator))
-                return true;
-
-            permissions = channel.CalculatePermissions(permissions, member, GetEverOneRole().Id);
-
-            if (permissions.Has(Permission.SendMessages))
-                return true;
-
-            return false;
-        }
-
     }
 }

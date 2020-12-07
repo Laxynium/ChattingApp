@@ -1,18 +1,15 @@
 ﻿using System;
+using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Groups.Api.Features.Members.AssignRole
 {
-    public class RemoveRoleFromMemberApiRequest
+    public class AssignRoleToMemberApiRequest : ICommand
     {
-        public Guid GroupId { get; set; }
-        public Guid MemberUserId { get; set; }
-        public Guid RoleId { get; set; }
+        public Guid GroupId { get; }
+        public Guid MemberUserId { get; }
+        public Guid RoleId { get; }
 
-        public RemoveRoleFromMemberApiRequest()
-        {
-            
-        }
-        public RemoveRoleFromMemberApiRequest(Guid groupId, Guid memberUserId, Guid roleId)
+        public AssignRoleToMemberApiRequest(Guid groupId, Guid memberUserId, Guid roleId)
         {
             GroupId = groupId;
             MemberUserId = memberUserId;
