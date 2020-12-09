@@ -42,12 +42,16 @@ import {
   createRoleAction,
   createRoleFailureAction,
   createRoleSuccessAction,
+  getRolePermissionsAction,
+  getRolePermissionsFailureAction,
+  getRolePermissionsSuccessAction,
   getRolesAction,
   getRolesFailureAction,
   getRolesSuccessAction,
   removeRoleAction,
   removeRoleFailureAction,
   removeRoleSuccessAction,
+  updateRolePermissionsSuccessAction,
 } from 'src/app/home/groups/store/roles/actions';
 import {
   CurrentGroup,
@@ -55,6 +59,7 @@ import {
   ICurrentGroup,
 } from 'src/app/home/groups/store/types/currentGroup';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
+import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 
 export interface GroupsStateInterface {
@@ -71,6 +76,8 @@ export interface GroupsStateInterface {
   invitations: InvitationDto[];
   roles: RoleDto[];
   creatingRole: boolean;
+  rolePermissions: PermissionDto[];
+  rolePermissionsLoading: boolean;
 }
 
 const initialState: GroupsStateInterface = {
@@ -87,6 +94,8 @@ const initialState: GroupsStateInterface = {
   invitations: [],
   roles: [],
   creatingRole: false,
+  rolePermissions: [],
+  rolePermissionsLoading: false,
 };
 
 const groupsReducer = createReducer(
@@ -267,8 +276,23 @@ const groupsReducer = createReducer(
   })),
   on(removeRoleFailureAction, (s, a) => ({
     ...s,
+  })),
+
+  on(getRolePermissionsAction, (s, a) => ({
+    ...s,
+    rolePermissionsLoading: true,
+  })),
+  on(getRolePermissionsSuccessAction, (s, a) => ({
+    ...s,
+    rolePermissionsLoading: false,
+    rolePermissions: [...a.roles],
+  })),
+  on(getRolePermissionsFailureAction, (s, a) => ({
+    ...s,
+    rolePermissionsLoading: false,
   }))
 );
+
 export function reducers(state: GroupsStateInterface, action: Action) {
   return groupsReducer(state, action);
 }

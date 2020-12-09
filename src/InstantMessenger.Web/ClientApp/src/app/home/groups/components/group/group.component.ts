@@ -42,8 +42,9 @@ export class GroupComponent implements OnInit {
     this.$currentGroup.subscribe((g) => {
       if (!g) {
         this.router.navigateByUrl('/groups');
+      } else {
+        this.store.dispatch(getChannelsAction({groupId: g.groupId}));
       }
-      this.store.dispatch(getChannelsAction({groupId: g.groupId}));
     });
   }
 

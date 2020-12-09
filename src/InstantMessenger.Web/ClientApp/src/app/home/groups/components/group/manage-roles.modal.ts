@@ -14,12 +14,6 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
           <a ngbNavLink>Roles</a>
           <ng-template ngbNavContent><app-roles></app-roles></ng-template>
         </li>
-        <li [ngbNavItem]="3">
-          <a ngbNavLink>Role permissions</a>
-          <ng-template ngbNavContent
-            ><app-manage-role-permissions></app-manage-role-permissions
-          ></ng-template>
-        </li>
       </ul>
     </div>
     <div class="modal-body">

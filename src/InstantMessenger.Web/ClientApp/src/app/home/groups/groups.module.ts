@@ -25,6 +25,7 @@ import {ManageRolePermissionsComponent} from './components/manage-role-permissio
 import {UiSwitchModule} from 'ngx-ui-switch';
 import {RolesService} from 'src/app/home/groups/services/roles.service';
 import {RolesEffects} from 'src/app/home/groups/store/roles/effects';
+import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-role-permissions/manage-role-permissions.modal';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {RolesEffects} from 'src/app/home/groups/store/roles/effects';
     RolesComponent,
     AddRoleComponent,
     ManageRolePermissionsComponent,
+    ManageRolePermissionsModal,
   ],
   imports: [
     CommonModule,

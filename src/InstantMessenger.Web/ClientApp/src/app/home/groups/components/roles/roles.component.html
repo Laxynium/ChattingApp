@@ -3,7 +3,7 @@
     class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
     <span>{{role.name}}</span>
     <div>
-      <button class="btn btn-outline-primary">
+      <button class="btn btn-outline-primary" (click)="goToRolePermissions(role)">
         <fa-icon [icon]="['fas','sign-in-alt']"></fa-icon>
       </button>
       <button *ngIf="role.priority != -1" class="btn btn-outline-danger" (click)="removeRole(role)">

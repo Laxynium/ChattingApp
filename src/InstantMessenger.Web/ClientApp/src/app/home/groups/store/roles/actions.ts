@@ -1,10 +1,19 @@
 import {createAction, props} from '@ngrx/store';
+import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 
 export enum ActionTypes {
   GET_ROLES = '[Groups] Get roles',
   GET_ROLES_SUCCESS = '[Groups] Get roles success',
   GET_ROLES_FAILURE = '[Groups] Get roles failure',
+
+  GET_ROLE_PERMISSIONS = '[Groups] Get role permissions',
+  GET_ROLE_PERMISSIONS_SUCCESS = '[Groups] Get role permissions success',
+  GET_ROLE_PERMISSIONS_FAILURE = '[Groups] Get role permissions failure',
+
+  UPDATE_ROLE_PERMISSIONS = '[Groups] Update role permissions',
+  UPDATE_ROLE_PERMISSIONS_SUCCESS = '[Groups] Update role permissions success',
+  UPDATE_ROLE_PERMISSIONS_FAILURE = '[Groups] Update role permissions failure',
 
   CREATE_ROLE = '[Groups] Create role',
   CREATE_ROLE_SUCCESS = '[Groups] Create role success',
@@ -35,6 +44,18 @@ export const getRolesFailureAction = createAction(
   ActionTypes.GET_ROLES_FAILURE
 );
 
+export const getRolePermissionsAction = createAction(
+  ActionTypes.GET_ROLE_PERMISSIONS,
+  props<{groupId: string; roleId: string}>()
+);
+export const getRolePermissionsSuccessAction = createAction(
+  ActionTypes.GET_ROLE_PERMISSIONS_SUCCESS,
+  props<{roles: PermissionDto[]}>()
+);
+export const getRolePermissionsFailureAction = createAction(
+  ActionTypes.GET_ROLE_PERMISSIONS_FAILURE
+);
+
 export const createRoleAction = createAction(
   ActionTypes.CREATE_ROLE,
   props<{groupId: string; roleName: string}>()
@@ -45,6 +66,26 @@ export const createRoleSuccessAction = createAction(
 );
 export const createRoleFailureAction = createAction(
   ActionTypes.CREATE_ROLE_FAILURE
+);
+
+export const updateRolePermissionsAction = createAction(
+  ActionTypes.UPDATE_ROLE_PERMISSIONS,
+  props<{
+    groupId: string;
+    roleId: string;
+    permissions: PermissionDto[];
+  }>()
+);
+export const updateRolePermissionsSuccessAction = createAction(
+  ActionTypes.UPDATE_ROLE_PERMISSIONS_SUCCESS,
+  props<{
+    groupId: string;
+    roleId: string;
+    permissions: PermissionDto[];
+  }>()
+);
+export const updateRolePermissionsFailureAction = createAction(
+  ActionTypes.UPDATE_ROLE_PERMISSIONS_FAILURE
 );
 
 export const removeRoleAction = createAction(

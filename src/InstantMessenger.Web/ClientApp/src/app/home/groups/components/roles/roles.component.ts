@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
+import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-role-permissions/manage-role-permissions.modal';
 import {
   getRolesAction,
   removeRoleAction,
@@ -17,7 +19,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
 })
 export class RolesComponent implements OnInit {
   $roles: Observable<RoleDto[]>;
-  constructor(private store: Store) {
+  constructor(private store: Store, private modal: NgbModal) {
     this.$roles = this.store.pipe(select(rolesSelector));
   }
 
@@ -32,6 +34,14 @@ export class RolesComponent implements OnInit {
         this.store.dispatch(getRolesAction({groupId: g.groupId}));
       });
   }
+
+  goToRolePermissions(role: RoleDto) {
+    const modalRef = this.modal.open(ManageRolePermissionsModal, {
+      scrollable: true,
+    });
+    modalRef.componentInstance.role = role;
+  }
+
   removeRole(role: RoleDto) {
     this.store.dispatch(
       removeRoleAction({groupId: role.groupId, roleId: role.roleId})

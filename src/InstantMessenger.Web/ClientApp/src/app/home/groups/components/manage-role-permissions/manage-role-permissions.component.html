@@ -1,5 +1,12 @@
-<ul class="list-group conversations-body">
-  <li *ngFor="let p of $permissions | async" class="list-group-item d-flex justify-content-between align-items-center">
-    <span>{{p.name}}</span>
-    <ui-switch></ui-switch>
-</ul>
+<div>
+  <div *ngIf="$permissionsLoading | async">
+    <fa-icon [icon]="['fas','spinner']" spin=true></fa-icon>
+  </div>
+  <ul *ngIf="!($permissionsLoading | async)" class="list-group">
+    <li *ngFor="let p of $permissions | async"
+      class="list-group-item d-flex justify-content-between align-items-center">
+      <span>{{p.name}}</span>
+      <ui-switch [checked]="p.isOn" (valueChange)="onPermissionChange($event, p)"></ui-switch>
+    </li>
+  </ul>
+</div>

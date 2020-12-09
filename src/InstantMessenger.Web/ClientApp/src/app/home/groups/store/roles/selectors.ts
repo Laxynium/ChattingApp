@@ -1,6 +1,7 @@
 import {createSelector} from '@ngrx/store';
 import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
 import {groupsFeatureSelector} from 'src/app/home/groups/store/selectors';
+import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 
 export const rolesSelector = createSelector(
@@ -18,6 +19,16 @@ export const rolesSelector = createSelector(
 export const creatingRoleSelector = createSelector(
   groupsFeatureSelector,
   (s: GroupsStateInterface): boolean => s.creatingRole
+);
+
+export const rolePermissionsSelector = createSelector(
+  groupsFeatureSelector,
+  (s: GroupsStateInterface): PermissionDto[] => s.rolePermissions
+);
+
+export const rolePermissionsLoadingSelector = createSelector(
+  groupsFeatureSelector,
+  (s: GroupsStateInterface): boolean => s.rolePermissionsLoading
 );
 
 function compare(a: number, b: number) {

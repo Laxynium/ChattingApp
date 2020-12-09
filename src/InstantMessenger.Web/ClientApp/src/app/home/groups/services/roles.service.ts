@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {concatMap} from 'rxjs/operators';
+import {forkJoin, Observable, zip} from 'rxjs';
+import {concatMap, map} from 'rxjs/operators';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {environment} from 'src/environments/environment';
@@ -18,10 +18,56 @@ export class RolesService {
     return this.http.get<RoleDto[]>(`${this.rolesApi(r.groupId)}`);
   }
 
-  public getPermissions(r: {groupId: string}): Observable<PermissionDto[]> {
-    return this.http.get<PermissionDto[]>(
-      `${this.groupApi}/${r.groupId}/permissions`
+  public getRolePermissions(r: {
+    groupId: string;
+    roleId: string;
+  }): Observable<PermissionDto[]> {
+    return zip(
+      this.http.get<PermissionResponseDto[]>(
+        `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions`
+      ),
+      this.http.get<PermissionResponseDto[]>(
+        `${this.groupApi}/${r.groupId}/permissions`
+      )
+    ).pipe(
+      map(([rolePermissions, allPermissions]) =>
+        allPermissions.reduce(
+          (agg: PermissionDto[], cur: PermissionResponseDto) => [
+            ...agg,
+            <PermissionDto>{
+              name: cur.name,
+              code: cur.code,
+              isOn: rolePermissions.some((x) => x.name == cur.name),
+            },
+          ],
+          []
+        )
+      )
     );
+  }
+
+  public updateRolePermissions(r: {
+    groupId: string;
+    roleId: string;
+    permissions: PermissionDto[];
+  }): Observable<Object> {
+    const requests = r.permissions.map((p) => {
+      if (p.isOn) {
+        return this.http.post(
+          `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions`,
+          {
+            groupId: r.groupId,
+            roleId: r.roleId,
+            permissionName: p.name,
+          }
+        );
+      } else {
+        return this.http.delete(
+          `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions/${p.name}`
+        );
+      }
+    });
+    return forkJoin(requests);
   }
 
   public createRole(r: {
@@ -62,4 +108,9 @@ export class RolesService {
       `${this.rolesApi(r.groupId)}/${r.roleId}/permissions/${r.permissionName}`
     );
   }
+}
+
+interface PermissionResponseDto {
+  name: string;
+  code: string;
 }

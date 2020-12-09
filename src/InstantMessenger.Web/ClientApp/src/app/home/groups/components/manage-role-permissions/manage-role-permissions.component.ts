@@ -1,8 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {RolesService} from 'src/app/home/groups/services/roles.service';
+import {first} from 'rxjs/operators';
+import {getRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
+import {
+  rolePermissionsLoadingSelector,
+  rolePermissionsSelector,
+} from 'src/app/home/groups/store/roles/selectors';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {v4 as guid} from 'uuid';
+import {RoleDto} from 'src/app/home/groups/store/types/role';
 
 @Component({
   selector: 'app-manage-role-permissions',
@@ -10,10 +16,43 @@ import {v4 as guid} from 'uuid';
   styleUrls: ['./manage-role-permissions.component.scss'],
 })
 export class ManageRolePermissionsComponent implements OnInit {
+  @Input() role: RoleDto;
+  @Output() rolePermissionsChanged = new EventEmitter<PermissionDto[]>();
   $permissions: Observable<PermissionDto[]>;
-  constructor(private rolesService: RolesService) {}
+  updatedPermissions: PermissionDto[] = [];
+  $permissionsLoading: Observable<boolean>;
+  constructor(private store: Store) {
+    this.$permissions = this.store.pipe(select(rolePermissionsSelector));
+    this.$permissionsLoading = this.store.pipe(
+      select(rolePermissionsLoadingSelector)
+    );
+  }
 
   ngOnInit(): void {
-    this.$permissions = this.rolesService.getPermissions({groupId: guid()});
+    this.store.dispatch(
+      getRolePermissionsAction({
+        groupId: this.role.groupId,
+        roleId: this.role.roleId,
+      })
+    );
+  }
+
+  onPermissionChange(event: boolean, permission: PermissionDto) {
+    console.log(event, permission);
+    this.$permissions.pipe(first()).subscribe(() => {
+      const permIdx = this.updatedPermissions.findIndex(
+        (x) => x.name == permission.name
+      );
+      if (permIdx == -1) {
+        this.updatedPermissions.push({...permission, isOn: event});
+      } else {
+        this.updatedPermissions[permIdx] = {
+          ...permission,
+          isOn: event,
+        };
+      }
+
+      this.rolePermissionsChanged.emit(this.updatedPermissions);
+    });
   }
 }
