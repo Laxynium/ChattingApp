@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Roles.RemoveRole;
@@ -168,6 +169,19 @@ namespace InstantMessenger.UnitTests
                     x.Name.Should().Be("@everyone");
                 }
             );
+        });
+
+        [Fact]
+        public async Task Everyone_role_cannot_be_removed() => await Run(async sut =>
+        {
+            var group = await GroupBuilder.For(sut).CreateGroup("group1")
+                .Build();
+            var everyoneRole = (await sut.QueryAsync(new GetRolesQuery(group.OwnerId, group.GroupId))).First();
+            
+
+            Func<Task> action = ()=>sut.SendAsync(new RemoveRoleCommand(group.OwnerId, group.GroupId, everyoneRole.RoleId));
+
+            await action.Should().ThrowAsync<EveryoneRoleCannotBeRemovedException>();
         });
     }
 }

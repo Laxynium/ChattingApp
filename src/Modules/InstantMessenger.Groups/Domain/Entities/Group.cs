@@ -77,6 +77,9 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             var role = GetRole(roleId);
 
+            if(role == GetEveryoneRole())
+                throw new EveryoneRoleCannotBeRemovedException();
+
             foreach (var m in _members)
             {
                 m.RemoveRole(role);
@@ -248,7 +251,6 @@ namespace InstantMessenger.Groups.Domain.Entities
             return new Action.RevokeInvitation(GetMember(userId), GetMemberPermissions(userId))
                 .CanExecute();
         }
-
         private Maybe<Role> GetRoleAbove(Role role) => 
             UserDefinedRoles.Skip(1)
             .Zip(UserDefinedRoles)
