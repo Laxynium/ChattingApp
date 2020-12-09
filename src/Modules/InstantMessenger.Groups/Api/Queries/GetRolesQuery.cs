@@ -28,9 +28,10 @@ namespace InstantMessenger.Groups.Api.Queries
 
         public async Task<IEnumerable<RoleDto>> HandleAsync(GetRolesQuery query) => await _context.Groups.AsNoTracking()
             .Where(x=>x.Id == GroupId.From(query.GroupId))
+            .Where(x => x.Members.Select(m => m.UserId).Any(u => u == UserId.From(query.UserId)))
             .SelectMany(x=>x.Roles)
             .OrderByDescending(x => x.Priority)
-            .Select(x => new RoleDto(x.Id.Value, x.Name.Value, x.Priority.Value))
+            .Select(x => new RoleDto(query.GroupId,x.Id.Value, x.Name.Value, x.Priority.Value))
             .ToListAsync();
     }
 }

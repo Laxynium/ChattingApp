@@ -11,15 +11,17 @@ namespace InstantMessenger.Groups.Api.Queries
 {
     public class RoleDto
     {
+        public Guid GroupId { get; }
         public Guid RoleId { get; }
         public string Name { get; }
         public int Priority { get; }
 
-        public RoleDto(Guid roleId, string name, int priority)
+        public RoleDto(Guid groupId, Guid roleId, string name, int priority)
         {
             RoleId = roleId;
             Name = name;
             Priority = priority;
+            GroupId = groupId;
         }
     }
 
@@ -59,7 +61,7 @@ namespace InstantMessenger.Groups.Api.Queries
                 .SelectMany(x => x.Roles)
                 .Where(x => memberRoleIds.Contains(x.Id))
                 .OrderByDescending(x => x.Priority)
-                .Select(x=>new RoleDto(x.Id.Value, x.Name.Value, x.Priority.Value))
+                .Select(x=>new RoleDto(query.GroupId,x.Id.Value, x.Name.Value, x.Priority.Value))
                 .ToListAsync();
         }
     }

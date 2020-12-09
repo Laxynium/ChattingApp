@@ -112,6 +112,13 @@ namespace InstantMessenger.Groups.Api
         {
             var result = await _facade.QueryAsync(new GetRolesQuery(User.GetUserId(), groupId));
             return Ok(result);
+        }        
+        
+        [HttpGet("{groupId}/roles/{roleId}")]
+        public async Task<IActionResult> GetRole(Guid groupId, Guid roleId)
+        {
+            var result = await _facade.QueryAsync(new GetRoleQuery(User.GetUserId(), groupId, roleId));
+            return Ok(result);
         }
 
         [HttpPost("{groupId}/roles/{roleId}/permissions")]
@@ -126,6 +133,13 @@ namespace InstantMessenger.Groups.Api
         {
             await _facade.SendAsync(new RemovePermissionFromRoleCommand(User.GetUserId(), request.GroupId, request.RoleId, request.PermissionName));
             return Ok();
+        }
+
+        [HttpGet("{groupId}/permissions")]
+        public async Task<IActionResult> GetAvailablePermissions(Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetAvailablePermissionsQuery(groupId));
+            return Ok(result);
         }
 
 

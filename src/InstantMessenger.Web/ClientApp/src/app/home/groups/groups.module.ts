@@ -18,6 +18,13 @@ import {InvitationsModal} from 'src/app/home/groups/components/group/invitations
 import {InvitationsComponent} from './components/invitations/invitations.component';
 import {GenerateInvitationComponent} from './components/generate-invitation/generate-invitation.component';
 import {TimepsanPipe} from 'src/app/home/groups/components/invitations/timespan.pipe';
+import {ManageRolesModal} from 'src/app/home/groups/components/group/manage-roles.modal';
+import {RolesComponent} from './components/roles/roles.component';
+import {AddRoleComponent} from './components/add-role/add-role.component';
+import {ManageRolePermissionsComponent} from './components/manage-role-permissions/manage-role-permissions.component';
+import {UiSwitchModule} from 'ngx-ui-switch';
+import {RolesService} from 'src/app/home/groups/services/roles.service';
+import {RolesEffects} from 'src/app/home/groups/store/roles/effects';
 
 @NgModule({
   declarations: [
@@ -27,9 +34,13 @@ import {TimepsanPipe} from 'src/app/home/groups/components/invitations/timespan.
     GroupComponent,
     CreateChannelModal,
     InvitationsModal,
+    ManageRolesModal,
     InvitationsComponent,
     GenerateInvitationComponent,
     TimepsanPipe,
+    RolesComponent,
+    AddRoleComponent,
+    ManageRolePermissionsComponent,
   ],
   imports: [
     CommonModule,
@@ -38,9 +49,10 @@ import {TimepsanPipe} from 'src/app/home/groups/components/invitations/timespan.
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule,
+    UiSwitchModule,
     StoreModule.forFeature('groups', reducers),
-    EffectsModule.forFeature([GroupsEffects]),
+    EffectsModule.forFeature([GroupsEffects, RolesEffects]),
   ],
-  providers: [GroupsService],
+  providers: [GroupsService, RolesService],
 })
 export class GroupsModule {}

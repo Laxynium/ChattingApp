@@ -39,11 +39,23 @@ import {
   revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/actions';
 import {
+  createRoleAction,
+  createRoleFailureAction,
+  createRoleSuccessAction,
+  getRolesAction,
+  getRolesFailureAction,
+  getRolesSuccessAction,
+  removeRoleAction,
+  removeRoleFailureAction,
+  removeRoleSuccessAction,
+} from 'src/app/home/groups/store/roles/actions';
+import {
   CurrentGroup,
   EmptyCurrentGroup,
   ICurrentGroup,
 } from 'src/app/home/groups/store/types/currentGroup';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
+import {RoleDto} from 'src/app/home/groups/store/types/role';
 
 export interface GroupsStateInterface {
   groups: GroupDto[];
@@ -57,6 +69,8 @@ export interface GroupsStateInterface {
     isBeingGenerated: boolean;
   };
   invitations: InvitationDto[];
+  roles: RoleDto[];
+  creatingRole: boolean;
 }
 
 const initialState: GroupsStateInterface = {
@@ -71,6 +85,8 @@ const initialState: GroupsStateInterface = {
     isBeingGenerated: false,
   },
   invitations: [],
+  roles: [],
+  creatingRole: false,
 };
 
 const groupsReducer = createReducer(
@@ -214,6 +230,42 @@ const groupsReducer = createReducer(
     channels: [...s.channels.filter((c) => c.channelId != a.channelId)],
   })),
   on(removeChannelFailureAction, (s, a) => ({
+    ...s,
+  })),
+
+  on(getRolesAction, (s, a) => ({
+    ...s,
+  })),
+  on(getRolesSuccessAction, (s, a) => ({
+    ...s,
+    roles: [...a.roles],
+  })),
+  on(getRolesFailureAction, (s, a) => ({
+    ...s,
+  })),
+
+  on(createRoleAction, (s, a) => ({
+    ...s,
+    creatingRole: true,
+  })),
+  on(createRoleSuccessAction, (s, a) => ({
+    ...s,
+    roles: [...s.roles, a.role],
+    creatingRole: false,
+  })),
+  on(createRoleFailureAction, (s, a) => ({
+    ...s,
+    creatingRole: false,
+  })),
+
+  on(removeRoleAction, (s, a) => ({
+    ...s,
+  })),
+  on(removeRoleSuccessAction, (s, a) => ({
+    ...s,
+    roles: [...s.roles.filter((r) => r.roleId != a.roleId)],
+  })),
+  on(removeRoleFailureAction, (s, a) => ({
     ...s,
   }))
 );

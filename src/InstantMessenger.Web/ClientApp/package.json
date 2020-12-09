@@ -34,6 +34,7 @@
     "bootstrap": "^4.5.0",
     "immutable": "^4.0.0-rc.12",
     "ngrx-store-localstorage": "^10.1.1",
+    "ngx-ui-switch": "^10.0.2",
     "ramda": "^0.27.1",
     "rxjs": "~6.6.0",
     "sass": "^1.29.0",
