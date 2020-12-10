@@ -26,6 +26,12 @@ import {UiSwitchModule} from 'ngx-ui-switch';
 import {RolesService} from 'src/app/home/groups/services/roles.service';
 import {RolesEffects} from 'src/app/home/groups/store/roles/effects';
 import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-role-permissions/manage-role-permissions.modal';
+import {MembersComponent} from './components/members/members.component';
+import {MembersModal} from 'src/app/home/groups/components/members/members.modal';
+import {MembersEffects} from 'src/app/home/groups/store/members/effects';
+import {MembersService} from 'src/app/home/groups/services/members.service';
+import {ManageMemberRolesComponent} from './components/manage-member-roles/manage-member-roles.component';
+import {ManageMemberRolesModal} from 'src/app/home/groups/components/manage-member-roles/manage-member-roles.modal';
 
 @NgModule({
   declarations: [
@@ -43,6 +49,10 @@ import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-
     AddRoleComponent,
     ManageRolePermissionsComponent,
     ManageRolePermissionsModal,
+    MembersComponent,
+    MembersModal,
+    ManageMemberRolesComponent,
+    ManageMemberRolesModal,
   ],
   imports: [
     CommonModule,
@@ -53,8 +63,8 @@ import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-
     FontAwesomeModule,
     UiSwitchModule,
     StoreModule.forFeature('groups', reducers),
-    EffectsModule.forFeature([GroupsEffects, RolesEffects]),
+    EffectsModule.forFeature([GroupsEffects, RolesEffects, MembersEffects]),
   ],
-  providers: [GroupsService, RolesService],
+  providers: [GroupsService, RolesService, MembersService],
 })
 export class GroupsModule {}

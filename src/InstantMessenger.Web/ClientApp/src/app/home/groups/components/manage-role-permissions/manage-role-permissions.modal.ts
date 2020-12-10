@@ -14,7 +14,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
         type="button"
         class="close"
         aria-describedby="modal-title"
-        (click)="modal.dismiss('btn-click')"
+        (click)="modal.close('btn-click')"
       >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -38,7 +38,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
       <button
         type="button"
         class="btn btn-outline-dark"
-        (click)="modal.dismiss('btn-click')"
+        (click)="modal.close('btn-click')"
       >
         Close
       </button>
@@ -62,6 +62,6 @@ export class ManageRolePermissionsModal implements OnInit {
         permissions: this.changedRolePermissions.map((p) => ({...p})),
       })
     );
-    this.modal.dismiss('save');
+    this.modal.close('save');
   }
 }

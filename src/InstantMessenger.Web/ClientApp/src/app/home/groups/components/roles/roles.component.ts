@@ -38,6 +38,9 @@ export class RolesComponent implements OnInit {
   goToRolePermissions(role: RoleDto) {
     const modalRef = this.modal.open(ManageRolePermissionsModal, {
       scrollable: true,
+      beforeDismiss: () => {
+        return false;
+      },
     });
     modalRef.componentInstance.role = role;
   }

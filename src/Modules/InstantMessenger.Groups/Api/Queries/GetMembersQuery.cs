@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
-using InstantMessenger.Groups.Infrastructure;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +11,7 @@ namespace InstantMessenger.Groups.Api.Queries
 {
     public class MemberDto
     {
+        public Guid GroupId { get; set; }
         public Guid UserId { get; set; }
         public Guid MemberId { get; set; }
         public string Name { get; set; }
@@ -22,12 +20,14 @@ namespace InstantMessenger.Groups.Api.Queries
     }
     public class GetMembersQuery : IQuery<IEnumerable<MemberDto>>
     {
+        public Guid UserId { get; }
         public Guid GroupId { get; }
         public bool IsOwner { get; }
         public Guid? UserIdOfMember { get; }
 
-        public GetMembersQuery( Guid groupId, bool isOwner = false, Guid? userIdOfMember = null)
+        public GetMembersQuery(Guid userId, Guid groupId, bool isOwner = false, Guid? userIdOfMember = null)
         {
+            UserId = userId;
             GroupId = groupId;
             IsOwner = isOwner;
             UserIdOfMember = userIdOfMember;
@@ -46,6 +46,7 @@ namespace InstantMessenger.Groups.Api.Queries
         {
             var members = _context.Groups.AsNoTracking()
                 .Where(x => x.Id == GroupId.From(query.GroupId))
+                .Where(x=>x.Members.Select(m=>m.UserId).Any(id=>id == UserId.From(query.UserId)))
                 .SelectMany(x => x.Members);
             if (query.IsOwner)
             {
@@ -60,6 +61,7 @@ namespace InstantMessenger.Groups.Api.Queries
                 .Select(
                     x => new MemberDto
                     {
+                        GroupId = query.GroupId,
                         UserId = x.UserId.Value,
                         MemberId = x.Id.Value,
                         IsOwner = x.IsOwner,

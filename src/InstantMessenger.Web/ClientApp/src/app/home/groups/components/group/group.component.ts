@@ -7,6 +7,7 @@ import {first} from 'rxjs/operators';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
 import {InvitationsModal} from 'src/app/home/groups/components/group/invitations.modal';
 import {ManageRolesModal} from 'src/app/home/groups/components/group/manage-roles.modal';
+import {MembersModal} from 'src/app/home/groups/components/members/members.modal';
 import {
   ChannelDto,
   GroupDto,
@@ -75,6 +76,14 @@ export class GroupComponent implements OnInit {
   }
   openManageRolesModal() {
     this.modal.open(ManageRolesModal, {
+      beforeDismiss: () => {
+        return false;
+      },
+      scrollable: true,
+    });
+  }
+  openMembersModal() {
+    this.modal.open(MembersModal, {
       beforeDismiss: () => {
         return false;
       },

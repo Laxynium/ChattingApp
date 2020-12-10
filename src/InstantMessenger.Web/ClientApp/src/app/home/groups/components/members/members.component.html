@@ -1,0 +1,17 @@
+<ul class="list-group conversations-body">
+  <li *ngFor="let member of $members | async"
+    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+    <div class="member-name">
+      <img class="rounded-circle member-avatar" src="{{member.avatar}}" />
+      <span>{{member.name}}</span>
+    </div>
+    <div ngbDropdown class="d-inline-block" placement="left-top">
+      <button id="dropdownBasic1" class="btn btn-outline-secondary" ngbDropdownToggle>
+        <fa-icon [icon]="['fas', 'ellipsis-h']" size="1x"></fa-icon>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
+        <button *ngIf="!member.isOwner" ngbDropdownItem (click)="(kickMember(member))">Kick member</button>
+        <button ngbDropdownItem (click)="openManageMemberRoles(member)">Manage roles</button>
+      </div>
+    </div>
+</ul>

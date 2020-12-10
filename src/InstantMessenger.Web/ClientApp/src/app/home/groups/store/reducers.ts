@@ -39,6 +39,19 @@ import {
   revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/actions';
 import {
+  addRoleToMemberSuccessAction,
+  getMemberRolesAction,
+  getMemberRolesFailureAction,
+  getMemberRolesSuccessAction,
+  getMembersAction,
+  getMembersFailureAction,
+  getMembersSuccessAction,
+  kickMemberAction,
+  kickMemberFailureAction,
+  kickMemberSuccessAction,
+  removeRoleFromMemberAction,
+} from 'src/app/home/groups/store/members/actions';
+import {
   createRoleAction,
   createRoleFailureAction,
   createRoleSuccessAction,
@@ -51,7 +64,6 @@ import {
   removeRoleAction,
   removeRoleFailureAction,
   removeRoleSuccessAction,
-  updateRolePermissionsSuccessAction,
 } from 'src/app/home/groups/store/roles/actions';
 import {
   CurrentGroup,
@@ -59,6 +71,8 @@ import {
   ICurrentGroup,
 } from 'src/app/home/groups/store/types/currentGroup';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
+import {MemberDto} from 'src/app/home/groups/store/types/member';
+import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 
@@ -78,6 +92,11 @@ export interface GroupsStateInterface {
   creatingRole: boolean;
   rolePermissions: PermissionDto[];
   rolePermissionsLoading: boolean;
+
+  members: MemberDto[];
+  membersLoading: boolean;
+
+  memberRoles: RoleDto[];
 }
 
 const initialState: GroupsStateInterface = {
@@ -96,6 +115,11 @@ const initialState: GroupsStateInterface = {
   creatingRole: false,
   rolePermissions: [],
   rolePermissionsLoading: false,
+
+  members: [],
+  membersLoading: false,
+
+  memberRoles: [],
 };
 
 const groupsReducer = createReducer(
@@ -290,6 +314,59 @@ const groupsReducer = createReducer(
   on(getRolePermissionsFailureAction, (s, a) => ({
     ...s,
     rolePermissionsLoading: false,
+  })),
+
+  on(getMembersAction, (s, a) => ({
+    ...s,
+    membersLoading: true,
+  })),
+  on(getMembersSuccessAction, (s, a) => ({
+    ...s,
+    members: [...a.members],
+    membersLoading: false,
+  })),
+  on(getMembersFailureAction, (s, a) => ({
+    ...s,
+    membersLoading: false,
+  })),
+
+  on(kickMemberAction, (s, a) => ({
+    ...s,
+  })),
+  on(kickMemberSuccessAction, (s, a) => ({
+    ...s,
+    members: [
+      ...s.members.filter(
+        (m) => m.userId != a.userId || m.groupId != a.groupId
+      ),
+    ],
+  })),
+  on(kickMemberFailureAction, (s, a) => ({
+    ...s,
+    membersLoading: false,
+  })),
+
+  on(getMemberRolesAction, (s, a) => ({
+    ...s,
+  })),
+  on(getMemberRolesSuccessAction, (s, a) => ({
+    ...s,
+    memberRoles: [...a.roles],
+  })),
+  on(getMemberRolesFailureAction, (s, a) => ({
+    ...s,
+  })),
+
+  on(addRoleToMemberSuccessAction, (s, a) => ({
+    ...s,
+    memberRoles: [...s.memberRoles, a.memberRole.role],
+  })),
+
+  on(removeRoleFromMemberAction, (s, a) => ({
+    ...s,
+    memberRoles: [
+      ...s.memberRoles.filter((r) => r.roleId != a.memberRole.role.roleId),
+    ],
   }))
 );
 

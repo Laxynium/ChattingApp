@@ -1,0 +1,24 @@
+<div class="form-inline justify-content-between mb-2">
+  <div class="form-group flex-grow-1 pr-1">
+    <select [(ngModel)]="selectedRole" class="form-control flex-grow-1">
+      <option [ngValue]="null">Select role...</option>
+      <option [ngValue]="role" *ngFor="let role of $rolesToPick | async">
+        {{role.name}}
+      </option>
+    </select>
+  </div>
+  <button [disabled]="selectedRole == null" class="btn btn-primary" (click)="addRoleToMember()">
+    <fa-icon [icon]="['fas','plus']"></fa-icon>
+  </button>
+</div>
+
+<ul class="list-group">
+  <li *ngFor="let role of $memberRoles | async"
+    class="list-group-item d-flex justify-content-between align-items-center list-group-item">
+    <span>{{role.name}}</span>
+    <div>
+      <button *ngIf="role.priority != -1" class="btn btn-outline-danger" (click)="removeRoleFromMember(role)">
+        <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+      </button>
+    </div>
+</ul>

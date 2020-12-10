@@ -74,7 +74,7 @@ namespace InstantMessenger.Groups.Api
         [HttpGet("{groupId}/owner")]
         public async Task<IActionResult> GetOwner([FromRoute] Guid groupId)
         {
-            var result = await _facade.QueryAsync(new GetMembersQuery(groupId, true));
+            var result = await _facade.QueryAsync(new GetMembersQuery(User.GetUserId(), groupId, true));
             return Ok(result.FirstOrDefault());
         }
 
@@ -150,8 +150,8 @@ namespace InstantMessenger.Groups.Api
             return Ok(result);
         }
 
-        [HttpPost("{groupId}/members/{memberUserId}/kick")]
-        public async Task<IActionResult> Post(Guid groupId, Guid memberUserId)
+        [HttpDelete("{groupId}/members/{memberUserId}/kick")]
+        public async Task<IActionResult> Delete(Guid groupId, Guid memberUserId)
         {
             await _facade.SendAsync(new KickMemberCommand(User.GetUserId(), groupId, memberUserId));
             return Ok();
@@ -183,21 +183,21 @@ namespace InstantMessenger.Groups.Api
         [HttpGet("{groupId}/members/{memberUserId}")]
         public async Task<IActionResult> GetMember(Guid groupId, Guid memberUserId)
         {
-            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,false,memberUserId));
+            var result = await _facade.QueryAsync(new GetMembersQuery(User.GetUserId(), groupId,false,memberUserId));
             return Ok(result.FirstOrDefault());
         }
 
         [HttpGet("{groupId}/members/me")]
         public async Task<IActionResult> GetMember(Guid groupId)
         {
-            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,false,User.GetUserId()));
+            var result = await _facade.QueryAsync(new GetMembersQuery(User.GetUserId(), groupId,false,User.GetUserId()));
             return Ok(result.FirstOrDefault());
         }
 
         [HttpGet("{groupId}/members")]
         public async Task<IActionResult> GetMembers(Guid groupId)
         {
-            var result = await _facade.QueryAsync(new GetMembersQuery(groupId,false));
+            var result = await _facade.QueryAsync(new GetMembersQuery(User.GetUserId(),groupId,false));
             return Ok(result);
         }
 
