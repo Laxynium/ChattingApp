@@ -5,6 +5,7 @@ using InstantMessenger.Identity.Domain.Exceptions;
 using InstantMessenger.Identity.Domain.Rules;
 using InstantMessenger.Identity.Domain.ValueObjects;
 using InstantMessenger.Shared.BuildingBlocks;
+using InstantMessenger.SharedKernel;
 using Microsoft.AspNetCore.Identity;
 
 namespace InstantMessenger.Identity.Domain.Entities

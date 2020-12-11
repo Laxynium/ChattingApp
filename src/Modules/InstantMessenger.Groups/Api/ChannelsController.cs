@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
 using InstantMessenger.Groups.Api.Features.Channel.RemoveChannel;
+using InstantMessenger.Groups.Api.Features.Messages.SendMessage;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -33,6 +34,20 @@ namespace InstantMessenger.Groups.Api
         {
             await _facade.SendAsync(new RemoveChannelCommand(User.GetUserId(), groupId, channelId));
             return Ok();
+        }
+
+        [HttpPost("{channelId}/messages")]
+        public async Task<IActionResult> SendMessage(SendMessageApiRequest request)
+        {
+            await _facade.SendAsync(new SendMessageCommand(User.GetUserId(), request.GroupId, request.ChannelId, request.MessageId, request.Content));
+            return Ok();
+        }
+
+        [HttpGet("{channelId}/messages")]
+        public async Task<IActionResult> GetMessages(Guid groupId, Guid channelId)
+        {
+            var result = await _facade.QueryAsync(new GetMessagesQuery(User.GetUserId(), groupId, channelId));
+            return Ok(result);
         }
 
         [HttpGet("{channelId}")]

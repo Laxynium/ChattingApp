@@ -32,6 +32,7 @@ import {MembersEffects} from 'src/app/home/groups/store/members/effects';
 import {MembersService} from 'src/app/home/groups/services/members.service';
 import {ManageMemberRolesComponent} from './components/manage-member-roles/manage-member-roles.component';
 import {ManageMemberRolesModal} from 'src/app/home/groups/components/manage-member-roles/manage-member-roles.modal';
+import { MessagesComponent } from './components/messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {ManageMemberRolesModal} from 'src/app/home/groups/components/manage-memb
     MembersModal,
     ManageMemberRolesComponent,
     ManageMemberRolesModal,
+    MessagesComponent,
   ],
   imports: [
     CommonModule,

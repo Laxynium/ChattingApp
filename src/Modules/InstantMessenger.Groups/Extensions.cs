@@ -50,6 +50,18 @@ namespace InstantMessenger.Groups
                         );
                     }
                 )
+                .AddDbContext<GroupsViewContext>(
+                    o =>
+                    {
+                        using var provider = services.BuildServiceProvider();
+                        using var scope = provider.CreateScope();
+                        var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
+                            .GetConnectionString("InstantMessengerDb");
+                        o.UseSqlServer(
+                            connectionString,
+                            x => x.MigrationsHistoryTable("__EFMigrationsHistory_Views", "Groups")
+                        );
+                    })
                 .AddUnitOfWork<GroupsContext, DomainEventsMapper>()
                 .AddTransient<GroupsModuleFacade>()
                 .AddScoped<IGroupRepository, GroupRepository>()

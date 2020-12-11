@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Shared\InstantMessenger.SharedKernel\InstantMessenger.SharedKernel.csproj" />
       <ProjectReference Include="..\..\Shared\InstantMessenger.Shared\InstantMessenger.Shared.csproj" />
     </ItemGroup>
   <ItemGroup>
