@@ -78,7 +78,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(new KickMemberCommand(group.OwnerId, group.GroupId, group.Member(1).UserId));
 
-            var members = await sut.QueryAsync(new GetMembersQuery(group.GroupId, false, group.Member(1).UserId));
+            var members = await sut.QueryAsync(new GetMembersQuery(group.OwnerId,group.GroupId, false, group.Member(1).UserId));
             members.Should().BeNullOrEmpty();
         });
 
@@ -165,7 +165,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(new KickMemberCommand(group.Member(1).UserId, group.GroupId,group.Member(2).UserId));
 
-            var members = await sut.QueryAsync(new GetMembersQuery(group.GroupId, false, group.Member(2).UserId));
+            var members = await sut.QueryAsync(new GetMembersQuery(group.OwnerId,group.GroupId, false, group.Member(2).UserId));
             members.Should().BeNullOrEmpty();
         });
     }

@@ -48,10 +48,6 @@ namespace InstantMessenger.PrivateMessages
                 .AddUnitOfWork<PrivateMessagesContext,DomainEventMapper>()
                 .AddScoped<IConversationRepository, ConversationRepository>()
                 .AddScoped<IMessageRepository, MessageRepository>();
-                
-            services.AddSignalR(
-                x => { x.EnableDetailedErrors = true; }
-            ).AddNewtonsoftJsonProtocol();
             return services;
         }
 

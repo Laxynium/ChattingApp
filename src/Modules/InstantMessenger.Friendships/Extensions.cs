@@ -46,11 +46,7 @@ namespace InstantMessenger.Friendships
                 .AddScoped<IFriendshipRepository, FriendshipRepository>()
                 .AddScoped<IUniquePendingInvitationRule, UniquePendingInvitationRule>()
                 .AddSingleton<IClock>(x=>SystemClock.Instance);
-            services.AddSignalR(
-                x =>
-                {
-                    x.EnableDetailedErrors = true;
-                }).AddNewtonsoftJsonProtocol();
+
             return services;
         }
 

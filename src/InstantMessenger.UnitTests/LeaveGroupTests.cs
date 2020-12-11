@@ -49,7 +49,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(new LeaveGroupCommand(group.Member(1).UserId, group.GroupId));
 
-            var members = await sut.QueryAsync(new GetMembersQuery(group.GroupId, false, group.Member(1).UserId));
+            var members = await sut.QueryAsync(new GetMembersQuery(group.OwnerId,group.GroupId, false, group.Member(1).UserId));
             members.Should().BeNullOrEmpty();
         });
     }

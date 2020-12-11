@@ -33,7 +33,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(addMember);
 
-            var members = await sut.QueryAsync(new GetMembersQuery(addMember.GroupId,userIdOfMember:addMember.UserIdOfMember));
+            var members = await sut.QueryAsync(new GetMembersQuery(createGroup.UserId, addMember.GroupId,userIdOfMember:addMember.UserIdOfMember));
             members.Should().SatisfyRespectively(
                 x =>
                 {

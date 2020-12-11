@@ -75,7 +75,7 @@ namespace InstantMessenger.UnitTests
             groups.Should().BeEmpty();
 
             //then all members are removed
-            var members = await sut.QueryAsync(new GetMembersQuery(group.GroupId));
+            var members = await sut.QueryAsync(new GetMembersQuery(group.OwnerId,group.GroupId));
             members.Should().BeEmpty();
             //then all channels are removed
             var channels = await sut.QueryAsync(new GetGroupChannelsQuery(group.OwnerId, group.GroupId));

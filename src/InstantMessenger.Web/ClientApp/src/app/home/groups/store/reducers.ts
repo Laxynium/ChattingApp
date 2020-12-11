@@ -1,4 +1,5 @@
 import {Action, createReducer, on} from '@ngrx/store';
+import {Map} from 'immutable';
 import {
   ChannelDto,
   GroupDto,
@@ -80,7 +81,7 @@ export interface GroupsStateInterface {
   groups: GroupDto[];
   groupsLoading: boolean;
   currentGroup: ICurrentGroup;
-  channels: ChannelDto[];
+  channels: Map<string, ChannelDto>;
   generatedInvitation: {
     groupId: string;
     invitationId: string;
@@ -103,7 +104,7 @@ const initialState: GroupsStateInterface = {
   groups: [],
   groupsLoading: false,
   currentGroup: new EmptyCurrentGroup(),
-  channels: [],
+  channels: Map(),
   generatedInvitation: {
     groupId: null,
     invitationId: null,
@@ -143,7 +144,9 @@ const groupsReducer = createReducer(
   })),
   on(getChannelsSuccessAction, (s, a) => ({
     ...s,
-    channels: [...a.channels],
+    channels: s.channels
+      .clear()
+      .concat(a.channels.map((c) => [c.channelId, c])),
   })),
   on(getChannelsFailureAction, (s, a) => ({
     ...s,
@@ -249,7 +252,7 @@ const groupsReducer = createReducer(
   })),
   on(createChannelSuccessAction, (s, a) => ({
     ...s,
-    channels: [...s.channels, a.channel],
+    channels: s.channels.set(a.channel.channelId, a.channel),
   })),
   on(createChannelFailureAction, (s, a) => ({
     ...s,
@@ -260,7 +263,7 @@ const groupsReducer = createReducer(
   })),
   on(removeChannelSuccessAction, (s, a) => ({
     ...s,
-    channels: [...s.channels.filter((c) => c.channelId != a.channelId)],
+    channels: s.channels.remove(a.channelId),
   })),
   on(removeChannelFailureAction, (s, a) => ({
     ...s,

@@ -62,7 +62,7 @@ namespace InstantMessenger.UnitTests
                 }
             );
             //then owner member is created
-            var members = await sut.QueryAsync(new GetMembersQuery(command.GroupId));
+            var members = await sut.QueryAsync(new GetMembersQuery(command.UserId,command.GroupId));
             members.Should().SatisfyRespectively(
                 x =>
                 {

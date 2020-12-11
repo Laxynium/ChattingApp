@@ -21,6 +21,11 @@ namespace InstantMessenger.Api
                 .AddControllersAsServices()
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
+
+            services.AddSignalR(
+                x => { x.EnableDetailedErrors = true; }
+            ).AddNewtonsoftJsonProtocol();
+
             services
                 .AddIdentityModule()
                 .AddFriendshipsModule()
@@ -45,6 +50,7 @@ namespace InstantMessenger.Api
                 .UseIdentityModule()
                 .UseFriendshipsModule()
                 .UsePrivateMessagesModule()
+                .UseGroupsModule()
                 .UseSharedModule();
 
             app.UseEndpoints(endpoints =>

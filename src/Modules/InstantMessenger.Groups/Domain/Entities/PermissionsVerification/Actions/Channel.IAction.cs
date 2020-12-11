@@ -33,7 +33,7 @@ namespace InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Action
             public Channel Channel { get; }
             public Role EveryoneRole { get; }
 
-            public RemoveChannel(Member asMember,Permissions memberPermissions, Channel channel, Role everyoneRole) : base(asMember)
+            public RemoveChannel(Member asMember, Permissions memberPermissions, Channel channel, Role everyoneRole) : base(asMember)
             {
                 MemberPermissions = memberPermissions;
                 Channel = channel;

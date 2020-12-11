@@ -122,7 +122,7 @@ namespace InstantMessenger.UnitTests
 
             await sut.SendAsync(new JoinGroupCommand(newMemberUserId, group.Invitation(1).Code));
 
-            var members = await sut.QueryAsync(new GetMembersQuery(group.GroupId));
+            var members = await sut.QueryAsync(new GetMembersQuery(group.OwnerId,group.GroupId));
             var newMember = members.FirstOrDefault(x => x.UserId == newMemberUserId);
             newMember.Should().NotBeNull();
             newMember.CreatedAt.Should().NotBe(default);

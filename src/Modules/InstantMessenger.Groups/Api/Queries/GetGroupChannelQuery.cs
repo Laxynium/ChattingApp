@@ -31,18 +31,33 @@ namespace InstantMessenger.Groups.Api.Queries
         {
             _context = context;
         }
-        public async Task<ChannelDto> HandleAsync(GetGroupChannelQuery query) => await _context.Channels.AsNoTracking()
-            .Where(x => _context.Groups.Where(g => g.Id == query.GroupId).SelectMany(g => g.Members).Select(m => m.UserId).Any(u => u == UserId.From(query.UserId)))
-            .Where(x => x.GroupId == GroupId.From(query.GroupId))
-            .Where(x => x.Id == ChannelId.From(query.ChannelId))
-            .Select(
-                x => new ChannelDto
-                {
-                    ChannelId = x.Id.Value,
-                    GroupId = x.GroupId.Value,
-                    ChannelName = x.Name.Value
-                }
-            ).FirstOrDefaultAsync();
+        public async Task<ChannelDto> HandleAsync(GetGroupChannelQuery query)
+        {
+            var group = await _context.Groups.AsNoTracking()
+                .Where(g => g.Id == GroupId.From(query.GroupId))
+                .Where(g => g.Members.Select(m => m.UserId).Any(id => id == UserId.From(query.UserId)))
+                .FirstOrDefaultAsync();
+            if (group is null)
+                return null;
+
+            var channels =  await _context.Channels.AsNoTracking()
+                .Where(
+                    x => _context.Groups.Where(g => g.Id == query.GroupId).SelectMany(g => g.Members).Select(m => m.UserId)
+                        .Any(u => u == UserId.From(query.UserId))
+                )
+                .Where(x => x.GroupId == GroupId.From(query.GroupId))
+                .Where(x => x.Id == ChannelId.From(query.ChannelId))
+                .ToListAsync();
+            return channels.Where(c=>group.CanAccessChannel(UserId.From(query.UserId), c))
+                .Select(
+                    x => new ChannelDto
+                    {
+                        ChannelId = x.Id.Value,
+                        GroupId = x.GroupId.Value,
+                        ChannelName = x.Name.Value
+                    }
+                ).FirstOrDefault();
+        }
     }
 
 }

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Groups.Domain.ValueObjects;
+using InstantMessenger.Shared.BuildingBlocks;
 
 namespace InstantMessenger.Groups.Domain.Entities
 {
@@ -22,6 +23,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             GroupId = groupId;
             Name = name;
+            Apply(new ChannelCreatedEvent(Id, GroupId, Name));
         }
 
         public Permissions CalculatePermissions(Member asMember, RoleId everyoneRole)
@@ -103,6 +105,11 @@ namespace InstantMessenger.Groups.Domain.Entities
             => RemoveOverride(_rolePermissionOverrides, _rolePermissionOverrides
                 .Where(x=>x.RoleId == role.Id && x.Permission == permission)
                 .ToArray());
+
+        public void Remove()
+        {
+            Apply(new ChannelRemovedEvent(Id, GroupId, Name));
+        }
 
         private void ReplaceOverride(RolePermissionOverride @override) => ReplaceOverride(_rolePermissionOverrides, @override);
 

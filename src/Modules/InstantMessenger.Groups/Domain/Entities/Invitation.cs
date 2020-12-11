@@ -3,10 +3,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
+using InstantMessenger.Shared.BuildingBlocks;
 using NodaTime;
 
 namespace InstantMessenger.Groups.Domain.Entities
@@ -40,6 +41,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             InvitationCode = invitationCode;
             ExpirationTime = expirationTime;
             UsageCounter = usageCounter;
+            Apply(new InvitationCreatedEvent(invitationId, groupId, invitationCode, expirationTime, usageCounter));
         }
 
         public static async Task<Invitation> Create(InvitationId invitationId, GroupId groupId,
@@ -64,6 +66,7 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         public void Revoke(UserId userId)
         {
+            Apply(new InvitationRevokedEvent(Id, GroupId,InvitationCode, ExpirationTime, UsageCounter));
         }
 
         private static async Task<InvitationCode> CreateInvitationCode(IUniqueInvitationCodeRule uniqueInvitationCodeRule)

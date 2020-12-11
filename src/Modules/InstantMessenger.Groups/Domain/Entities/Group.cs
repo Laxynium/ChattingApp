@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
@@ -13,7 +14,7 @@ using Action = InstantMessenger.Groups.Domain.Entities.PermissionsVerification.A
 
 namespace InstantMessenger.Groups.Domain.Entities
 {
-    public class Group : Entity<GroupId>
+    public class Group : Shared.BuildingBlocks.Entity<GroupId>
     {
         private readonly HashSet<Member> _members = new HashSet<Member>();
         public IEnumerable<Member> Members => _members.ToList();
@@ -42,7 +43,10 @@ namespace InstantMessenger.Groups.Domain.Entities
         }
 
         public void Remove(UserId userId) => new Action.DeleteGroup(GetMember(userId))
-            .Execute();
+        .Execute(() =>
+        {
+            Apply(new GroupRemovedEvent(Id, Name, Members));
+        });
 
         public void LeaveGroup(UserId userId)
         {
@@ -50,6 +54,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             if (member.IsOwner)
                 throw new OwnerCannotLeaveGroupException();
             _members.Remove(member);
+            Apply(new MemberLeftGroupEvent());
         }
 
 
@@ -70,6 +75,7 @@ namespace InstantMessenger.Groups.Domain.Entities
                 role1.IncrementPriority();
             }
             _roles.Add(role);
+            Apply(new RoleCreatedEvent());
         });
 
         public void RemoveRole(UserId userId, RoleId roleId) => new Action.RemoveRole(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), GetRole(roleId))
@@ -86,6 +92,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             }
 
             _roles.Remove(role);
+            Apply(new RoleRemovedEvent());
         });
 
         public void AddMember(UserId userIdOfMember, MemberName memberName, IClock clock)
@@ -96,14 +103,15 @@ namespace InstantMessenger.Groups.Domain.Entities
             var everyoneRole = GetEveryoneRole();
             var newMember = Member.Create(userIdOfMember, memberName, everyoneRole, clock);
             _members.Add(newMember);
+            Apply(new MemberAddedToGroupEvent());
         }
 
         public void KickMember(UserId userId, UserId userIdOfMember) => new Action.KickMember(GetMember(userId), GetMemberPermissions(userId),GetRoles(userId),GetMember(userIdOfMember), GetRoles(userIdOfMember))
-            .Execute(() =>
-            {
-                _members.Remove(GetMember(userIdOfMember));
-
-            });
+        .Execute(() =>
+        {
+            _members.Remove(GetMember(userIdOfMember));
+            Apply(new MemberKickedFromGroupEvent());
+        });
 
         public bool ContainsMember(UserId userId)
         {
@@ -115,6 +123,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             var member = GetMember(userIdOfMember);
             member.AddRole(GetRole(roleId));
+            Apply(new RoleAddedToMemberEvent());
         });
 
         public void RemoveRoleFromMember(UserId userId, UserId userIdOfMember, RoleId roleId) => new Action.RemoveRoleFromMember(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), UserDefinedRoles, GetRole(roleId))
@@ -122,6 +131,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             var member = GetMember(userIdOfMember);
             member.RemoveRole(GetRole(roleId));
+            Apply(new RoleRemovedFromMemberEvent());
         });
 
 
@@ -129,12 +139,14 @@ namespace InstantMessenger.Groups.Domain.Entities
         .Execute(() =>
         {
             GetRole(roleId).AddPermission(permission);
+            Apply(new PermissionAddedToRoleEvent());
         });
 
         public void RemovePermissionFromRole(UserId userId, RoleId roleId, Permission permission) => new Action.RemovePermissionFromRole(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), GetRole(roleId), permission)
         .Execute(() =>
         {
             GetRole(roleId).RemovePermission(permission);
+            Apply(new PermissionRemovedFromRoleEvent());
         });
 
         public void MoveUpRole(UserId userId, RoleId roleId) => new Action.MoveUpRoleInHierarchy(GetMember(userId),GetMemberPermissions(userId),GetRoles(userId),UserDefinedRoles, GetRole(roleId))
@@ -183,14 +195,12 @@ namespace InstantMessenger.Groups.Domain.Entities
 
 
         public void RemoveChannel(UserId userId, Channel channel) => new Action.RemoveChannel(GetMember(userId),GetMemberPermissions(userId),channel,GetEveryoneRole())
-            .Execute();
+            .Execute(channel.Remove);
 
         public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
             .Execute(() =>
         {
-            var role = GetRole(roleId);
-
-            channel.AllowPermission(role, permission);
+            channel.AllowPermission(GetRole(roleId), permission);
         });
 
         public void DenyPermission(UserId userId, Channel channel, RoleId roleId, Permission permission) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
@@ -240,10 +250,16 @@ namespace InstantMessenger.Groups.Domain.Entities
             return message;
         }
 
-        public IEnumerable<Channel> GetChannels(UserId userId)
+        public bool CanAccessChannel(UserId userId, Channel channel)
         {
-            //select only those which should be visible to user
-            yield break;
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return true;
+            var permissions = GetMemberPermissions(userId);
+            if (permissions.Has(Permission.Administrator))
+                return true;
+            var overridenPermissions = channel.CalculatePermissions(permissions, member, GetEveryoneRole().Id);
+            return overridenPermissions.Has(Permission.ReadMessages);
         }
 
         public bool CanAccessInvitations(UserId userId)
@@ -251,6 +267,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             return new Action.RevokeInvitation(GetMember(userId), GetMemberPermissions(userId))
                 .CanExecute();
         }
+
         private Maybe<Role> GetRoleAbove(Role role) => 
             UserDefinedRoles.Skip(1)
             .Zip(UserDefinedRoles)

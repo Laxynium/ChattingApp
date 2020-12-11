@@ -35,16 +35,35 @@ namespace InstantMessenger.Groups.Api.Queries
         {
             _context = context;
         }
-        public async Task<IEnumerable<ChannelDto>> HandleAsync(GetGroupChannelsQuery query) => await _context.Channels.AsNoTracking()
-            .Where(x => _context.Groups.Where(g => g.Id == GroupId.From(query.GroupId)).SelectMany(g => g.Members).Select(m => m.UserId).Any(u => u == UserId.From(query.UserId)))
-            .Where(x => x.GroupId == GroupId.From(query.GroupId))
-            .Select(
-                x => new ChannelDto
-                {
-                    ChannelId = x.Id.Value,
-                    GroupId = x.GroupId.Value,
-                    ChannelName = x.Name.Value
-                }
-            ).ToListAsync();
+
+        public async Task<IEnumerable<ChannelDto>> HandleAsync(GetGroupChannelsQuery query)
+        {
+            var group = await _context.Groups.AsNoTracking()
+                .Where(g => g.Id == GroupId.From(query.GroupId))
+                .Where(g => g.Members.Select(m => m.UserId).Any(id => id == UserId.From(query.UserId)))
+                .FirstOrDefaultAsync();
+            if(group is null)
+                return new List<ChannelDto>();
+
+            var channels = await _context.Channels.AsNoTracking()
+                .Where(
+                    x => _context.Groups.Where(g => g.Id == x.GroupId)
+                        .SelectMany(g => g.Members)
+                        .Select(m => m.UserId)
+                        .Any(u => u == UserId.From(query.UserId))
+                )
+                .Where(x => x.GroupId == GroupId.From(query.GroupId))
+                .ToListAsync();
+
+            return channels.Where(c => group.CanAccessChannel(UserId.From(query.UserId), c))
+                .Select(
+                    x => new ChannelDto
+                    {
+                        ChannelId = x.Id.Value,
+                        GroupId = x.GroupId.Value,
+                        ChannelName = x.Name.Value
+                    }
+                ).ToList();
+        }
     }
 }

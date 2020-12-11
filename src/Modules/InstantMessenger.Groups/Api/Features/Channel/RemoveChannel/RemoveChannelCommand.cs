@@ -26,13 +26,11 @@ namespace InstantMessenger.Groups.Api.Features.Channel.RemoveChannel
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public RemoveChannelHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public RemoveChannelHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(RemoveChannelCommand command)
         {
@@ -44,8 +42,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.RemoveChannel
             group.RemoveChannel(UserId.From(command.UserId), channel);
 
             await _channelRepository.RemoveAsync(channel);
-
-            await _unitOfWork.Commit();
         }
     }
 }

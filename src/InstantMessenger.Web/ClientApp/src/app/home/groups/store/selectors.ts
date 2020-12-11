@@ -30,7 +30,11 @@ export const currentGroupSelector = createSelector(
 
 export const channelsSelector = createSelector(
   groupsFeatureSelector,
-  (s: GroupsStateInterface): ChannelDto[] => s.channels
+  (s: GroupsStateInterface): ChannelDto[] =>
+    s.channels
+      .toList()
+      .sortBy((x) => x.channelName)
+      .toArray()
 );
 
 export const currentInvitationSelector = createSelector(

@@ -1,4 +1,5 @@
 ﻿using InstantMessenger.Groups.Api;
+using InstantMessenger.Groups.Api.Hubs;
 using InstantMessenger.Groups.Api.IntegrationEvents;
 using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Messages;
@@ -13,6 +14,7 @@ using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,6 +61,14 @@ namespace InstantMessenger.Groups
                 .AddSingleton<IClock>(x => SystemClock.Instance);
 
             return services;
+        }
+
+        public static IApplicationBuilder UseGroupsModule(this IApplicationBuilder app)
+        {
+            app.UseEndpoints(
+                x => { x.MapHub<GroupsHub>("/api/groups/hub"); }
+            );
+            return app;
         }
     }
 }
