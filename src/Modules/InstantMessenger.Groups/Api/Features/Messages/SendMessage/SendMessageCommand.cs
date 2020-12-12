@@ -51,6 +51,11 @@ namespace InstantMessenger.Groups.Api.Features.Messages.SendMessage
             var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException(GroupId.From(command.GroupId));
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId)) ?? throw new ChannelNotFoundException(ChannelId.From(command.ChannelId));
 
+            if (await _messageRepository.ExistsAsync(ChannelId.From(command.ChannelId), MessageId.From(command.MessageId)))
+            {
+                throw new MessageAlreadyExistsException(command.MessageId);
+            }
+
             var message = group.SendMessage(UserId.From(command.UserId), channel, MessageId.From(command.MessageId), new MessageContent(command.Content), _clock);
 
             await _messageRepository.AddAsync(message);

@@ -8,38 +8,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public class GetMessagesQuery : IQuery<IEnumerable<GroupMessageDto>>
+    public class GetMessageQuery : IQuery<GroupMessageDto>
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
         public Guid ChannelId { get; }
+        public Guid MessageId { get; }
 
-        public GetMessagesQuery(Guid userId, Guid groupId, Guid channelId)
+        public GetMessageQuery(Guid userId, Guid groupId, Guid channelId, Guid messageId)
         {
             UserId = userId;
             GroupId = groupId;
             ChannelId = channelId;
+            MessageId = messageId;
         }
     }
-    public class GetMessagesQueryHandler : IQueryHandler<GetMessagesQuery, IEnumerable<GroupMessageDto>>
+    public class GetMessageQueryHandler : IQueryHandler<GetMessageQuery, GroupMessageDto>
     {
         private readonly GroupsViewContext _viewContext;
         private readonly GroupsContext _groupsContext;
 
-        public GetMessagesQueryHandler(GroupsViewContext viewContext, GroupsContext groupsContext)
+        public GetMessageQueryHandler(GroupsViewContext viewContext, GroupsContext groupsContext)
         {
             _viewContext = viewContext;
             _groupsContext = groupsContext;
         }
 
-        public async Task<IEnumerable<GroupMessageDto>> HandleAsync(GetMessagesQuery query)
+        public async Task<GroupMessageDto> HandleAsync(GetMessageQuery query)
         {
-            
             var groupMessageDtos = await _viewContext.GroupMessages
-                .Where(m => m.GroupId == query.GroupId 
+                .Where(m => m.GroupId == query.GroupId
                             && m.ChannelId == query.ChannelId)
-                .ToListAsync();
+                .Where(m=>m.MessageId == query.MessageId)
+                .FirstOrDefaultAsync();
             return groupMessageDtos;
         }
     }
+
 }

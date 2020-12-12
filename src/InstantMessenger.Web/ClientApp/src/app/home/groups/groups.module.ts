@@ -32,7 +32,10 @@ import {MembersEffects} from 'src/app/home/groups/store/members/effects';
 import {MembersService} from 'src/app/home/groups/services/members.service';
 import {ManageMemberRolesComponent} from './components/manage-member-roles/manage-member-roles.component';
 import {ManageMemberRolesModal} from 'src/app/home/groups/components/manage-member-roles/manage-member-roles.modal';
-import { MessagesComponent } from './components/messages/messages.component';
+import {MessagesComponent} from './components/messages/messages.component';
+import {MesssagesService} from './services/messages.service';
+import {MessagesEffects} from './store/messages/effects';
+import {SharedModule} from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -65,8 +68,14 @@ import { MessagesComponent } from './components/messages/messages.component';
     FontAwesomeModule,
     UiSwitchModule,
     StoreModule.forFeature('groups', reducers),
-    EffectsModule.forFeature([GroupsEffects, RolesEffects, MembersEffects]),
+    EffectsModule.forFeature([
+      GroupsEffects,
+      RolesEffects,
+      MembersEffects,
+      MessagesEffects,
+    ]),
+    SharedModule,
   ],
-  providers: [GroupsService, RolesService, MembersService],
+  providers: [GroupsService, RolesService, MembersService, MesssagesService],
 })
 export class GroupsModule {}

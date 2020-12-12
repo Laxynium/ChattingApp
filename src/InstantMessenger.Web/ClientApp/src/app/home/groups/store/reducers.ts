@@ -73,9 +73,15 @@ import {
 } from 'src/app/home/groups/store/types/currentGroup';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
-import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {MessageDto} from './types/message';
+import {getMessagesFailureAction} from './messages/actions';
+import {
+  getMessagesAction,
+  getMessagesSuccessAction,
+  sendMessageSuccessAction,
+} from './messages/actions';
 
 export interface GroupsStateInterface {
   groups: GroupDto[];
@@ -98,6 +104,8 @@ export interface GroupsStateInterface {
   membersLoading: boolean;
 
   memberRoles: RoleDto[];
+
+  currentChannelMessages: Map<string, MessageDto>;
 }
 
 const initialState: GroupsStateInterface = {
@@ -121,6 +129,7 @@ const initialState: GroupsStateInterface = {
   membersLoading: false,
 
   memberRoles: [],
+  currentChannelMessages: Map(),
 };
 
 const groupsReducer = createReducer(
@@ -370,6 +379,24 @@ const groupsReducer = createReducer(
     memberRoles: [
       ...s.memberRoles.filter((r) => r.roleId != a.memberRole.role.roleId),
     ],
+  })),
+
+  on(getMessagesAction, (s, a) => ({
+    ...s,
+  })),
+  on(getMessagesSuccessAction, (s, a) => ({
+    ...s,
+    currentChannelMessages: Map(a.messages.map((m) => [m.messageId, m])),
+  })),
+  on(getMessagesFailureAction, (s, a) => ({
+    ...s,
+  })),
+  on(sendMessageSuccessAction, (s, a) => ({
+    ...s,
+    currentChannelMessages: s.currentChannelMessages.set(
+      a.message.messageId,
+      a.message
+    ),
   }))
 );
 

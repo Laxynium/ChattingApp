@@ -11,18 +11,6 @@ using SixLabors.ImageSharp.Processing;
 
 namespace InstantMessenger.SharedKernel
 {
-    public class AvatarFile
-    {
-        public long Length { get; }
-        public MemoryStream Data { get; }
-
-        public AvatarFile(long length, MemoryStream data)
-        {
-            Length = length;
-            Data = data;
-        }
-    }
-
     public class AvatarError : SmartEnum<AvatarError,string>
     {
         public string Message { get; }
@@ -45,15 +33,13 @@ namespace InstantMessenger.SharedKernel
         {
         }
 
-        public static async Task<Result<Avatar,AvatarError>> Create(AvatarFile avatarFile)
+        public static async Task<Result<Avatar, AvatarError>> Create(byte[] data)
         {
-            if (avatarFile.Length > MB(5))
+            if(data.Length > MB(5))
             {
                 return Result.Failure<Avatar, AvatarError>(AvatarError.SizeTooBig);
             }
-
-            avatarFile.Data.Position = 0;
-            var image = Image.Load(avatarFile.Data, out var format);
+            var image = Image.Load(data, out var format);
             if (!format.MimeTypes.Contains(MimeType.Image.Png))
             {
                 return Result.Failure<Avatar, AvatarError>(AvatarError.InvalidFormat);
@@ -69,7 +55,9 @@ namespace InstantMessenger.SharedKernel
             return size * 1024 * 1024;
         }
 
-        public string AsBase64String()
+        public static string ToBase64String(byte[] data) => Image.Load(data, new PngDecoder()).ToBase64String(PngFormat.Instance);
+
+        public string ToBase64String()
         {
             return Image.Load(Value, new PngDecoder()).ToBase64String(PngFormat.Instance);
         }

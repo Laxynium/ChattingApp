@@ -53,3 +53,10 @@ body {
 .dropdown-toggle::after {
   display: none;
 }
+
+.tab-content {
+  height: inherit;
+}
+div[ngbnavpane].tab-pane {
+  height: inherit;
+}

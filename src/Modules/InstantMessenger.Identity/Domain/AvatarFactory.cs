@@ -13,7 +13,7 @@ namespace InstantMessenger.Identity.Domain
         {
             await using var image = new MemoryStream();
             await file.CopyToAsync(image);
-            var avatar = await Avatar.Create(new AvatarFile(file.Length, image));
+            var avatar = await Avatar.Create(image.ToArray());
             if (avatar.IsFailure)
             {
                 var _ = avatar.Error switch

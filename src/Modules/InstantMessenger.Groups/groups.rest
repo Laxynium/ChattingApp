@@ -1,0 +1,74 @@
+@baseUrl = http://localhost:5000/api
+### SignUp
+# @name signUp
+POST {{baseUrl}}/identity/sign-up HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user1@test.com",
+    "password":"TEest123!@#"
+}
+
+### SignIn
+# @name signIn
+POST {{baseUrl}}/identity/sign-in HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user2@test.com",
+    "password":"QWEqwe123!@#"
+}
+
+@token = {{signIn.response.body.$.token}}
+
+### Create group
+@groupId = 00000000-0000-0000-0000-000000000001
+
+# @name createGroup
+POST {{baseUrl}}/groups
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    groupId: "{{groupId}}",
+    groupName: "test"
+}
+### Get group
+
+# @name getGroup
+GET {{baseUrl}}/groups
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Create channel
+@channelId = 00000000-0000-0000-0000-000000000001
+# @name createChannel
+POST {{baseUrl}}/groups/{{groupId}}/channels
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    groupId: "{{groupId}}",
+    channelId: "{{channelId}}",
+    channelName: "test"
+}
+
+### Send Message
+@messageId = 00000000-0000-0000-0000-000000000004
+# @name sendMessage
+POST {{baseUrl}}/groups/{{groupId}}/channels/{{channelId}}/messages
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    groupId: "{{groupId}}",
+    channelId: "{{channelId}}",
+    messageId: "{{messageId}}",
+    content: "some test content\n haha co to jest"
+}
+
+### Get Messages
+# @name groupMessages
+GET {{baseUrl}}/groups/{{groupId}}/channels/{{channelId}}/messages
+Content-Type: application/json
+Authorization: Bearer {{token}}

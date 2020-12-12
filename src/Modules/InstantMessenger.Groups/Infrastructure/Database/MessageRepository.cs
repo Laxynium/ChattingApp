@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Messages.Entities;
+using InstantMessenger.Groups.Domain.Messages.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Infrastructure.Database
 {
@@ -16,6 +20,11 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         public async Task AddAsync(Message message)
         {
             await _context.Messages.AddAsync(message);
+        }
+
+        public async Task<bool> ExistsAsync(ChannelId channelId, MessageId messageId)
+        {
+            return await _context.Messages.AnyAsync(m => m.ChannelId == channelId && m.Id == messageId);
         }
     }
 }

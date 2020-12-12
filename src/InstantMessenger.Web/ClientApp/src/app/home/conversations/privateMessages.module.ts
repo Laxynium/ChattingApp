@@ -8,16 +8,12 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {reducers} from 'src/app/home/conversations/store/reducers';
 import {ConversationsEffects} from 'src/app/home/conversations/store/effects';
 import {ConversationsService} from 'src/app/home/conversations/services/conversations.service';
-import {ScrollToBottomDirective} from 'src/app/shared/directives/scroll-to-bottom.directive';
 import {ConversationsComponent} from './components/conversations/conversations.component';
 import {ConversationComponent} from 'src/app/home/conversations/components/conversation/conversation.component';
+import {SharedModule} from '../../shared/shared.module';
 
 @NgModule({
-  declarations: [
-    ConversationComponent,
-    ScrollToBottomDirective,
-    ConversationsComponent,
-  ],
+  declarations: [ConversationComponent, ConversationsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,6 +22,7 @@ import {ConversationComponent} from 'src/app/home/conversations/components/conve
     FontAwesomeModule,
     StoreModule.forFeature('conversations', reducers),
     EffectsModule.forFeature([ConversationsEffects]),
+    SharedModule,
   ],
   providers: [ConversationsService],
 })

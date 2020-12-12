@@ -28,5 +28,10 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             _context.Remove(channel);
             return Task.CompletedTask;
         }
+
+        public async Task<bool> ExistsAsync(GroupId groupId, ChannelId channelId)
+        {
+            return await _context.Channels.AnyAsync(c => c.GroupId == groupId && c.Id == channelId);
+        }
     }
 }

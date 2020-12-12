@@ -9,5 +9,6 @@ namespace InstantMessenger.Groups.Domain
         public Task AddAsync(Channel channel);
         Task<Channel> GetAsync(GroupId groupId, ChannelId channelId);
         Task RemoveAsync(Channel channel);
+        Task<bool> ExistsAsync(GroupId groupId, ChannelId channelId);
     }
 }

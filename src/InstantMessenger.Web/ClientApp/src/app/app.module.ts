@@ -40,6 +40,7 @@ import {
   faInfinity,
   faTrashAlt,
   faCrown,
+  faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
@@ -95,7 +96,8 @@ export class AppModule {
       faPlus,
       faInfinity,
       faTrashAlt,
-      faCrown
+      faCrown,
+      faPaperPlane
     );
   }
 }

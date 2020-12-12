@@ -40,7 +40,11 @@ namespace InstantMessenger.Groups.Api
         public async Task<IActionResult> SendMessage(SendMessageApiRequest request)
         {
             await _facade.SendAsync(new SendMessageCommand(User.GetUserId(), request.GroupId, request.ChannelId, request.MessageId, request.Content));
-            return Ok();
+
+            var message = await _facade.QueryAsync(new GetMessageQuery(User.GetUserId(), request.GroupId,
+                request.ChannelId, request.MessageId));
+
+            return Ok(message);
         }
 
         [HttpGet("{channelId}/messages")]

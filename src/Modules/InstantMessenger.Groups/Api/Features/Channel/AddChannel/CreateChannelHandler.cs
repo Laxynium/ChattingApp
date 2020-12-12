@@ -24,6 +24,9 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AddChannel
             var groupId = GroupId.From(command.GroupId);
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
+            if (await _channelRepository.ExistsAsync(group.Id, ChannelId.From(command.ChannelId)))
+                throw new ChannelAlreadyExistsException(command.ChannelId);
+
             var channel = group.CreateChannel(UserId.From(command.UserId), ChannelId.From(command.ChannelId), ChannelName.Create(command.ChannelName));
 
             await _channelRepository.AddAsync(channel);

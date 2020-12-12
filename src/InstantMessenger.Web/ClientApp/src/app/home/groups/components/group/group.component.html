@@ -1,16 +1,26 @@
 <div class="scrollable-content-wrapper">
   <div class="scrollable-content">
     <div class="header d-flex justify-content-between">
-      <h2>{{($currentGroup | async)?.name}}</h2>
+      <h2>{{ ($currentGroup | async)?.name }}</h2>
       <div class="group-settings">
         <div ngbDropdown class="d-inline-block" placement="left-top">
           <button id="dropdownBasic1" class="btn btn-primary" ngbDropdownToggle>
             <fa-icon [icon]="['fas', 'cogs']" size="1x"></fa-icon>
           </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
-            <button ngbDropdownItem (click)="openInvitationsModal()">Invite people</button>
-            <button ngbDropdownItem (click)="openManageRolesModal()">Manage roles</button>
-            <button ngbDropdownItem (click)="openMembersModal()">View members</button>
+          <div
+            ngbDropdownMenu
+            aria-labelledby="dropdownBasic1"
+            class="dropdown-menu"
+          >
+            <button ngbDropdownItem (click)="openInvitationsModal()">
+              Invite people
+            </button>
+            <button ngbDropdownItem (click)="openManageRolesModal()">
+              Manage roles
+            </button>
+            <button ngbDropdownItem (click)="openMembersModal()">
+              View members
+            </button>
           </div>
         </div>
       </div>
@@ -22,39 +32,69 @@
             <div class="left-pannel">
               <div class="left-pannel-header">
                 <span><strong>Channels</strong></span>
-                <button class="btn btn-primary" (click)="openCreateChannelModal()">
-                  <fa-icon [icon]="['fas','plus']"></fa-icon>
+                <button
+                  class="btn btn-primary"
+                  (click)="openCreateChannelModal()"
+                >
+                  <fa-icon [icon]="['fas', 'plus']"></fa-icon>
                 </button>
               </div>
               <div class="left-pannel-body">
                 <div class="left-pannel-body-wrapper">
                   <div class="left-pannel-body-scrollable">
                     <div class="d-flex">
-                      <ul ngbNav #nav="ngbNav" class="nav-pills w-100" orientation="vertical">
-                        <li *ngFor="let channel of $channels | async" ngbNavItem="{{channel.channelId}}">
+                      <ul
+                        ngbNav
+                        #nav="ngbNav"
+                        class="nav-pills w-100"
+                        orientation="vertical"
+                        roles="false"
+                      >
+                        <li
+                          *ngFor="let channel of $channels | async"
+                          ngbNavItem="{{ channel.channelId }}"
+                        >
                           <a ngbNavLink class="d-flex justify-content-between">
-                            <span>{{channel.channelName}}</span>
-                            <div ngbDropdown class="d-inline-block" placement="left-top"
-                              (click)="channelDropdownChange($event)">
-                              <button id="dropdownBasic1" class="btn btn-outline-secondary" ngbDropdownToggle>
-                                <fa-icon [icon]="['fas', 'ellipsis-h']" size="1x"></fa-icon>
+                            <span>{{ channel.channelName }}</span>
+                            <div
+                              ngbDropdown
+                              class="d-inline-block"
+                              placement="left-top"
+                              (click)="channelDropdownChange($event)"
+                            >
+                              <button
+                                id="dropdownBasic1"
+                                class="btn btn-outline-secondary"
+                                ngbDropdownToggle
+                              >
+                                <fa-icon
+                                  [icon]="['fas', 'ellipsis-h']"
+                                  size="1x"
+                                ></fa-icon>
                               </button>
-                              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
-                                <button ngbDropdownItem (click)="removeChannel(channel.channelId)">Remove
-                                  channel</button>
+                              <div
+                                ngbDropdownMenu
+                                aria-labelledby="dropdownBasic1"
+                                class="dropdown-menu"
+                              >
+                                <button
+                                  ngbDropdownItem
+                                  (click)="removeChannel(channel.channelId)"
+                                >
+                                  Remove channel
+                                </button>
                               </div>
                             </div>
                           </a>
-                          <ng-template ngbNavContent>
-                            <p>{{channel.channelId}}</p>
+                          <ng-template ngbNavContent class="h-100">
+                            <app-messages [channel]="channel"></app-messages>
                           </ng-template>
                         </li>
-                        <li style="display: none;" [ngbNavItem]="1">
+                        <li style="display: none" [ngbNavItem]="1">
                           <!--Without this selecting is not working, idk why-->
                           <a ngbNavLink class="d-flex justify-content-between">
                           </a>
-                          <ng-template ngbNavContent>
-                          </ng-template>
+                          <!-- <ng-template ngbNavContent></ng-template> -->
                         </li>
                       </ul>
                     </div>

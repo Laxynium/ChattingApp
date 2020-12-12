@@ -42,7 +42,7 @@ namespace InstantMessenger.Identity.Api.Queries
             {
                 Id = user.Id,
                 Nickname = user.Nickname,
-                Avatar = user.Avatar?.AsBase64String(),
+                Avatar = user.Avatar?.ToBase64String(),
             };
         }
     }
