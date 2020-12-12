@@ -245,7 +245,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             new Action.SendMessage(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole())
                 .Execute(()=>{});
 
-            var message = new Message(messageId, userId, channel.Id, content,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+            var message = new Message(messageId, channel.GroupId, channel.Id, userId,content, clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
 
             return message;
         }
@@ -268,6 +268,19 @@ namespace InstantMessenger.Groups.Domain.Entities
                 .CanExecute();
         }
 
+        public bool CanAccessMessage(UserId userId, Channel channel)
+        {
+            var member = GetMember(userId);
+            if (member.IsOwner)
+                return true;
+            var permissions = GetMemberPermissions(userId);
+            if (permissions.Has(Permission.Administrator))
+                return true;
+
+            var overridenPermissions = channel.CalculatePermissions(permissions, member, GetEveryoneRole().Id);
+
+            return overridenPermissions.Has(Permission.ReadMessages);
+        }
         private Maybe<Role> GetRoleAbove(Role role) => 
             UserDefinedRoles.Skip(1)
             .Zip(UserDefinedRoles)

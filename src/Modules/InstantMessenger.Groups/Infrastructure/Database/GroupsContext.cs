@@ -34,43 +34,13 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("Groups");
-
-            BuildGroup(modelBuilder.Entity<Group>());
-            BuildInvitation(modelBuilder.Entity<Invitation>());
-            Build(modelBuilder.Entity<Channel>());
-            Build(modelBuilder.Entity<Message>());
+            modelBuilder.Entity<Group>(Build);
+            modelBuilder.Entity<Invitation>(Build);
+            modelBuilder.Entity<Channel>(Build);
+            modelBuilder.Entity<Message>(Build);
         }
 
-        private static void Build(EntityTypeBuilder<Message> message)
-        {
-            message.HasKey(x => x.Id);
-            message.Property(x => x.Id)
-                .ValueGeneratedNever()
-                .HasConversion(x=>x.Value,x=>MessageId.From(x))
-                .IsRequired()
-                .HasColumnName("MessageId");
-            
-            message.Property(x => x.ChannelId)
-                .HasConversion(x => x.Value, 
-                    x => ChannelId.From(x))
-                .IsRequired();
-            message.HasOne<Channel>()
-                .WithMany()
-                .HasForeignKey(x => x.ChannelId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            message.Property(x => x.From)
-                .HasConversion(x => x.Value, x => UserId.From(x))
-                .IsRequired();
-
-            message.Property(x => x.CreatedAt).IsRequired();
-            message.Property(x => x.Content)
-                .HasConversion(x=>x.Value,x=>new MessageContent(x))
-                .IsRequired();
-        }
-
-        private static void BuildInvitation(EntityTypeBuilder<Invitation> invitation)
+        private static void Build(EntityTypeBuilder<Invitation> invitation)
         {
             invitation.ToTable("Invitations");
             invitation.HasKey(x => x.Id)
@@ -123,7 +93,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                 .IsRequired();
         }
 
-        private static void BuildGroup(EntityTypeBuilder<Group> group)
+        private static void Build(EntityTypeBuilder<Group> group)
         {
             group.ToTable("Groups");
             group.HasKey(x => x.Id)
@@ -261,6 +231,45 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                         .IsRequired();
                 }
             );
+        }
+
+        private static void Build(EntityTypeBuilder<Message> message)
+        {
+            message.HasKey(x => x.Id);
+            message.Property(x => x.Id)
+                .ValueGeneratedNever()
+                .HasConversion(x=>x.Value,x=>MessageId.From(x))
+                .IsRequired()
+                .HasColumnName("MessageId");
+
+            message.Property(x => x.GroupId)
+                .HasConversion(x => x.Value, x => GroupId.From(x))
+                .IsRequired();
+
+            message.HasOne<Group>()
+                .WithMany()
+                .HasForeignKey(x => x.GroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            message.Property(x => x.ChannelId)
+                .HasConversion(x => x.Value, 
+                    x => ChannelId.From(x))
+                .IsRequired();
+            message.HasOne<Channel>()
+                .WithMany()
+                .HasForeignKey(x => x.ChannelId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            message.Property(x => x.From)
+                .HasConversion(x => x.Value, x => UserId.From(x))
+                .IsRequired();
+
+            message.Property(x => x.CreatedAt).IsRequired();
+            message.Property(x => x.Content)
+                .HasConversion(x=>x.Value,x=>new MessageContent(x))
+                .IsRequired();
         }
     }
 }

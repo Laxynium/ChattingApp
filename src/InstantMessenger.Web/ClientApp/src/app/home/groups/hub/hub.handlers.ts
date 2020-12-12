@@ -1,3 +1,4 @@
+import {MessageDto} from '../store/types/message';
 import {
   generateInvitationSuccessAction,
   getChannelsAction,
@@ -9,6 +10,7 @@ import {
   HubHandlersProvider,
   HubMethod,
 } from 'src/app/shared/hubs/hubHandlersProvider';
+import {sendMessageSuccessAction} from 'src/app/home/groups/store/messages/actions';
 
 interface GroupDto {
   groupId: string;
@@ -39,12 +41,16 @@ const onChannelCreated: HubMethod<ChannelDto> = (store, data) => {
 const onChannelRemoved: HubMethod<ChannelDto> = (store, data) => {
   store.dispatch(getChannelsAction({groupId: data.groupId}));
 };
+const onMessageCreated: HubMethod<MessageDto> = (store, data) => {
+  store.dispatch(sendMessageSuccessAction({message: data}));
+};
 const hubProvider: HubHandlersProvider = () => ({
   onGroupRemoved: onGroupRemoved,
   onInvitationCreated: onInvitationCreated,
   onInvitationRevoked: onInvitationRevoked,
   onChannelCreated: onChannelCreated,
   onChannelRemoved: onChannelRemoved,
+  onMessageCreated: onMessageCreated,
 });
 
 export const groupsHub: Hub = {

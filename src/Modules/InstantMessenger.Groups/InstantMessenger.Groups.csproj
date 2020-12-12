@@ -25,6 +25,8 @@
     <Compile Remove="Infrastructure\Database\Migrations\20201128173428_Add Messages Fix.Designer.cs" />
     <Compile Remove="Infrastructure\Database\Migrations\20201128173641_Add Messages Fix.cs" />
     <Compile Remove="Infrastructure\Database\Migrations\20201128173641_Add Messages Fix.Designer.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201212143353_Add GroupId To Message.cs" />
+    <Compile Remove="Infrastructure\Database\Migrations\20201212143353_Add GroupId To Message.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

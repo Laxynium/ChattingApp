@@ -9,7 +9,7 @@ namespace InstantMessenger.Groups.Domain.Messages.ValueObjects
 
         public MessageContent(string value)
         {
-            Value = value;
+            Value = value.Trim();
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

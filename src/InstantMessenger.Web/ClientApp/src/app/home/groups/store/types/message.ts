@@ -4,9 +4,9 @@ export interface ChannelMessageDto {
   message: MessageDto[];
 }
 export interface MessageDto {
-  channelId: string;
-  groupId: string;
   messageId: string;
+  groupId: string;
+  channelId: string;
   senderId: string;
   senderName: string;
   senderAvatar: string;

@@ -26,6 +26,7 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
                 Domain.Events.PermissionRemovedFromRoleEvent e =>new IntegrationEvents.PermissionRemovedFromRoleEvent(),
                 Domain.Events.ChannelCreatedEvent e =>new IntegrationEvents.ChannelCreatedEvent(e.ChannelId, e.GroupId, e.ChannelName),
                 Domain.Events.ChannelRemovedEvent e =>new IntegrationEvents.ChannelRemovedEvent(e.ChannelId, e.GroupId, e.ChannelName),
+                Domain.Events.MessageCreatedEvent e => new IntegrationEvents.MessageCreatedEvent(e.MessageId,e.GroupId,e.ChannelId, e.SenderId,e.Content.Value, e.CreatedAt),
                 _ => Maybe<IIntegrationEvent>.None
             };
         }

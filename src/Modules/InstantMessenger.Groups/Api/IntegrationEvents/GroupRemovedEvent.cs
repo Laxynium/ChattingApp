@@ -131,4 +131,25 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
     public class ChannelRenamedEvent : IIntegrationEvent
     {
     }
+
+    public class MessageCreatedEvent : IIntegrationEvent
+    {
+        public Guid MessageId { get; }
+        public Guid GroupId { get; }
+        public Guid ChannelId { get; }
+        public Guid SenderId { get; }
+        public string Content { get; }
+        public DateTimeOffset CreatedAt { get; }
+
+        public MessageCreatedEvent(Guid messageId, Guid groupId, Guid channelId,
+            Guid senderId, string content, DateTimeOffset createdAt)
+        {
+            ChannelId = channelId;
+            SenderId = senderId;
+            Content = content;
+            CreatedAt = createdAt;
+            GroupId = groupId;
+            MessageId = messageId;
+        }
+    }
 }

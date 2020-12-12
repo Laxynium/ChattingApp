@@ -1,25 +1,29 @@
 ﻿using System;
-using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.ValueObjects;
+using InstantMessenger.Shared.BuildingBlocks;
 
 namespace InstantMessenger.Groups.Domain.Messages.Entities
 {
-    public class Message : Entity<MessageId>
+    public sealed class Message : Entity<MessageId>
     {
-        public UserId From { get; }
+        public GroupId GroupId { get; }
         public ChannelId ChannelId { get; }
+        public UserId From { get; }
         public MessageContent Content { get; }
 
         public DateTimeOffset CreatedAt { get; }
 
-        public Message(MessageId id, UserId from, ChannelId channelId, MessageContent content, DateTimeOffset createdAt):base(id)
+        public Message(MessageId id, GroupId groupId, ChannelId channelId, UserId from, MessageContent content, DateTimeOffset createdAt):base(id)
         {
-            From = from;
             ChannelId = channelId;
+            From = from;
             Content = content;
             CreatedAt = createdAt;
+            GroupId = groupId;
+            Apply(new MessageCreatedEvent(Id,GroupId,ChannelId, From, Content,CreatedAt));
         }
     }
 }

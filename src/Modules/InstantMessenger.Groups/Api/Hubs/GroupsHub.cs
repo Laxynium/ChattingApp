@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Api.IntegrationEvents;
+using InstantMessenger.Groups.Infrastructure.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -61,6 +61,7 @@ namespace InstantMessenger.Groups.Api.Hubs
         public Task OnPermissionRemovedFromRole();
         public Task OnChannelCreated(ChannelDto dto);
         public Task OnChannelRemoved(ChannelDto dto);
+        public Task OnMessageCreated(GroupMessageDto dto);
     }
 
     [Authorize]
