@@ -15,13 +15,13 @@ namespace InstantMessenger.Groups.Domain.Entities
         private readonly ImmutableHashSet<Permission> _validPermissions = ImmutableHashSet<Permission>.Empty
             .Add(Permission.ManageRoles)
             .Add(Permission.ManageChannels)
-            .Add(Permission.AddReactions)
-            .Add(Permission.EmbedLinks)
-            .Add(Permission.AttachFiles)
-            .Add(Permission.MentionRoles)
+            //.Add(Permission.AddReactions)
+            //.Add(Permission.EmbedLinks)
+            //.Add(Permission.AttachFiles)
+            //.Add(Permission.MentionRoles)
             .Add(Permission.SendMessages)
             .Add(Permission.ReadMessages);
-    public Permission Permission { get; }
+        public Permission Permission { get; }
         public OverrideType Type { get; }
 
         protected PermissionOverride(Permission permission, OverrideType type)

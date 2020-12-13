@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
+using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Messages.Entities;
@@ -281,6 +282,64 @@ namespace InstantMessenger.Groups.Domain.Entities
 
             return overridenPermissions.Has(Permission.ReadMessages);
         }
+
+        public IReadOnlyList<AllowedActions> GetAllowedActions(UserId userId, List<Channel> channels)
+        {
+            var member = GetMember(userId);
+
+            if (member.IsOwner)
+            {
+                return new[]{AllowedActions.All, };
+            }
+
+            var permissions = GetMemberPermissions(userId);
+            if (permissions.Has(Permission.Administrator))
+            {
+                return new[] { AllowedActions.All, };
+            }
+
+            var result = new List<AllowedActions>();
+
+            var generalActions = new List<(AllowedActions action,Permission permission)>
+            {
+                (AllowedActions.ManageInvitations,Permission.ManageInvitations),
+                (AllowedActions.ManageChannelsGeneral, Permission.ManageChannels),
+                (AllowedActions.ManageRolesGeneral, Permission.ManageRoles),
+                (AllowedActions.KickMembers, Permission.Kick),
+            };
+            generalActions.ForEach(
+                a =>
+                {
+                    if(permissions.Has(a.permission))
+                        result.Add(a.action);
+                });
+
+
+            var channelSpecificPermissions =
+                channels.Select(channel => (channel, permissions: channel.CalculatePermissions(permissions, member, GetEveryoneRole().Id)))
+                    .ToList();
+
+            var channelSpecificActions = new List<(Permission permission, Func<List<Guid>,AllowedActions> action)>
+            {
+                (Permission.ManageRoles, AllowedActions.ManageRoles),
+                (Permission.ManageChannels, AllowedActions.ManageChannels),
+                (Permission.ReadMessages, AllowedActions.ReadMessages),
+                (Permission.SendMessages, AllowedActions.SendMessages),
+            };
+
+            channelSpecificActions.ForEach(
+                a =>
+                {
+                    var allowedChannels = channelSpecificPermissions
+                        .Where(x => x.permissions.Has(a.permission))
+                        .Select(x => x.channel.Id.Value)
+                        .ToList();
+                    result.Add(a.action(allowedChannels));
+                });
+
+            return result;
+        }
+
         private Maybe<Role> GetRoleAbove(Role role) => 
             UserDefinedRoles.Skip(1)
             .Zip(UserDefinedRoles)

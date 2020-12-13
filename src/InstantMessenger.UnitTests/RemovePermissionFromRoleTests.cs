@@ -113,11 +113,11 @@ namespace InstantMessenger.UnitTests
             var group = await GroupBuilder.For(sut).CreateGroup("group1")
                 .AsOwner()
                 .CreateRole("role1").AddPermission("Administrator").Build()
-                .CreateRole("role2").AddPermission("ManageGroup").Build()
+                .CreateRole("role2").AddPermission("ManageInvitations").Build()
                 .CreateMember().AssignRole(1).Build()
                 .Build().Build();
 
-            await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageGroup"));
+            await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageInvitations"));
 
             var permissions = await sut.QueryAsync(new GetRolePermissionsQuery(group.GroupId, group.Role(2).RoleId));
             permissions.Should().BeNullOrEmpty();
@@ -158,11 +158,11 @@ namespace InstantMessenger.UnitTests
             var group = await GroupBuilder.For(sut).CreateGroup("group1")
                 .AsOwner()
                 .CreateRole("role1").AddPermission("ManageRoles").Build()
-                .CreateRole("role2").AddPermission("ManageGroup").Build()
+                .CreateRole("role2").AddPermission("ManageInvitations").Build()
                 .CreateMember().AssignRole(1).Build()
                 .Build().Build();
 
-            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageGroup"));
+            Func<Task> action = async () => await sut.SendAsync(new RemovePermissionFromRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageInvitations"));
 
             await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });

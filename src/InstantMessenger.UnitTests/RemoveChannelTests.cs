@@ -89,7 +89,7 @@ namespace InstantMessenger.UnitTests
         [Theory]
         [InlineData("Administrator")]
         [InlineData("ManageChannels")]
-        public async Task Member_with_valid_permissions_can_create_channel(string validPermission) => await Run(async sut =>
+        public async Task Member_with_valid_permissions_can_remove_channel(string validPermission) => await Run(async sut =>
         {
             var group = await GroupBuilder.For(sut)
                 .CreateGroup("group1")

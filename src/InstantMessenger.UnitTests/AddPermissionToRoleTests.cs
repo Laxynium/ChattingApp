@@ -163,7 +163,7 @@ namespace InstantMessenger.UnitTests
                     .CreateRole("role2").Build()
                 .CreateMember().AssignRole(1).Build().Build().Build();
 
-            Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageGroup"));
+            Func<Task> action = async () => await sut.SendAsync(new AddPermissionToRoleCommand(group.Member(1).UserId, group.GroupId, group.Role(2).RoleId, "ManageInvitations"));
 
             await action.Should().ThrowAsync<InsufficientPermissionsException>();
         });

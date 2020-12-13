@@ -94,12 +94,12 @@ namespace InstantMessenger.UnitTests.PermissionOverrides
 
         [Theory]
         [InlineData("Administrator")]
-        [InlineData("ManageGroup")]
+        //[InlineData("ManageGroup")]
         [InlineData("Kick")]
-        [InlineData("Ban")]
-        [InlineData("Invite")]
-        [InlineData("ChangeNickname")]
-        [InlineData("ManageNicknames")]
+        //[InlineData("Ban")]
+        [InlineData("ManageInvitations")]
+        //[InlineData("ChangeNickname")]
+        //[InlineData("ManageNicknames")]
         public async Task Fails_when_permission_cannot_be_overriden(string deniedPermission) => await Run(async sut =>
         {
             var group = await GroupBuilder.For(sut).CreateGroup("group1")
@@ -120,10 +120,10 @@ namespace InstantMessenger.UnitTests.PermissionOverrides
         [InlineData("ManageChannels")]
         [InlineData("ReadMessages")]
         [InlineData("SendMessages")]
-        [InlineData("AttachFiles")]
-        [InlineData("EmbedLinks")]
-        [InlineData("MentionRoles")]
-        [InlineData("AddReactions")]
+        //[InlineData("AttachFiles")]
+        //[InlineData("EmbedLinks")]
+        //[InlineData("MentionRoles")]
+        //[InlineData("AddReactions")]
         public async Task success_when_permission_can_be_overriden(string allowedPermission) => await Run(async sut =>
         {
             var group = await GroupBuilder.For(sut).CreateGroup("group1")

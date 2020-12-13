@@ -18,7 +18,7 @@ namespace InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Action
             {
                 if (AsMember.IsOwner)
                     return true;
-                return MemberPermissions.Has(Permission.Administrator, Permission.Invite);
+                return MemberPermissions.Has(Permission.Administrator, Permission.ManageInvitations);
             }
         }
 
@@ -36,7 +36,7 @@ namespace InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Action
             {
                 if (AsMember.IsOwner)
                     return true;
-                return MemberPermissions.Has(Permission.Administrator, Permission.Invite);
+                return MemberPermissions.Has(Permission.Administrator, Permission.ManageInvitations);
             }
         }
     }

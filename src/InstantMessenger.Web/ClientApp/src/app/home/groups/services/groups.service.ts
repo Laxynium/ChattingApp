@@ -1,11 +1,13 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {Set} from 'immutable';
 import {Observable} from 'rxjs';
-import {concatMap} from 'rxjs/operators';
+import {concatMap, map} from 'rxjs/operators';
 import {
   ChannelDto,
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
+import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
 import {
   GenerateInvitationRequest,
   InvitationDto,
@@ -105,7 +107,23 @@ export class GroupsService {
     );
   }
 
-  public getChannels(groupId): Observable<ChannelDto[]> {
+  public getChannels(groupId: String): Observable<ChannelDto[]> {
     return this.http.get<ChannelDto[]>(this.channelsApi(groupId));
+  }
+
+  public getAllowedActions(groupId: string): Observable<AllowedAction[]> {
+    return this.http
+      .get<{name: string; isChannelSpecific: boolean; channels: string[]}[]>(
+        `${this.groupApi}/${groupId}/allowed-actions`
+      )
+      .pipe(
+        map((aa) =>
+          aa.map((a) => ({
+            name: a.name,
+            isChannelSpecific: a.isChannelSpecific,
+            channels: Set(a.channels),
+          }))
+        )
+      );
   }
 }

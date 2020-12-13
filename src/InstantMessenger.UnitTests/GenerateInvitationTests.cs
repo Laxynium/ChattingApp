@@ -103,7 +103,7 @@ namespace InstantMessenger.UnitTests
 
         [Theory]
         [InlineData("Administrator")]
-        [InlineData("Invite")]
+        [InlineData("ManageInvitations")]
         public async Task Member_with_correct_permission_can_create_invitation(string correctPermission) => await Run(async sut =>
         {
             var group = await GroupBuilder.For(sut).CreateGroup("group1")

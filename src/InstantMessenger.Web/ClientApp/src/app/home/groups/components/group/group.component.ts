@@ -6,12 +6,14 @@ import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
 import {InvitationsModal} from 'src/app/home/groups/components/group/invitations.modal';
+import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/group/manage-channel-permissions.modal';
 import {ManageRolesModal} from 'src/app/home/groups/components/group/manage-roles.modal';
 import {MembersModal} from 'src/app/home/groups/components/members/members.modal';
 import {
   ChannelDto,
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
+import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
 import {
   getChannelsAction,
   removeChannelAction,
@@ -45,6 +47,7 @@ export class GroupComponent implements OnInit {
         this.router.navigateByUrl('/groups');
       } else {
         this.store.dispatch(getChannelsAction({groupId: g.groupId}));
+        this.store.dispatch(getAllowedActionsAction({groupId: g.groupId}));
       }
     });
   }
@@ -58,11 +61,17 @@ export class GroupComponent implements OnInit {
     this.modal.open(CreateChannelModal);
   }
 
-  removeChannel(channelId) {
+  removeChannel(channelId: string) {
     this.store.pipe(select(currentGroupSelector), first()).subscribe((g) => {
       this.store.dispatch(
         removeChannelAction({channelId: channelId, groupId: g.groupId})
       );
+    });
+  }
+
+  openManagePermissions(channelId: string) {
+    this.modal.open(ManageChannelPermissionsModal, {
+      scrollable: true,
     });
   }
 

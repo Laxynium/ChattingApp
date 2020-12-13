@@ -36,6 +36,9 @@ import {MessagesComponent} from './components/messages/messages.component';
 import {MesssagesService} from './services/messages.service';
 import {MessagesEffects} from './store/messages/effects';
 import {SharedModule} from '../../shared/shared.module';
+import {AccessControlDirective} from 'src/app/home/groups/directives/access-control.directive';
+import {AccessControlEffects} from 'src/app/home/groups/store/access-control/effects';
+import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/group/manage-channel-permissions.modal';
 
 @NgModule({
   declarations: [
@@ -58,6 +61,8 @@ import {SharedModule} from '../../shared/shared.module';
     ManageMemberRolesComponent,
     ManageMemberRolesModal,
     MessagesComponent,
+    AccessControlDirective,
+    ManageChannelPermissionsModal,
   ],
   imports: [
     CommonModule,
@@ -73,6 +78,7 @@ import {SharedModule} from '../../shared/shared.module';
       RolesEffects,
       MembersEffects,
       MessagesEffects,
+      AccessControlEffects,
     ]),
     SharedModule,
   ],

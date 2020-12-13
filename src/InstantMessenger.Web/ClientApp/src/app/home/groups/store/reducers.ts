@@ -82,6 +82,8 @@ import {
   getMessagesSuccessAction,
   sendMessageSuccessAction,
 } from './messages/actions';
+import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
+import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-control/actions';
 
 export interface GroupsStateInterface {
   groups: GroupDto[];
@@ -106,6 +108,8 @@ export interface GroupsStateInterface {
   memberRoles: RoleDto[];
 
   currentChannelMessages: Map<string, MessageDto>;
+
+  allowedActions: Map<string, AllowedAction>;
 }
 
 const initialState: GroupsStateInterface = {
@@ -130,6 +134,8 @@ const initialState: GroupsStateInterface = {
 
   memberRoles: [],
   currentChannelMessages: Map(),
+
+  allowedActions: Map(),
 };
 
 const groupsReducer = createReducer(
@@ -262,6 +268,16 @@ const groupsReducer = createReducer(
   on(createChannelSuccessAction, (s, a) => ({
     ...s,
     channels: s.channels.set(a.channel.channelId, a.channel),
+    allowedActions: s.allowedActions.has('all')
+      ? s.allowedActions
+      : s.allowedActions.has('manage_channels')
+      ? s.allowedActions.set('manage_channels', {
+          ...s.allowedActions.get('manage_channels'),
+          channels: s.allowedActions
+            .get('manage_channels')
+            .channels.add(a.channel.channelId),
+        })
+      : s.allowedActions,
   })),
   on(createChannelFailureAction, (s, a) => ({
     ...s,
@@ -397,6 +413,11 @@ const groupsReducer = createReducer(
       a.message.messageId,
       a.message
     ),
+  })),
+
+  on(getAllowedActionsSuccessAction, (s, a) => ({
+    ...s,
+    allowedActions: Map(a.allowedActions.map((a) => [a.name, a])),
   }))
 );
 

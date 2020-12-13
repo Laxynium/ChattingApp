@@ -137,6 +137,15 @@ namespace InstantMessenger.UnitTests.Common
                     return this;
                 }
 
+                public RoleBuilder AddPermissions(params string[] names)
+                {
+                    foreach (var name in names)
+                    {
+                        AddPermission(name);
+                    }
+                    return this;
+                }
+
                 public AsUserBuilder Build() => _builder;
             }
 

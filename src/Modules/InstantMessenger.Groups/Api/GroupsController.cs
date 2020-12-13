@@ -79,6 +79,14 @@ namespace InstantMessenger.Groups.Api
             return Ok(result.FirstOrDefault());
         }
 
+        [HttpGet("{groupId}/allowed-actions")]
+        public async Task<IActionResult> GetAllowedActions([FromRoute] Guid groupId)
+        {
+            var result = await _facade.QueryAsync(new GetAllowedActionsQuery(User.GetUserId(),groupId));
+            return Ok(result);
+        }
+
+
 
         [HttpPost("{groupId}/roles")]
         public async Task<IActionResult> Post(AddRoleApiRequest request)
