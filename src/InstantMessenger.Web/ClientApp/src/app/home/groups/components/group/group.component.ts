@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 import {first, map} from 'rxjs/operators';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
 import {InvitationsModal} from 'src/app/home/groups/components/group/invitations.modal';
-import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/group/manage-channel-permissions.modal';
+import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/channel/manage-channel-permissions.modal';
 import {ManageRolesModal} from 'src/app/home/groups/components/group/manage-roles.modal';
 import {MembersModal} from 'src/app/home/groups/components/members/members.modal';
 import {
@@ -89,10 +89,11 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  openManagePermissions() {
-    this.modal.open(ManageChannelPermissionsModal, {
+  openManagePermissions(channel: ChannelDto) {
+    const modal = this.modal.open(ManageChannelPermissionsModal, {
       scrollable: true,
     });
+    modal.componentInstance.channel = channel;
   }
 
   openInvitationsModal() {

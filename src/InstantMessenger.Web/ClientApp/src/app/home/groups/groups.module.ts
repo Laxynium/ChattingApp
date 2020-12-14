@@ -38,9 +38,13 @@ import {MessagesEffects} from './store/messages/effects';
 import {SharedModule} from '../../shared/shared.module';
 import {AccessControlDirective} from 'src/app/home/groups/directives/access-control.directive';
 import {AccessControlEffects} from 'src/app/home/groups/store/access-control/effects';
-import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/group/manage-channel-permissions.modal';
+import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/channel/manage-channel-permissions.modal';
 import {ChannelComponent} from 'src/app/home/groups/components/channel/channel.component';
 import {RouterModule} from '@angular/router';
+import {RolePermissionOverridesComponent} from './components/channel/role-permission-overrides/role-permission-overrides.component';
+import {RolePermissionOverridesModal} from 'src/app/home/groups/components/channel/role-permission-overrides/role-permission-overrides.modal';
+import {ChannelsEffects} from 'src/app/home/groups/store/channels/effects';
+import {ChannelsService} from 'src/app/home/groups/services/channels.service';
 
 @NgModule({
   declarations: [
@@ -66,6 +70,8 @@ import {RouterModule} from '@angular/router';
     AccessControlDirective,
     ManageChannelPermissionsModal,
     ChannelComponent,
+    RolePermissionOverridesComponent,
+    RolePermissionOverridesModal,
   ],
   imports: [
     CommonModule,
@@ -82,10 +88,17 @@ import {RouterModule} from '@angular/router';
       MembersEffects,
       MessagesEffects,
       AccessControlEffects,
+      ChannelsEffects,
     ]),
     SharedModule,
     RouterModule,
   ],
-  providers: [GroupsService, RolesService, MembersService, MesssagesService],
+  providers: [
+    GroupsService,
+    RolesService,
+    MembersService,
+    MesssagesService,
+    ChannelsService,
+  ],
 })
 export class GroupsModule {}

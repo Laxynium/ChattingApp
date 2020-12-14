@@ -55,7 +55,7 @@
                                 <fa-icon [icon]="['fas', 'ellipsis-h']" size="1x"></fa-icon>
                               </button>
                               <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
-                                <button ngbDropdownItem (click)="openManagePermissions(channel.channelId)" accessControl
+                                <button ngbDropdownItem (click)="openManagePermissions(channel)" accessControl
                                   [accessControlAction]="['manage_roles']"
                                   [accessControlGroupId]="($currentGroup | async)?.groupId"
                                   [accessControlChannelId]="channel.channelId">

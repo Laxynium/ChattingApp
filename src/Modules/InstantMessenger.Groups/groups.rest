@@ -5,7 +5,7 @@ POST {{baseUrl}}/identity/sign-up HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "user1@test.com",
+    "email": "user2@test.com",
     "password":"TEest123!@#"
 }
 
@@ -77,5 +77,12 @@ Authorization: Bearer {{token}}
 @groupId = 2abad471-5be2-4771-bc62-0537d30c7100
 # @name allowedActions
 GET {{baseUrl}}/groups/{{groupId}}/allowed-actions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get role permission overrides
+@groupId = 2abad471-5be2-4771-bc62-0537d30c7100
+# @name allowedActions
+GET {{baseUrl}}/groups/{{groupId}}/channels/{{channelId}}/permission-overrides/role2
 Content-Type: application/json
 Authorization: Bearer {{token}}

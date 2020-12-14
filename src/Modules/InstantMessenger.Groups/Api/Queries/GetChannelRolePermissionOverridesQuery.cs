@@ -44,7 +44,7 @@ namespace InstantMessenger.Groups.Api.Queries
                     x => new PermissionOverrideDto
                     {
                         Permission = x.Permission.Name,
-                        Type = (OverrideTypeDto) (int) x.Type
+                        Type = x.Type == OverrideType.Allow ? OverrideTypeDto.Allow : OverrideTypeDto.Deny
                     }
                 ).ToListAsync();
         }

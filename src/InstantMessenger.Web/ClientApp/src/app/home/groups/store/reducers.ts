@@ -90,6 +90,13 @@ import {
 } from './messages/actions';
 import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
 import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-control/actions';
+import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
+import {
+  getChannelRolePermissionOverridesAction,
+  getChannelRolePermissionOverridesFailureAction,
+  getChannelRolePermissionOverridesSuccessAction,
+  updateChannelRolePermissionOverridesSuccessAction,
+} from 'src/app/home/groups/store/channels/actions';
 
 export interface GroupsStateInterface {
   groups: GroupDto[];
@@ -118,6 +125,9 @@ export interface GroupsStateInterface {
   allowedActions: Map<string, AllowedAction>;
 
   currentChannel: ChannelDto | null;
+
+  roleOverrides: PermissionOverrideDto[];
+  roleOverridesLoading: boolean;
 }
 
 const initialState: GroupsStateInterface = {
@@ -145,6 +155,9 @@ const initialState: GroupsStateInterface = {
 
   allowedActions: Map(),
   currentChannel: null,
+
+  roleOverrides: [],
+  roleOverridesLoading: false,
 };
 
 const groupsReducer = createReducer(
@@ -436,6 +449,24 @@ const groupsReducer = createReducer(
   on(getAllowedActionsSuccessAction, (s, a) => ({
     ...s,
     allowedActions: Map(a.allowedActions.map((a) => [a.name, a])),
+  })),
+
+  on(getChannelRolePermissionOverridesAction, (s, a) => ({
+    ...s,
+    roleOverridesLoading: true,
+  })),
+  on(getChannelRolePermissionOverridesSuccessAction, (s, a) => ({
+    ...s,
+    roleOverridesLoading: false,
+    roleOverrides: a.overrides,
+  })),
+  on(getChannelRolePermissionOverridesFailureAction, (s, a) => ({
+    ...s,
+    roleOverridesLoading: false,
+  })),
+  on(updateChannelRolePermissionOverridesSuccessAction, (s, a) => ({
+    ...s,
+    roleOverrides: a.overrides,
   }))
 );
 

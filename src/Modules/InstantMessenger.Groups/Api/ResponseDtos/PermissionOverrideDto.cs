@@ -2,8 +2,8 @@
 {
     public enum OverrideTypeDto
     {
-        Allow,
-        Deny
+        Allow = 1,
+        Deny = -1
     }
     public class PermissionOverrideDto
     {

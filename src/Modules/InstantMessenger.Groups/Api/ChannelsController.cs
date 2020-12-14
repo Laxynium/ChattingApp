@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
 using InstantMessenger.Groups.Api.Features.Channel.RemoveChannel;
+using InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverride;
 using InstantMessenger.Groups.Api.Features.Messages.SendMessage;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Shared.Mvc;
@@ -46,6 +47,36 @@ namespace InstantMessenger.Groups.Api
 
             return Ok(message);
         }
+
+        [HttpPut("{channelId}/permission-overrides/role")]
+        public async Task<IActionResult> UpdateRolePermissionOverrides(UpdateRolePermissionOverrideApiRequest request)
+        {
+            await _facade.SendAsync(
+                new UpdateRolePermissionOverrideCommand(
+                    User.GetUserId(),
+                    request.GroupId,
+                    request.ChannelId,
+                    request.RoleId,
+                    request.Overrides
+                )
+            );
+            return Ok();
+        }
+
+        [HttpGet("{channelId}/permission-overrides/role/{roleId}")]
+        public async Task<IActionResult> GetRolePermissionOverrides(Guid groupId, Guid channelId, Guid roleId)
+        {
+            var result = await _facade.QueryAsync(new GetChannelRolePermissionOverridesQuery(groupId, channelId, roleId));
+            return Ok(result);
+        }
+
+        [HttpGet("{channelId}/permission-overrides/role")]
+        public async Task<IActionResult> GetAvailablePermissionOverrides(Guid groupId, Guid channelId)
+        {
+            var result = await _facade.QueryAsync(new GetAvailablePermissionOverridesQuery());
+            return Ok(result);
+        }
+
 
         [HttpGet("{channelId}/messages")]
         public async Task<IActionResult> GetMessages(Guid groupId, Guid channelId)

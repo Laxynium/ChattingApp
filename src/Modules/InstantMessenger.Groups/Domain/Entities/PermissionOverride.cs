@@ -12,7 +12,7 @@ namespace InstantMessenger.Groups.Domain.Entities
     }
     public abstract class PermissionOverride : ValueObject
     {
-        private readonly ImmutableHashSet<Permission> _validPermissions = ImmutableHashSet<Permission>.Empty
+        private static readonly ImmutableHashSet<Permission> _validPermissions = ImmutableHashSet<Permission>.Empty
             .Add(Permission.ManageRoles)
             .Add(Permission.ManageChannels)
             //.Add(Permission.AddReactions)
@@ -36,6 +36,8 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             return Type == OverrideType.Allow ? permissions.Add(Permission) : permissions.Remove(Permission);
         }
+
+        public static IReadOnlyList<Permission> ValidPermissions => _validPermissions.ToImmutableList();
     }
     public class RolePermissionOverride : PermissionOverride
     {
