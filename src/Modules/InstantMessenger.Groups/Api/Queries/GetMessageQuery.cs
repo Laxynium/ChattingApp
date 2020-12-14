@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public class GetMessageQuery : IQuery<GroupMessageDto>
+    public class GetMessageQuery : IQuery<GroupMessageView>
     {
         public Guid UserId { get; }
         public Guid GroupId { get; }
@@ -23,7 +23,7 @@ namespace InstantMessenger.Groups.Api.Queries
             MessageId = messageId;
         }
     }
-    public class GetMessageQueryHandler : IQueryHandler<GetMessageQuery, GroupMessageDto>
+    public class GetMessageQueryHandler : IQueryHandler<GetMessageQuery, GroupMessageView>
     {
         private readonly GroupsViewContext _viewContext;
         private readonly GroupsContext _groupsContext;
@@ -34,7 +34,7 @@ namespace InstantMessenger.Groups.Api.Queries
             _groupsContext = groupsContext;
         }
 
-        public async Task<GroupMessageDto> HandleAsync(GetMessageQuery query)
+        public async Task<GroupMessageView> HandleAsync(GetMessageQuery query)
         {
             var groupMessageDtos = await _viewContext.GroupMessages
                 .Where(m => m.GroupId == query.GroupId

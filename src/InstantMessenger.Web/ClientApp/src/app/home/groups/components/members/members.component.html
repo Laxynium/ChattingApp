@@ -5,8 +5,8 @@
       <img class="rounded-circle member-avatar" src="{{member.avatar}}" />
       <span>{{member.name}}</span>
     </div>
-    <div ngbDropdown class="d-inline-block" placement="left-top" accessControl [accessControlAction]="['manage_roles']"
-      [accessControlGroupId]="member.groupId">
+    <div ngbDropdown class="d-inline-block" placement="left-top" accessControl
+      [accessControlAction]="['manage_roles_general']" [accessControlGroupId]="member.groupId">
       <button id="dropdownBasic1" class="btn btn-outline-secondary" ngbDropdownToggle>
         <fa-icon [icon]="['fas', 'ellipsis-h']" size="1x"></fa-icon>
       </button>

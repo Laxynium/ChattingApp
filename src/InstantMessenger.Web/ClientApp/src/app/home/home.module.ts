@@ -46,6 +46,9 @@ const routes = [
         path: 'groups',
         component: GroupsComponent,
         canActivate: [AuthGuard],
+        // children: [
+        //   {path: '', component: ProfileComponent, canActivate: [AuthGuard]},
+        // ]
       },
     ],
   },

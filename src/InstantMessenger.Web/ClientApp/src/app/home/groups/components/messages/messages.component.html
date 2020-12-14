@@ -3,11 +3,8 @@
     <div class="messages-wrapper">
       <div class="messages">
         <div class="body" #scrollMe scroll-to-bottom>
-          <div
-            *ngFor="let message of $messages | async"
-            class="message"
-            [ngClass]="{me: message.isMine, friend: !message.isMine}"
-          >
+          <div *ngFor="let message of $messages | async" class="message"
+            [ngClass]="{me: message.isMine, friend: !message.isMine}">
             <div class="message-header">
               <span class="message-header-avatar">
                 <img class="rounded-circle" src="{{ message.senderAvatar }}" />
@@ -15,11 +12,8 @@
               <span class="message-header-nickname">{{
                 message.senderName
               }}</span>
-              <span class="message-created-at"
-                ><small>
-                  {{ message.createdAt | date: 'yyyy/mm/dd HH:mm' }}</small
-                ></span
-              >
+              <span class="message-created-at"><small>
+                  {{ message.createdAt | date: 'yyyy/mm/dd HH:mm' }}</small></span>
             </div>
             <div class="message-body">
               <p>{{ message.content }}</p>
@@ -30,19 +24,12 @@
     </div>
     <div class="input-area">
       <div class="input">
-        <textarea
-          [(ngModel)]="messageContent"
-          name="content"
-          class="text-area"
-          (keyup.control.enter)="sendMessage()"
-        ></textarea>
+        <textarea [(ngModel)]="messageContent" name="content" class="text-area"
+          (keyup.control.enter)="sendMessage()"></textarea>
       </div>
       <div class="send">
-        <button
-          [disabled]="messageContent.trim() == ''"
-          class="btn btn-primary w-100 h-50 align-self-center"
-          (click)="sendMessage()"
-        >
+        <button [disabled]="messageContent.trim() == ''" class="btn btn-primary w-100 h-50 align-self-center"
+          (click)="sendMessage()">
           Send
         </button>
       </div>

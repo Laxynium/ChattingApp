@@ -4,6 +4,7 @@ using FluentAssertions;
 using FluentAssertions.Common;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Microsoft.Extensions.DependencyInjection;

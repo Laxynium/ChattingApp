@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;

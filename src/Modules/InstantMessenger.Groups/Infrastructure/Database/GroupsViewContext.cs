@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace InstantMessenger.Groups.Infrastructure.Database
 {
-    public class GroupMessageDto
+    public class GroupMessageView
     {
         public Guid GroupId { get; private set; }
         public Guid ChannelId { get; private set; }
@@ -19,7 +19,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         public string Content { get; private set; }
         public DateTimeOffset CreatedAt { get; private set; }
 
-        public GroupMessageDto(Guid groupId, Guid channelId, Guid messageId, 
+        public GroupMessageView(Guid groupId, Guid channelId, Guid messageId, 
             Guid senderId, string senderName, byte[]? senderAvatar, string content, DateTimeOffset createdAt)
         {
             GroupId = groupId;
@@ -35,7 +35,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
     }
     public class GroupsViewContext : DbContext
     {
-        public DbSet<GroupMessageDto> GroupMessages { get; set; }
+        public DbSet<GroupMessageView> GroupMessages { get; set; }
 
         public GroupsViewContext(DbContextOptions<GroupsViewContext>options):base(options)
         {
@@ -43,7 +43,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupMessageDto>(
+            modelBuilder.Entity<GroupMessageView>(
                 gm =>
                 {
                     gm.HasNoKey();

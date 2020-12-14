@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
@@ -9,12 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public class ChannelDto
-    {
-        public Guid ChannelId { get; set; }
-        public Guid GroupId { get; set; }
-        public string ChannelName { get; set; }
-    }
     public class GetGroupChannelsQuery : IQuery<IEnumerable<ChannelDto>>
     {
         public Guid UserId { get; }

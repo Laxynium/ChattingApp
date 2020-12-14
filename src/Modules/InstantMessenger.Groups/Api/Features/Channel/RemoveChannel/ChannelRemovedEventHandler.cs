@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Hubs;
 using InstantMessenger.Groups.Api.IntegrationEvents;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;

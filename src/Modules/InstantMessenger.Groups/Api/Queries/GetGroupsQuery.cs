@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
@@ -9,12 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public class GroupDto
-    {
-        public Guid GroupId { get; set; }
-        public string Name { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-    }
     public class GetGroupsQuery : IQuery<IEnumerable<GroupDto>>
     {
         public Guid UserId { get; }
@@ -50,7 +45,7 @@ namespace InstantMessenger.Groups.Api.Queries
                 {
                     GroupId = x.Id.Value,
                     Name = x.Name.Value,
-                    CreatedAt = x.CreatedAt
+                    CreatedAt = x.CreatedAt,
                 }
             ).ToListAsync();
         }

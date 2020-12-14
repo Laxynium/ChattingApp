@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Hubs;
-using InstantMessenger.Groups.Api.IntegrationEvents;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Shared.IntegrationEvents;
 using Microsoft.AspNetCore.SignalR;
 
 namespace InstantMessenger.Groups.Api.Features.Group.Delete
 {
-    public class GroupRemovedEventHandler: IIntegrationEventHandler<GroupRemovedEvent>
+    public class GroupRemovedEventHandler: IIntegrationEventHandler<IntegrationEvents.GroupRemovedEvent>
     {
         private readonly IHubContext<GroupsHub, IGroupsHubContract> _hubContext;
 
@@ -15,10 +15,10 @@ namespace InstantMessenger.Groups.Api.Features.Group.Delete
         {
             _hubContext = hubContext;
         }
-        public async Task HandleAsync(GroupRemovedEvent @event)
+        public async Task HandleAsync(IntegrationEvents.GroupRemovedEvent @event)
         {
             await _hubContext.Clients.Users(@event.AllowedUsers.Select(id => id.ToString("N")).ToList())
-                .OnGroupRemoved(new GroupDto(@event.GroupId, @event.GroupName));
+                .OnGroupRemoved(new GroupDto(@event.GroupId, @event.GroupName,@event.CreatedAt));
         }
     }
 }

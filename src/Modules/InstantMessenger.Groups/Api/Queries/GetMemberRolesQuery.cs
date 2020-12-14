@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
@@ -9,22 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public class RoleDto
-    {
-        public Guid GroupId { get; }
-        public Guid RoleId { get; }
-        public string Name { get; }
-        public int Priority { get; }
-
-        public RoleDto(Guid groupId, Guid roleId, string name, int priority)
-        {
-            RoleId = roleId;
-            Name = name;
-            Priority = priority;
-            GroupId = groupId;
-        }
-    }
-
     public class GetMemberRolesQuery : IQuery<IEnumerable<RoleDto>>
     {
         public Guid UserId { get; }

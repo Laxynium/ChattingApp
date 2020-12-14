@@ -46,7 +46,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void Remove(UserId userId) => new Action.DeleteGroup(GetMember(userId))
         .Execute(() =>
         {
-            Apply(new GroupRemovedEvent(Id, Name, Members));
+            Apply(new GroupRemovedEvent(Id, Name, CreatedAt,Members));
         });
 
         public void LeaveGroup(UserId userId)
@@ -104,7 +104,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             var everyoneRole = GetEveryoneRole();
             var newMember = Member.Create(userIdOfMember, memberName, everyoneRole, clock);
             _members.Add(newMember);
-            Apply(new MemberAddedToGroupEvent());
+            Apply(new DomainEvents());
         }
 
         public void KickMember(UserId userId, UserId userIdOfMember) => new Action.KickMember(GetMember(userId), GetMemberPermissions(userId),GetRoles(userId),GetMember(userIdOfMember), GetRoles(userIdOfMember))
@@ -123,31 +123,35 @@ namespace InstantMessenger.Groups.Domain.Entities
         .Execute(() =>
         {
             var member = GetMember(userIdOfMember);
-            member.AddRole(GetRole(roleId));
-            Apply(new RoleAddedToMemberEvent());
+            var role = GetRole(roleId);
+            member.AddRole(role);
+            Apply(new RoleAddedToMemberEvent(Id,member.UserId, role.Id, role.Name, role.Priority));
         });
 
         public void RemoveRoleFromMember(UserId userId, UserId userIdOfMember, RoleId roleId) => new Action.RemoveRoleFromMember(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), UserDefinedRoles, GetRole(roleId))
             .Execute(() =>
         {
             var member = GetMember(userIdOfMember);
-            member.RemoveRole(GetRole(roleId));
-            Apply(new RoleRemovedFromMemberEvent());
+            var role = GetRole(roleId);
+            member.RemoveRole(role);
+            Apply(new RoleRemovedFromMemberEvent(Id,member.UserId, role.Id, role.Name, role.Priority));
         });
 
 
         public void AddPermissionToRole(UserId userId, RoleId roleId, Permission permission) => new Action.AddPermissionToRole(GetMember(userId), GetMemberPermissions(userId),GetRoles(userId),GetRole(roleId),permission)
         .Execute(() =>
         {
-            GetRole(roleId).AddPermission(permission);
-            Apply(new PermissionAddedToRoleEvent());
+            var role = GetRole(roleId);
+            role.AddPermission(permission);
+            Apply(new PermissionAddedToRoleEvent(Id,role.Id, permission.Name, permission.Value));
         });
 
         public void RemovePermissionFromRole(UserId userId, RoleId roleId, Permission permission) => new Action.RemovePermissionFromRole(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), GetRole(roleId), permission)
         .Execute(() =>
         {
-            GetRole(roleId).RemovePermission(permission);
-            Apply(new PermissionRemovedFromRoleEvent());
+            var role = GetRole(roleId);
+            role.RemovePermission(permission);
+            Apply(new PermissionRemovedFromRoleEvent(Id,role.Id, permission.Name, permission.Value));
         });
 
         public void MoveUpRole(UserId userId, RoleId roleId) => new Action.MoveUpRoleInHierarchy(GetMember(userId),GetMemberPermissions(userId),GetRoles(userId),UserDefinedRoles, GetRole(roleId))

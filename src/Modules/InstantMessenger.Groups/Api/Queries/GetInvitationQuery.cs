@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain;
-using InstantMessenger.Groups.Domain.Entities;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
@@ -11,34 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InstantMessenger.Groups.Api.Queries
 {
-    public enum ExpirationTimeTypeDto
-    {
-        Infinite,Bounded
-    }
-    public class ExpirationTimeDto
-    {
-        public ExpirationTimeTypeDto Type { get; set; }
-        public DateTimeOffset Start { get; set; }
-        public TimeSpan? Period { get; set; }
-    }
-    public enum UsageCounterTypeDto
-    {
-        Infinite, Bounded
-    }
-    public class UsageCounterDto
-    {
-        public UsageCounterTypeDto Type { get; set; }
-        public int? Value { get; set; }
-    }
-    public class InvitationDto
-    {
-        public Guid GroupId { get; set; }
-        public Guid InvitationId { get; set; }
-        public string Code { get; set; }
-        public ExpirationTimeDto ExpirationTime { get; set; }
-        public UsageCounterDto UsageCounter { get; set; }
-
-    }
     public class GetInvitationQuery : IQuery<InvitationDto>
     {
         public Guid UserId { get; }

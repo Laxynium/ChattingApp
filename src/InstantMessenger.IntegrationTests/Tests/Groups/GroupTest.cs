@@ -7,6 +7,7 @@ using InstantMessenger.Groups.Api.Features.Members.AssignRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
 using Xunit;

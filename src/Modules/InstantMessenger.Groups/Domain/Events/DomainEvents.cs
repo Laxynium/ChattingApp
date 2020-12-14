@@ -15,11 +15,13 @@ namespace InstantMessenger.Groups.Domain.Events
     {
         public GroupId GroupId { get; }
         public GroupName GroupName { get; }
+        public DateTimeOffset CreatedAt { get; }
         public IEnumerable<Member> AllowedMembers { get; }
-        public GroupRemovedEvent(GroupId groupId, GroupName groupName, IEnumerable<Member> allowedMembers)
+        public GroupRemovedEvent(GroupId groupId, GroupName groupName, DateTimeOffset createdAt, IEnumerable<Member> allowedMembers)
         {
             GroupId = groupId;
             GroupName = groupName;
+            CreatedAt = createdAt;
             AllowedMembers = allowedMembers;
         }
     }
@@ -58,7 +60,7 @@ namespace InstantMessenger.Groups.Domain.Events
         }
     }
 
-    public class MemberAddedToGroupEvent : IDomainEvent
+    public class DomainEvents : IDomainEvent
     {
         
     }
@@ -90,22 +92,71 @@ namespace InstantMessenger.Groups.Domain.Events
 
     public class RoleAddedToMemberEvent : IDomainEvent
     {
+        public GroupId GroupId { get; }
+        public UserId UserId { get; }
+        public RoleId RoleId { get; }
+        public RoleName RoleName { get; }
+        public RolePriority RolePriority { get; }
 
+        public RoleAddedToMemberEvent(GroupId groupId, UserId userId, RoleId roleId, RoleName roleName, RolePriority rolePriority)
+        {
+            GroupId = groupId;
+            UserId = userId;
+            RoleId = roleId;
+            RoleName = roleName;
+            RolePriority = rolePriority;
+        }
     }
 
     public class RoleRemovedFromMemberEvent : IDomainEvent
     {
+        public GroupId GroupId { get; }
+        public UserId UserId { get; }
+        public RoleId RoleId { get; }
+        public RoleName RoleName { get; }
+        public RolePriority RolePriority { get; }
+
+        public RoleRemovedFromMemberEvent(GroupId groupId, UserId userId, RoleId roleId, RoleName roleName, RolePriority rolePriority)
+        {
+            GroupId = groupId;
+            UserId = userId;
+            RoleId = roleId;
+            RoleName = roleName;
+            RolePriority = rolePriority;
+        }
 
     }
 
     public class PermissionAddedToRoleEvent : IDomainEvent
     {
+        public GroupId GroupId { get; }
+        public RoleId RoleId { get; }
+        public string PermissionName { get; }
+        public int PermissionValue { get; }
 
+        public PermissionAddedToRoleEvent(GroupId groupId, RoleId roleId, string permissionName, int permissionValue)
+        {
+            RoleId = roleId;
+            PermissionName = permissionName;
+            PermissionValue = permissionValue;
+            GroupId = groupId;
+        }
     }    
 
     public class PermissionRemovedFromRoleEvent : IDomainEvent
     {
+        public GroupId GroupId { get; }
+        public RoleId RoleId { get; }
+        public string PermissionName { get; }
+        public int PermissionValue { get; }
 
+        public PermissionRemovedFromRoleEvent(GroupId groupId, RoleId roleId, string permissionName, int permissionValue)
+        {
+            RoleId = roleId;
+            PermissionName = permissionName;
+            PermissionValue = permissionValue;
+            GroupId = groupId;
+        }
     }
 
     public class ChannelCreatedEvent : IDomainEvent

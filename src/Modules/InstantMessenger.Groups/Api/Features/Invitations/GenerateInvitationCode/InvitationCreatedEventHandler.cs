@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Hubs;
 using InstantMessenger.Groups.Api.IntegrationEvents;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.IntegrationEvents;
@@ -30,7 +31,7 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCod
                 .Select(u => u.UserId.Value.ToString("N"))
                 .ToList();
 
-            await _hubContext.Clients.Users(users).OnInvitationCreated(new InvitationDto(@event.GroupId, @event.InvitationId, @event.Code));
+            await _hubContext.Clients.Users(users).OnInvitationCreated(new InvitationDto(@event.GroupId, @event.InvitationId, @event.Code, @event.ExpirationTime, @event.UsageCounter));
         }
     }
 }

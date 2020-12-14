@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForMember;
 using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
