@@ -24,11 +24,7 @@ import {
 export class GroupsComponent implements OnInit {
   groups$: Observable<GroupDto[]>;
   groupsLoading$: Observable<boolean>;
-  constructor(
-    private modalService: NgbModal,
-    private store: Store,
-    private router: Router
-  ) {
+  constructor(private modalService: NgbModal, private store: Store) {
     this.groups$ = this.store.pipe(select(groupsSelector));
     this.groupsLoading$ = this.store.pipe(select(groupsLoadingSelector));
   }

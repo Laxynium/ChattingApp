@@ -8,7 +8,7 @@ import {
   sendMessageAction,
 } from '../../store/messages/actions';
 import {currentUserSelector} from '../../../../identity/store/selectors';
-import {first, map, mergeMap, tap} from 'rxjs/operators';
+import {first, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {ChannelDto} from '../../services/responses/group.dto';
 import {v4 as guid} from 'uuid';
 import {ScrollToBottomDirective} from 'src/app/shared/directives/scroll-to-bottom.directive';
@@ -21,8 +21,10 @@ import {ScrollToBottomDirective} from 'src/app/shared/directives/scroll-to-botto
 export class MessagesComponent implements OnInit {
   @ViewChild(ScrollToBottomDirective) scrollMe;
 
+  @Input() $groupId: Observable<string>;
+  @Input() $channelId: Observable<string>;
+
   messageContent: string = '';
-  @Input() channel: ChannelDto;
   $messages: Observable<(MessageDto & {isMine: boolean})[]>;
 
   constructor(private store: Store) {
@@ -43,25 +45,40 @@ export class MessagesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(
-      getMessagesAction({
-        groupId: this.channel.groupId,
-        channelId: this.channel.channelId,
-      })
-    );
+    this.$channelId
+      .pipe(
+        withLatestFrom(this.$groupId),
+        tap(([c, g]) => {
+          this.store.dispatch(
+            getMessagesAction({
+              channelId: c,
+              groupId: g,
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 
   sendMessage() {
-    this.store.dispatch(
-      sendMessageAction({
-        message: {
-          groupId: this.channel.groupId,
-          channelId: this.channel.channelId,
-          messageId: guid(),
-          content: this.messageContent,
-        },
-      })
-    );
+    this.$channelId
+      .pipe(
+        withLatestFrom(this.$groupId),
+        tap(([c, g]) => {
+          this.store.dispatch(
+            sendMessageAction({
+              message: {
+                groupId: g,
+                channelId: c,
+                messageId: guid(),
+                content: this.messageContent,
+              },
+            })
+          );
+        })
+      )
+      .subscribe();
+
     this.messageContent = '';
   }
 }

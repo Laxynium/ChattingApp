@@ -76,6 +76,10 @@ export class GroupsService {
     return this.http.get<GroupDto[]>(this.groupApi);
   }
 
+  public getGroup(groupId): Observable<GroupDto> {
+    return this.http.get<GroupDto>(`${this.groupApi}/${groupId}`);
+  }
+
   public getInvitations(request: {
     groupId: string;
   }): Observable<InvitationDto[]> {

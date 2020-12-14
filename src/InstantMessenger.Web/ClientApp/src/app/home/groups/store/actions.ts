@@ -35,6 +35,10 @@ export enum ActionTypes {
   CHANGE_CURRENT_GROUP_SUCCESS = '[Groups] Change current group success',
   CHANGE_CURRENT_GROUP_FAILURE = '[Groups] Change current group failure',
 
+  LOAD_CURRENT_GROUP = '[Groups] Load current group',
+  LOAD_CURRENT_GROUP_SUCCESS = '[Groups] Load current group success',
+  LOAD_CURRENT_GROUP_FAILURE = '[Groups] Load current group failure',
+
   CREATE_CHANNEL = '[Groups] Create channel',
   CREATE_CHANNEL_SUCCESS = '[Groups] Create channel success',
   CREATE_CHANNEL_FAILURE = '[Groups] Create channel failure',
@@ -42,6 +46,14 @@ export enum ActionTypes {
   REMOVE_CHANNEL = '[Groups] Remove channel',
   REMOVE_CHANNEL_SUCCESS = '[Groups] Remove channel success',
   REMOVE_CHANNEL_FAILURE = '[Groups] Remove channel failure',
+
+  CHANGE_CURRENT_CHANNEL = '[Groups] Change current channel',
+  CHANGE_CURRENT_CHANNEL_SUCCESS = '[Groups] Change current channel success',
+  CHANGE_CURRENT_CHANNEL_FAILURE = '[Groups] Change current channel failure',
+
+  LOAD_CURRENT_CHANNEL = '[Groups] Load current channel',
+  LOAD_CURRENT_CHANNEL_SUCCESS = '[Groups] Load current channel success',
+  LOAD_CURRENT_CHANNEL_FAILURE = '[Groups] Load current channel failure',
 
   GENERATE_INVITATION = '[Groups] Generate invitation',
   GENERATE_INVITATION_SUCCESS = '[Groups] Generate invitation success',
@@ -124,6 +136,18 @@ export const changeCurrentGroupFailureAction = createAction(
   ActionTypes.CHANGE_CURRENT_GROUP_FAILURE
 );
 
+export const loadCurrentGroupAction = createAction(
+  ActionTypes.LOAD_CURRENT_GROUP,
+  props<{groupId: string}>()
+);
+export const loadCurrentGroupSuccessAction = createAction(
+  ActionTypes.LOAD_CURRENT_GROUP_SUCCESS,
+  props<{group: GroupDto}>()
+);
+export const loadCurrentGroupFailureAction = createAction(
+  ActionTypes.LOAD_CURRENT_GROUP_FAILURE
+);
+
 export const createChannelAction = createAction(
   ActionTypes.CREATE_CHANNEL,
   props<{groupId: string; channelName: string}>()
@@ -146,6 +170,23 @@ export const removeChannelSuccessAction = createAction(
 );
 export const removeChannelFailureAction = createAction(
   ActionTypes.REMOVE_CHANNEL_FAILURE
+);
+
+export const changeCurrentChannelAction = createAction(
+  ActionTypes.CHANGE_CURRENT_CHANNEL,
+  props<{groupId: string; channelId: string}>()
+);
+
+export const loadCurrentChannelAction = createAction(
+  ActionTypes.LOAD_CURRENT_CHANNEL,
+  props<{channelId: string}>()
+);
+export const loadCurrentChannelSuccessAction = createAction(
+  ActionTypes.LOAD_CURRENT_CHANNEL_SUCCESS,
+  props<{channelId: string}>()
+);
+export const loadCurrentChannelFailureAction = createAction(
+  ActionTypes.LOAD_CURRENT_CHANNEL_FAILURE
 );
 
 export const generateInvitationAction = createAction(

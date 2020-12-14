@@ -5,6 +5,7 @@ import {
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {
+  changeCurrentChannelAction,
   changeCurrentGroupAction,
   changeCurrentGroupFailureAction,
   changeCurrentGroupSuccessAction,
@@ -29,6 +30,11 @@ import {
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
+  loadCurrentChannelAction,
+  loadCurrentChannelSuccessAction,
+  loadCurrentGroupAction,
+  loadCurrentGroupFailureAction,
+  loadCurrentGroupSuccessAction,
   removeChannelAction,
   removeChannelFailureAction,
   removeChannelSuccessAction,
@@ -88,7 +94,7 @@ import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-c
 export interface GroupsStateInterface {
   groups: GroupDto[];
   groupsLoading: boolean;
-  currentGroup: ICurrentGroup;
+  currentGroup: GroupDto | null;
   channels: Map<string, ChannelDto>;
   generatedInvitation: {
     groupId: string;
@@ -110,12 +116,14 @@ export interface GroupsStateInterface {
   currentChannelMessages: Map<string, MessageDto>;
 
   allowedActions: Map<string, AllowedAction>;
+
+  currentChannel: ChannelDto | null;
 }
 
 const initialState: GroupsStateInterface = {
   groups: [],
   groupsLoading: false,
-  currentGroup: new EmptyCurrentGroup(),
+  currentGroup: null,
   channels: Map(),
   generatedInvitation: {
     groupId: null,
@@ -136,6 +144,7 @@ const initialState: GroupsStateInterface = {
   currentChannelMessages: Map(),
 
   allowedActions: Map(),
+  currentChannel: null,
 };
 
 const groupsReducer = createReducer(
@@ -251,14 +260,14 @@ const groupsReducer = createReducer(
     ...s,
   })),
 
-  on(changeCurrentGroupAction, (s, a) => ({
+  on(loadCurrentGroupAction, (s, a) => ({
     ...s,
   })),
-  on(changeCurrentGroupSuccessAction, (s, a) => ({
+  on(loadCurrentGroupSuccessAction, (s, a) => ({
     ...s,
-    currentGroup: new CurrentGroup(a.groupId),
+    currentGroup: a.group,
   })),
-  on(changeCurrentGroupFailureAction, (s, a) => ({
+  on(loadCurrentGroupFailureAction, (s, a) => ({
     ...s,
   })),
 
@@ -292,6 +301,11 @@ const groupsReducer = createReducer(
   })),
   on(removeChannelFailureAction, (s, a) => ({
     ...s,
+  })),
+
+  on(loadCurrentChannelSuccessAction, (s, a) => ({
+    ...s,
+    currentChannel: s.channels.get(a.channelId),
   })),
 
   on(getRolesAction, (s, a) => ({

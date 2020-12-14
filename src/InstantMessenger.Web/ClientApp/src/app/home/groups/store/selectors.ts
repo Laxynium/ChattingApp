@@ -24,8 +24,7 @@ export const groupsLoadingSelector = createSelector(
 
 export const currentGroupSelector = createSelector(
   groupsFeatureSelector,
-  (s: GroupsStateInterface): GroupDto =>
-    s.groups.find((x) => x.groupId == s.currentGroup.groupId)
+  (s: GroupsStateInterface): GroupDto => s.currentGroup
 );
 
 export const channelsSelector = createSelector(
@@ -37,6 +36,10 @@ export const channelsSelector = createSelector(
       .toArray()
 );
 
+export const currentChannelSelector = createSelector(
+  groupsFeatureSelector,
+  (s: GroupsStateInterface): Object => s.currentChannel
+);
 export const currentInvitationSelector = createSelector(
   groupsFeatureSelector,
   (s: GroupsStateInterface): {code: string; isBeingGenerated: boolean} => ({

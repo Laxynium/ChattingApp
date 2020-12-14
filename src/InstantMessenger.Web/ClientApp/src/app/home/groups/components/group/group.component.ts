@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {NgbModal, NgbNav} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {first} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
 import {InvitationsModal} from 'src/app/home/groups/components/group/invitations.modal';
 import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/group/manage-channel-permissions.modal';
@@ -15,7 +15,9 @@ import {
 } from 'src/app/home/groups/services/responses/group.dto';
 import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
 import {
+  changeCurrentChannelAction,
   getChannelsAction,
+  loadCurrentGroupAction,
   removeChannelAction,
 } from 'src/app/home/groups/store/actions';
 import {
@@ -32,26 +34,44 @@ export class GroupComponent implements OnInit {
   @ViewChild(NgbNav) channelsNav: NgbNav;
   $currentGroup: Observable<GroupDto>;
   $channels: Observable<ChannelDto[]>;
+  $groupId: Observable<string>;
   constructor(
     private store: Store,
-    private router: Router,
+    private route: ActivatedRoute,
     private modal: NgbModal
   ) {
     this.$currentGroup = this.store.pipe(select(currentGroupSelector));
     this.$channels = this.store.pipe(select(channelsSelector));
+    this.$groupId = this.route.params.pipe(map((p) => p['id']));
+    //routerLink="channels/{{channel.channelId}}"
   }
 
   ngOnInit(): void {
-    this.$currentGroup.subscribe((g) => {
-      if (!g) {
-        this.router.navigateByUrl('/groups');
-      } else {
-        this.store.dispatch(getChannelsAction({groupId: g.groupId}));
-        this.store.dispatch(getAllowedActionsAction({groupId: g.groupId}));
-      }
+    this.$groupId.subscribe((groupId) => {
+      this.store.dispatch(loadCurrentGroupAction({groupId: groupId}));
+      this.store.dispatch(getChannelsAction({groupId: groupId}));
+      this.store.dispatch(getAllowedActionsAction({groupId: groupId}));
+    });
+    // this.$currentGroup.subscribe((g) => {
+    //   this.store.dispatch(getChannelsAction({groupId: g.groupId}));
+    // });
+    // this.$currentGroup.subscribe((g) => {
+    //   if (!g) {
+    //     // this.router.navigateByUrl('/groups');
+    //   } else {
+    //     this.store.dispatch(getChannelsAction({groupId: g.groupId}));
+    //     this.store.dispatch(getAllowedActionsAction({groupId: g.groupId}));
+    //   }
+    // });
+  }
+  navigateToChannel($event) {
+    const nextChannelId = $event.nextId;
+    this.$groupId.pipe(first()).subscribe((groupId) => {
+      this.store.dispatch(
+        changeCurrentChannelAction({groupId: groupId, channelId: nextChannelId})
+      );
     });
   }
-
   channelDropdownChange(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -69,7 +89,7 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  openManagePermissions(channelId: string) {
+  openManagePermissions() {
     this.modal.open(ManageChannelPermissionsModal, {
       scrollable: true,
     });

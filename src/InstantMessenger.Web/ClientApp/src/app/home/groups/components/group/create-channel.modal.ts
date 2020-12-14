@@ -56,7 +56,7 @@ import {currentGroupSelector} from 'src/app/home/groups/store/selectors';
         [disabled]="!channelName.valid"
         type="button"
         class="btn btn-success"
-        (click)="createGroup()"
+        (click)="createChannel()"
       >
         Ok
       </button>
@@ -80,7 +80,7 @@ export class CreateChannelModal implements OnInit {
     return this.form.get('channelName');
   }
 
-  createGroup() {
+  createChannel() {
     this.store.pipe(select(currentGroupSelector), first()).subscribe((g) => {
       const channelName = this.form.value.channelName;
       this.store.dispatch(

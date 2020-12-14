@@ -39,6 +39,8 @@ import {SharedModule} from '../../shared/shared.module';
 import {AccessControlDirective} from 'src/app/home/groups/directives/access-control.directive';
 import {AccessControlEffects} from 'src/app/home/groups/store/access-control/effects';
 import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/group/manage-channel-permissions.modal';
+import {ChannelComponent} from 'src/app/home/groups/components/channel/channel.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,7 @@ import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/grou
     MessagesComponent,
     AccessControlDirective,
     ManageChannelPermissionsModal,
+    ChannelComponent,
   ],
   imports: [
     CommonModule,
@@ -81,6 +84,7 @@ import {ManageChannelPermissionsModal} from 'src/app/home/groups/components/grou
       AccessControlEffects,
     ]),
     SharedModule,
+    RouterModule,
   ],
   providers: [GroupsService, RolesService, MembersService, MesssagesService],
 })

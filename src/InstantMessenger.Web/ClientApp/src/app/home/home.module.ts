@@ -17,6 +17,7 @@ import {ConversationComponent} from 'src/app/home/conversations/components/conve
 import {GroupsComponent} from './groups/components/groups/groups.component';
 import {GroupsModule} from 'src/app/home/groups/groups.module';
 import {GroupComponent} from 'src/app/home/groups/components/group/group.component';
+import {ChannelComponent} from 'src/app/home/groups/components/channel/channel.component';
 
 const routes = [
   {
@@ -41,14 +42,18 @@ const routes = [
         path: 'groups/:id',
         component: GroupComponent,
         canActivate: [AuthGuard],
+        children: [
+          {
+            path: 'channels/:channelId',
+            component: ChannelComponent,
+            canActivate: [AuthGuard],
+          },
+        ],
       },
       {
         path: 'groups',
         component: GroupsComponent,
         canActivate: [AuthGuard],
-        // children: [
-        //   {path: '', component: ProfileComponent, canActivate: [AuthGuard]},
-        // ]
       },
     ],
   },

@@ -3,12 +3,11 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {from, of} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {GroupsService} from 'src/app/home/groups/services/groups.service';
 import {
+  changeCurrentChannelAction,
   changeCurrentGroupAction,
-  changeCurrentGroupFailureAction,
-  changeCurrentGroupSuccessAction,
   createChannelAction,
   createChannelFailureAction,
   createChannelSuccessAction,
@@ -30,6 +29,11 @@ import {
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
+  loadCurrentChannelAction,
+  loadCurrentChannelSuccessAction,
+  loadCurrentGroupAction,
+  loadCurrentGroupFailureAction,
+  loadCurrentGroupSuccessAction,
   removeChannelAction,
   removeChannelFailureAction,
   removeChannelSuccessAction,
@@ -192,21 +196,32 @@ export class GroupsEffects {
       })
     )
   );
-  $changeGroup = createEffect(() =>
+  $changeGroup = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(changeCurrentGroupAction),
+        tap(({groupId}) => this.router.navigateByUrl(`/groups/${groupId}`))
+      ),
+    {dispatch: false}
+  );
+
+  $loadGroup = createEffect(() =>
     this.actions$.pipe(
-      ofType(changeCurrentGroupAction),
-      switchMap(({groupId}) => {
-        return from(this.router.navigateByUrl(`/groups/${groupId}`)).pipe(
-          map((r) =>
-            r
-              ? changeCurrentGroupSuccessAction({groupId})
-              : changeCurrentGroupFailureAction()
-          ),
-          catchError((e) => of(changeCurrentGroupFailureAction()))
+      ofType(loadCurrentGroupAction),
+      switchMap((r) => {
+        return this.groupsService.getGroup(r.groupId).pipe(
+          map((r) => loadCurrentGroupSuccessAction({group: r})),
+          catchError((response) =>
+            of(
+              loadCurrentGroupFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
         );
       })
     )
   );
+
   $createChannel = createEffect(() =>
     this.actions$.pipe(
       ofType(createChannelAction),
@@ -245,6 +260,27 @@ export class GroupsEffects {
           )
         );
       })
+    )
+  );
+
+  $changeCurrentChannel = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(changeCurrentChannelAction),
+        tap(({groupId, channelId}) =>
+          this.router.navigateByUrl(
+            `/groups/${groupId}/channels/${channelId}`,
+            {replaceUrl: true}
+          )
+        )
+      ),
+    {dispatch: false}
+  );
+
+  $loadCurrentChannel = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadCurrentChannelAction),
+      map(({channelId}) => loadCurrentChannelSuccessAction({channelId}))
     )
   );
 
