@@ -35,3 +35,16 @@ jobs:
             tag_with_ref: true
             repository: ${{ secrets.DOCKERHUB_USERNAME }}/chatting_app
                         
+  deploy:
+    runs-on: ubuntu-latest  
+    name: 'Deploy to Azure Containers Instances'
+    
+    steps:
+      - name: 'Deploy'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          resource-group: ${{secrets.RESOURCE_GROUP}}
+          dns-name-label: ${{secrets.RESOURCE_GROUP}}${{github.run_number}}
+          image: ${{secrets.REGISTRY_LOGIN_SERVER}}/${{DOCKERHUB_USERNAME}}/chatting-app
+          name: instant-messenger
+          location: 'west europe'
