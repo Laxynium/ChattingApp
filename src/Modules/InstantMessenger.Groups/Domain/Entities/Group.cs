@@ -273,7 +273,7 @@ namespace InstantMessenger.Groups.Domain.Entities
                 .CanExecute();
         }
 
-        public bool CanAccessMessage(UserId userId, Channel channel)
+        public bool CanAccessMessages(UserId userId, Channel channel)
         {
             var member = GetMember(userId);
             if (member.IsOwner)

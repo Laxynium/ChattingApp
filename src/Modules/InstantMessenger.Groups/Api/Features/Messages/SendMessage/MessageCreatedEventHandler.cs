@@ -42,7 +42,7 @@ namespace InstantMessenger.Groups.Api.Features.Messages.SendMessage
             if (message is null || group is null || channel is null)
                 return;
             var allowedMembers = group.Members
-                .Where(m => group.CanAccessMessage(m.UserId, channel))
+                .Where(m => group.CanAccessMessages(m.UserId, channel))
                 .Select(m=>m.UserId.Value.ToString("N"))
                 .ToList();
 

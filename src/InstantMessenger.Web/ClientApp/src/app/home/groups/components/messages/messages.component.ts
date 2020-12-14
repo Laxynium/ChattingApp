@@ -75,7 +75,8 @@ export class MessagesComponent implements OnInit {
               },
             })
           );
-        })
+        }),
+        first()
       )
       .subscribe();
 

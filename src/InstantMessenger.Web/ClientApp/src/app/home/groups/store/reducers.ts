@@ -171,6 +171,10 @@ const groupsReducer = createReducer(
     channels: s.channels
       .clear()
       .concat(a.channels.map((c) => [c.channelId, c])),
+    currentChannelMessages:
+      a.channels.length == 0
+        ? Map<string, MessageDto>()
+        : s.currentChannelMessages,
   })),
   on(getChannelsFailureAction, (s, a) => ({
     ...s,

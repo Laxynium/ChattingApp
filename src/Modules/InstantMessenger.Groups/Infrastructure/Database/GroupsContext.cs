@@ -268,7 +268,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
 
             message.Property(x => x.CreatedAt).IsRequired();
             message.Property(x => x.Content)
-                .HasConversion(x=>x.Value,x=>new MessageContent(x))
+                .HasConversion(x=>x.Value,x=>MessageContent.From(x))
                 .IsRequired();
         }
     }

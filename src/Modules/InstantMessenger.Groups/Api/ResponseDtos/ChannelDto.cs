@@ -4,14 +4,14 @@ namespace InstantMessenger.Groups.Api.ResponseDtos
 {
     public class ChannelDto
     {
-        public Guid ChannelId { get; set; }
         public Guid GroupId { get; set; }
+        public Guid ChannelId { get; set; }
         public string ChannelName { get; set; }
 
-        public ChannelDto(Guid channelId, Guid groupId, string channelName)
+        public ChannelDto(Guid groupId, Guid channelId, string channelName)
         {
-            ChannelId = channelId;
             GroupId = groupId;
+            ChannelId = channelId;
             ChannelName = channelName;
         }
         public ChannelDto(){}

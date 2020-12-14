@@ -17,6 +17,7 @@ using InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy;
 using InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy;
 using InstantMessenger.Groups.Api.Features.Roles.RemovePermissionFromRole;
 using InstantMessenger.Groups.Api.Features.Roles.RemoveRole;
+using InstantMessenger.Groups.Api.Features.Roles.UpdateRolePermissions;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -128,6 +129,13 @@ namespace InstantMessenger.Groups.Api
         {
             var result = await _facade.QueryAsync(new GetRoleQuery(User.GetUserId(), groupId, roleId));
             return Ok(result);
+        }
+
+        [HttpPut("{groupId}/roles/{roleId}/permissions")]
+        public async Task<IActionResult> Put(UpdateRolePermissionsApiRequest request)
+        {
+            await _facade.SendAsync(new UpdateRolePermissionsCommand(User.GetUserId(), request.GroupId, request.RoleId, request.Permissions));
+            return Ok();
         }
 
         [HttpPost("{groupId}/roles/{roleId}/permissions")]

@@ -51,23 +51,17 @@ export class RolesService {
     roleId: string;
     permissions: PermissionDto[];
   }): Observable<Object> {
-    const requests = r.permissions.map((p) => {
-      if (p.isOn) {
-        return this.http.post(
-          `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions`,
-          {
-            groupId: r.groupId,
-            roleId: r.roleId,
-            permissionName: p.name,
-          }
-        );
-      } else {
-        return this.http.delete(
-          `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions/${p.name}`
-        );
+    return this.http.put(
+      `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions`,
+      {
+        groupId: r.groupId,
+        roleId: r.roleId,
+        permissions: r.permissions.map((p) => ({
+          permission: p.name,
+          isOn: p.isOn,
+        })),
       }
-    });
-    return forkJoin(requests);
+    );
   }
 
   public createRole(r: {

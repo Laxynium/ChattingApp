@@ -56,7 +56,7 @@ namespace InstantMessenger.Groups.Api.Features.Messages.SendMessage
                 throw new MessageAlreadyExistsException(command.MessageId);
             }
 
-            var message = group.SendMessage(UserId.From(command.UserId), channel, MessageId.From(command.MessageId), new MessageContent(command.Content), _clock);
+            var message = group.SendMessage(UserId.From(command.UserId), channel, MessageId.From(command.MessageId), MessageContent.Create(command.Content), _clock);
 
             await _messageRepository.AddAsync(message);
             await _unitOfWork.Commit();
