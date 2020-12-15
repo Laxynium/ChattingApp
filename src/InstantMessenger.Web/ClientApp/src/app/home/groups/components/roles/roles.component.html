@@ -14,7 +14,11 @@
           <fa-icon [icon]="['fas','chevron-down']"></fa-icon>
         </button>
       </span>
-      <button *ngIf="role.priority != -1" class="btn btn-outline-danger ml-1" (click)="removeRole(role)">
+      <button *ngIf="role.priority != -1" class="btn btn-outline-info ml-1" (click)="openRenameRoleModal(role)">
+        <fa-icon [icon]="['fas','edit']"></fa-icon>
+      </button>
+      <button *ngIf="role.priority != -1" class="btn btn-outline-danger ml-1" (click)="removeRole(role)" accessControl
+        [accessControlAction]="['manage_roles_general']" [accessControlGroupId]="role.groupId">
         <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
       </button>
     </div>

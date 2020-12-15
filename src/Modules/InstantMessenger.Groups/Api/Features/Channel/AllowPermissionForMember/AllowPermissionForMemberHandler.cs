@@ -11,13 +11,11 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForMember
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public AllowPermissionForMemberHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public AllowPermissionForMemberHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(AllowPermissionForMemberCommand command)
@@ -33,9 +31,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForMember
                 UserId.From(command.MemberUserId),
                 Permission.FromName(command.Permission)
             );
-
-
-            await _unitOfWork.Commit();
         }
     }
 }

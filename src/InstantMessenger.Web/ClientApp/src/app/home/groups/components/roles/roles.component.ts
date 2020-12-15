@@ -4,6 +4,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
 import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-role-permissions/manage-role-permissions.modal';
+import {RenameRoleModal} from 'src/app/home/groups/components/rename-role/rename-role.modal';
 import {
   getRolesAction,
   moveDownRoleAction,
@@ -63,5 +64,9 @@ export class RolesComponent implements OnInit {
     this.store.dispatch(
       removeRoleAction({groupId: role.groupId, roleId: role.roleId})
     );
+  }
+  openRenameRoleModal(role: RoleDto) {
+    const modal = this.modal.open(RenameRoleModal);
+    modal.componentInstance.role = role;
   }
 }

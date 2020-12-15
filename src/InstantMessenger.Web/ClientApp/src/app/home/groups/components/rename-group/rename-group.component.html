@@ -1,0 +1,14 @@
+<form [formGroup]="form" (ngSubmit)="renameGroup()">
+  <div class="form-group">
+    <label for="groupName">Group name</label>
+    <div class="input-group">
+      <input class="form-control" formControlName="groupName" name="groupName" type="text" />
+    </div>
+    <div *ngIf="groupName.invalid && (groupName.dirty || groupName.touched)" class="text-danger">
+      <div *ngIf="groupName.errors.required">Group name is required</div>
+    </div>
+  </div>
+  <button [disabled]="form.invalid || ($renamingGroup | async)" type="submit" class="btn btn-primary">
+    Rename
+  </button>
+</form>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.Features.Group.ChangeName;
 using InstantMessenger.Groups.Api.Features.Group.Create;
 using InstantMessenger.Groups.Api.Features.Group.Delete;
 using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
@@ -13,6 +14,7 @@ using InstantMessenger.Groups.Api.Features.Members.LeaveGroup;
 using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
 using InstantMessenger.Groups.Api.Features.Roles.AddRole;
+using InstantMessenger.Groups.Api.Features.Roles.ChangeName;
 using InstantMessenger.Groups.Api.Features.Roles.MoveDownRoleInHierarchy;
 using InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy;
 using InstantMessenger.Groups.Api.Features.Roles.RemovePermissionFromRole;
@@ -48,6 +50,13 @@ namespace InstantMessenger.Groups.Api
         public async Task<IActionResult> Delete(Guid groupId)
         {
             await _facade.SendAsync(new RemoveGroupCommand(User.GetUserId(),groupId));
+            return Ok();
+        }     
+        
+        [HttpPut("{groupId}")]
+        public async Task<IActionResult> Put(RenameGroupApiRequest request)
+        {
+            await _facade.SendAsync(new RenameGroupCommand(User.GetUserId(),request.GroupId, request.Name));
             return Ok();
         }
 
@@ -100,6 +109,13 @@ namespace InstantMessenger.Groups.Api
         public async Task<IActionResult> DeleteRole([FromRoute]RemoveRoleApiRequest request)
         {
             await _facade.SendAsync(new RemoveRoleCommand(User.GetUserId(), request.GroupId, request.RoleId));
+            return Ok();
+        }        
+        
+        [HttpPut("{groupId}/roles/{roleId}")]
+        public async Task<IActionResult> PutRole(ChangeRoleNameApiRequest request)
+        {
+            await _facade.SendAsync(new ChangeRoleNameCommand(User.GetUserId(), request.GroupId, request.RoleId, request.Name));
             return Ok();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
+using InstantMessenger.Groups.Api.Features.Channel.EditChannel;
 using InstantMessenger.Groups.Api.Features.Channel.RemoveChannel;
 using InstantMessenger.Groups.Api.Features.Channel.UpdateMemberPermissionOverride;
 using InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverride;
@@ -35,6 +36,13 @@ namespace InstantMessenger.Groups.Api
         public async Task<IActionResult> DeleteChannel(Guid groupId, Guid channelId)
         {
             await _facade.SendAsync(new RemoveChannelCommand(User.GetUserId(), groupId, channelId));
+            return Ok();
+        }     
+        
+        [HttpPut("{channelId}")]
+        public async Task<IActionResult> EditChannel(RenameChannelApiRequest request)
+        {
+            await _facade.SendAsync(new RenameChannelCommand(User.GetUserId(), request.GroupId, request.ChannelId,request.Name));
             return Ok();
         }
 

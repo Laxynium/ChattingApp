@@ -24,6 +24,8 @@ import {
   channelsSelector,
   currentGroupSelector,
 } from 'src/app/home/groups/store/selectors';
+import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rename-group.modal';
+import {RenameChannelModal} from 'src/app/home/groups/components/rename-channel/rename-channel.modal';
 
 @Component({
   selector: 'app-group',
@@ -112,5 +114,15 @@ export class GroupComponent implements OnInit {
       },
       scrollable: true,
     });
+  }
+  openRenameGroupModal() {
+    this.$currentGroup.pipe(first()).subscribe((g) => {
+      const modal = this.modal.open(RenameGroupModal);
+      modal.componentInstance.group = g;
+    });
+  }
+  openRenameChannelModal(channel: ChannelDto) {
+    const modal = this.modal.open(RenameChannelModal);
+    modal.componentInstance.channel = channel;
   }
 }

@@ -1,11 +1,11 @@
-﻿using CSharpFunctionalExtensions;
-using InstantMessenger.Groups.Domain.ValueObjects;
+﻿using InstantMessenger.Groups.Domain.ValueObjects;
+using InstantMessenger.Shared.BuildingBlocks;
 
 namespace InstantMessenger.Groups.Domain.Entities
 {
     public class Role : Entity<RoleId>
     {
-        public RoleName Name { get; }
+        public RoleName Name { get; private set; }
         public RolePriority Priority { get; private set; }
         public Permissions Permissions { get; private set; }
 
@@ -44,6 +44,11 @@ namespace InstantMessenger.Groups.Domain.Entities
             if (this.Name == RoleName.EveryOneRole)
                 return;
             Priority = Priority.Decreased();
+        }
+
+        public void Rename(RoleName roleName)
+        {
+            Name = roleName;
         }
     }
 }

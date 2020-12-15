@@ -8,6 +8,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
     public class AllowedActions : ValueObject
     {
         public static readonly AllowedActions All = new AllowedActions("all");
+        public static readonly AllowedActions ManageGroup = new AllowedActions("manage_group");
         public static readonly AllowedActions ManageInvitations = new AllowedActions("manage_invitations");
         public static readonly AllowedActions ManageRolesGeneral = new AllowedActions("manage_roles_general");
         public static readonly AllowedActions ManageChannelsGeneral = new AllowedActions("manage_channels_general");

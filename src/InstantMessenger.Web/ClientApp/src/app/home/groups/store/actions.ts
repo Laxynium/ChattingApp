@@ -27,6 +27,10 @@ export enum ActionTypes {
   REMOVE_GROUP_SUCCESS = '[Groups] Remove group success',
   REMOVE_GROUP_FAILURE = '[Groups] Remove group failure',
 
+  RENAME_GROUP = '[Groups] Rename group',
+  RENAME_GROUP_SUCCESS = '[Groups] Rename group success',
+  RENAME_GROUP_FAILURE = '[Groups] Rename group failure',
+
   JOIN_GROUP = '[Groups] Join group',
   JOIN_GROUP_SUCCESS = '[Groups] Join group success',
   JOIN_GROUP_FAILURE = '[Groups] Join group failure',
@@ -111,6 +115,18 @@ export const removeGroupSuccessAction = createAction(
 );
 export const removeGroupFailureAction = createAction(
   ActionTypes.REMOVE_GROUP_FAILURE
+);
+
+export const renameGroupAction = createAction(
+  ActionTypes.RENAME_GROUP,
+  props<{group: GroupDto}>()
+);
+export const renameGroupSuccessAction = createAction(
+  ActionTypes.RENAME_GROUP_SUCCESS,
+  props<{group: GroupDto}>()
+);
+export const renameGroupFailureAction = createAction(
+  ActionTypes.RENAME_GROUP_FAILURE
 );
 
 export const joinGroupAction = createAction(

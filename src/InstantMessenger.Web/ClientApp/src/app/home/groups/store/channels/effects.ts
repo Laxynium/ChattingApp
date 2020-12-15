@@ -11,6 +11,9 @@ import {
   getChannelRolePermissionOverridesAction,
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
+  renameChannelAction,
+  renameChannelFailureAction,
+  renameChannelSuccessAction,
   updateChannelMemberPermissionOverridesAction,
   updateChannelMemberPermissionOverridesFailureAction,
   updateChannelMemberPermissionOverridesSuccessAction,
@@ -28,7 +31,7 @@ export class ChannelsEffects {
     this.actions$.pipe(
       ofType(updateChannelRolePermissionOverridesAction),
       switchMap((request) => {
-        return this.ChannelsService.updateRolePermissionOverrides(request).pipe(
+        return this.channelsService.updateRolePermissionOverrides(request).pipe(
           map((r) =>
             updateChannelRolePermissionOverridesSuccessAction(request)
           ),
@@ -60,26 +63,28 @@ export class ChannelsEffects {
     this.actions$.pipe(
       ofType(getChannelRolePermissionOverridesAction),
       switchMap((request) => {
-        return this.ChannelsService.getRolePermissionOverrides({
-          groupId: request.groupId,
-          channelId: request.channelId,
-          roleId: request.roleId,
-        }).pipe(
-          map((r) =>
-            getChannelRolePermissionOverridesSuccessAction({
-              groupId: request.groupId,
-              roleId: request.roleId,
-              channelId: request.channelId,
-              overrides: r,
-            })
-          ),
-          catchError((response: HttpErrorResponse) =>
-            of(
-              getChannelRolePermissionOverridesFailureAction(),
-              requestFailedAction({error: mapToError(response)})
+        return this.channelsService
+          .getRolePermissionOverrides({
+            groupId: request.groupId,
+            channelId: request.channelId,
+            roleId: request.roleId,
+          })
+          .pipe(
+            map((r) =>
+              getChannelRolePermissionOverridesSuccessAction({
+                groupId: request.groupId,
+                roleId: request.roleId,
+                channelId: request.channelId,
+                overrides: r,
+              })
+            ),
+            catchError((response: HttpErrorResponse) =>
+              of(
+                getChannelRolePermissionOverridesFailureAction(),
+                requestFailedAction({error: mapToError(response)})
+              )
             )
-          )
-        );
+          );
       })
     )
   );
@@ -88,19 +93,19 @@ export class ChannelsEffects {
     this.actions$.pipe(
       ofType(updateChannelMemberPermissionOverridesAction),
       switchMap((request) => {
-        return this.ChannelsService.updateMemberPermissionOverrides(
-          request
-        ).pipe(
-          map((r) =>
-            updateChannelMemberPermissionOverridesSuccessAction(request)
-          ),
-          catchError((response: HttpErrorResponse) =>
-            of(
-              updateChannelMemberPermissionOverridesFailureAction(),
-              requestFailedAction({error: mapToError(response)})
+        return this.channelsService
+          .updateMemberPermissionOverrides(request)
+          .pipe(
+            map((r) =>
+              updateChannelMemberPermissionOverridesSuccessAction(request)
+            ),
+            catchError((response: HttpErrorResponse) =>
+              of(
+                updateChannelMemberPermissionOverridesFailureAction(),
+                requestFailedAction({error: mapToError(response)})
+              )
             )
-          )
-        );
+          );
       })
     )
   );
@@ -122,7 +127,7 @@ export class ChannelsEffects {
     this.actions$.pipe(
       ofType(getChannelMemberPermissionOverridesAction),
       switchMap((request) => {
-        return this.ChannelsService.getMemberPermissionOverrides(request).pipe(
+        return this.channelsService.getMemberPermissionOverrides(request).pipe(
           map((r) =>
             getChannelMemberPermissionOverridesSuccessAction({
               groupId: request.groupId,
@@ -142,9 +147,37 @@ export class ChannelsEffects {
     )
   );
 
+  $renameChannel = createEffect(() =>
+    this.actions$.pipe(
+      ofType(renameChannelAction),
+      switchMap((request) => {
+        return this.channelsService.renameChannel(request.channel).pipe(
+          map(() => renameChannelSuccessAction({channel: request.channel})),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              renameChannelFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $renameChannelSuccess = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(renameChannelSuccessAction),
+        tap(() => {
+          this.toasts.showSuccess(`Channel successfully renamed`);
+        })
+      ),
+    {dispatch: false}
+  );
+
   constructor(
     private actions$: Actions,
-    private ChannelsService: ChannelsService,
+    private channelsService: ChannelsService,
     private toasts: ToastService
   ) {}
 }

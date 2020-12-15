@@ -41,6 +41,7 @@ import {
   removeGroupAction,
   removeGroupFailureAction,
   removeGroupSuccessAction,
+  renameGroupSuccessAction,
   revokeInvitationAction,
   revokeInvitationFailureAction,
   revokeInvitationSuccessAction,
@@ -73,6 +74,7 @@ import {
   removeRoleAction,
   removeRoleFailureAction,
   removeRoleSuccessAction,
+  renameRoleSuccessAction,
 } from 'src/app/home/groups/store/roles/actions';
 import {
   CurrentGroup,
@@ -100,6 +102,7 @@ import {
   getChannelRolePermissionOverridesAction,
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
+  renameChannelSuccessAction,
   updateChannelMemberPermissionOverridesSuccessAction,
   updateChannelRolePermissionOverridesSuccessAction,
 } from 'src/app/home/groups/store/channels/actions';
@@ -116,7 +119,7 @@ export interface GroupsStateInterface {
     isBeingGenerated: boolean;
   };
   invitations: InvitationDto[];
-  roles: RoleDto[];
+  roles: Map<string, RoleDto>;
   creatingRole: boolean;
   rolePermissions: PermissionDto[];
   rolePermissionsLoading: boolean;
@@ -148,7 +151,7 @@ const initialState: GroupsStateInterface = {
     isBeingGenerated: false,
   },
   invitations: [],
-  roles: [],
+  roles: Map(),
   creatingRole: false,
   rolePermissions: [],
   rolePermissionsLoading: false,
@@ -219,6 +222,11 @@ const groupsReducer = createReducer(
   })),
   on(removeGroupFailureAction, (s, a) => ({
     ...s,
+  })),
+
+  on(renameGroupSuccessAction, (s, a) => ({
+    ...s,
+    currentGroup: {...s.currentGroup, name: a.group.name},
   })),
 
   on(generateInvitationAction, (s, a) => ({
@@ -326,6 +334,14 @@ const groupsReducer = createReducer(
     ...s,
   })),
 
+  on(renameChannelSuccessAction, (s, a) => ({
+    ...s,
+    channels: s.channels.set(a.channel.channelId, {
+      ...s.channels.get(a.channel.channelId),
+      channelName: a.channel.channelName,
+    }),
+  })),
+
   on(loadCurrentChannelSuccessAction, (s, a) => ({
     ...s,
     currentChannel: s.channels.get(a.channelId),
@@ -336,7 +352,7 @@ const groupsReducer = createReducer(
   })),
   on(getRolesSuccessAction, (s, a) => ({
     ...s,
-    roles: [...a.roles],
+    roles: Map(a.roles.map((r) => [r.roleId, r])),
   })),
   on(getRolesFailureAction, (s, a) => ({
     ...s,
@@ -348,7 +364,7 @@ const groupsReducer = createReducer(
   })),
   on(createRoleSuccessAction, (s, a) => ({
     ...s,
-    roles: [...s.roles, a.role],
+    roles: s.roles.set(a.role.roleId, a.role),
     creatingRole: false,
   })),
   on(createRoleFailureAction, (s, a) => ({
@@ -361,19 +377,27 @@ const groupsReducer = createReducer(
   })),
   on(removeRoleSuccessAction, (s, a) => ({
     ...s,
-    roles: [...s.roles.filter((r) => r.roleId != a.roleId)],
+    roles: s.roles.remove(a.roleId),
   })),
   on(removeRoleFailureAction, (s, a) => ({
     ...s,
   })),
 
+  on(renameRoleSuccessAction, (s, a) => ({
+    ...s,
+    roles: s.roles.set(a.role.roleId, {
+      ...s.roles.get(a.role.roleId),
+      name: a.role.name,
+    }),
+  })),
+
   on(moveUpRoleSuccessAction, (s, a) => ({
     ...s,
-    roles: [...a.roles],
+    roles: Map(a.roles.map((r) => [r.roleId, r])),
   })),
   on(moveDownRoleSuccessAction, (s, a) => ({
     ...s,
-    roles: [...a.roles],
+    roles: Map(a.roles.map((r) => [r.roleId, r])),
   })),
 
   on(getRolePermissionsAction, (s, a) => ({

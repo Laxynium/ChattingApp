@@ -11,13 +11,11 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AddChannel
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateChannelHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public CreateChannelHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(CreateChannelCommand command)
         {
@@ -30,7 +28,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AddChannel
             var channel = group.CreateChannel(UserId.From(command.UserId), ChannelId.From(command.ChannelId), ChannelName.Create(command.ChannelName));
 
             await _channelRepository.AddAsync(channel);
-            await _unitOfWork.Commit();
         }
     }
 }

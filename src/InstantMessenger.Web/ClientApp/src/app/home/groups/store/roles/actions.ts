@@ -23,6 +23,10 @@ export enum ActionTypes {
   REMOVE_ROLE_SUCCESS = '[Groups] Remove role success',
   REMOVE_ROLE_FAILURE = '[Groups] Remove role failure',
 
+  RENAME_ROLE = '[Groups] Rename role',
+  RENAME_ROLE_SUCCESS = '[Groups] Rename role success',
+  RENAME_ROLE_FAILURE = '[Groups] Rename role failure',
+
   ADD_PERMISSION = '[Groups] Add permission',
   ADD_PERMISSION_SUCCESS = '[Groups] Add permission success',
   ADD_PERMISSION_FAILURE = '[Groups] Add permission failure',
@@ -106,6 +110,18 @@ export const removeRoleSuccessAction = createAction(
 );
 export const removeRoleFailureAction = createAction(
   ActionTypes.REMOVE_ROLE_FAILURE
+);
+
+export const renameRoleAction = createAction(
+  ActionTypes.RENAME_ROLE,
+  props<{role: RoleDto}>()
+);
+export const renameRoleSuccessAction = createAction(
+  ActionTypes.RENAME_ROLE_SUCCESS,
+  props<{role: RoleDto}>()
+);
+export const renameRoleFailureAction = createAction(
+  ActionTypes.RENAME_ROLE_FAILURE
 );
 
 export const addPermissionAction = createAction(

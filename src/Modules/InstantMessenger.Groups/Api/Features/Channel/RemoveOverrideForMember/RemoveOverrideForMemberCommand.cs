@@ -30,13 +30,10 @@ namespace InstantMessenger.Groups.Api.Features.Channel.RemoveOverrideForMember
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public RemoveOverrideForMemberHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public RemoveOverrideForMemberHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(RemoveOverrideForMemberCommand command)
         {
@@ -44,8 +41,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.RemoveOverrideForMember
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId));
 
             group.RemoveOverride(UserId.From(command.UserId), channel, UserId.From(command.MemberUserId), Permission.FromName(command.Permission));
-
-            await _unitOfWork.Commit();
         }
     }
 }

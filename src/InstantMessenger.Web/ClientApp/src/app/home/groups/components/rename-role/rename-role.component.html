@@ -1,0 +1,14 @@
+<form [formGroup]="form" (ngSubmit)="renameRole()">
+  <div class="form-group">
+    <label for="roleName">Role name</label>
+    <div class="input-group">
+      <input class="form-control" formControlName="roleName" name="roleName" type="text" />
+    </div>
+    <div *ngIf="roleName.invalid && (roleName.dirty || roleName.touched)" class="text-danger">
+      <div *ngIf="roleName.errors.required">Role name is required</div>
+    </div>
+  </div>
+  <button [disabled]="form.invalid || ($renamingRole | async)" type="submit" class="btn btn-primary">
+    Rename
+  </button>
+</form>

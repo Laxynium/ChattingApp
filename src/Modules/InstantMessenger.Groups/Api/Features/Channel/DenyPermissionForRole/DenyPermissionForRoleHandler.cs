@@ -11,13 +11,11 @@ namespace InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForRole
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public DenyPermissionForRoleHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public DenyPermissionForRoleHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(DenyPermissionForRoleCommand command)
         {
@@ -25,8 +23,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForRole
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId)) ?? throw new ChannelNotFoundException(ChannelId.From(command.ChannelId));
 
             group.DenyPermission(UserId.From(command.UserId), channel, RoleId.From(command.RoleId), Permission.FromName(command.Permission));
-
-            await _unitOfWork.Commit();
         }
     }
 }

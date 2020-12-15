@@ -6,7 +6,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
     public class Permission : SmartEnum<Permission,int>
     {
         public static readonly Permission Administrator = new Permission(nameof(Administrator), 0x1);
-        //public static readonly Permission ManageGroup = new Permission(nameof(ManageGroup), 0x2);
+        public static readonly Permission ManageGroup = new Permission(nameof(ManageGroup), 0x2);
         public static readonly Permission ManageRoles = new Permission(nameof(ManageRoles), 0x4);
         public static readonly Permission ManageChannels = new Permission(nameof(ManageChannels), 0x8);
         public static readonly Permission Kick = new Permission(nameof(Kick), 0x10);

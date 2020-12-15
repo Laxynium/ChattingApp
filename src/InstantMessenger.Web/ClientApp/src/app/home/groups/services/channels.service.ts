@@ -1,9 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {combineLatest, forkJoin, Observable, zip} from 'rxjs';
-import {combineAll, concatMap, map} from 'rxjs/operators';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Observable, zip} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {
   PermissionOverrideDto,
   PermissionOverrideTypeDto,
@@ -17,6 +16,14 @@ export class ChannelsService {
     return `${this.groupApi}/${groupId}/channels`;
   }
   constructor(private http: HttpClient) {}
+
+  public renameChannel(r: ChannelDto) {
+    return this.http.put(`${this.channelsApi(r.groupId)}/${r.channelName}`, {
+      groupId: r.groupId,
+      channelId: r.channelId,
+      name: r.channelName,
+    });
+  }
 
   public updateRolePermissionOverrides(r: {
     groupId: string;

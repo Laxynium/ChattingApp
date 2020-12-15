@@ -51,7 +51,6 @@ namespace InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Action
 
                 permissions = Channel.CalculatePermissions(permissions, AsMember, EveryoneRole.Id);
 
-
                 if (permissions.Has(Permission.ManageChannels))
                     return true;
 

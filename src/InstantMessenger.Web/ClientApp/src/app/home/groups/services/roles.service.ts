@@ -82,6 +82,10 @@ export class RolesService {
     return this.http.delete(`${this.rolesApi(r.groupId)}/${r.roleId}`);
   }
 
+  public renameRole(r: RoleDto): Observable<Object> {
+    return this.http.put(`${this.rolesApi(r.groupId)}/${r.roleId}`, r);
+  }
+
   public addPermission(r: {
     groupId: string;
     roleId: string;

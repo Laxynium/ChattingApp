@@ -20,6 +20,10 @@
             <button ngbDropdownItem (click)="openMembersModal()">
               View members
             </button>
+            <button ngbDropdownItem (click)="openRenameGroupModal()" accessControl
+              [accessControlAction]="['manage_group']" [accessControlGroupId]="($currentGroup | async)?.groupId">
+              Rename group
+            </button>
           </div>
         </div>
       </div>
@@ -60,6 +64,12 @@
                                   [accessControlGroupId]="($currentGroup | async)?.groupId"
                                   [accessControlChannelId]="channel.channelId">
                                   Manage permissions
+                                </button>
+                                <button ngbDropdownItem (click)="openRenameChannelModal(channel)" accessControl
+                                  [accessControlAction]="['manage_channels']"
+                                  [accessControlGroupId]="($currentGroup | async)?.groupId"
+                                  [accessControlChannelId]="channel.channelId">
+                                  Rename channel
                                 </button>
                                 <button ngbDropdownItem (click)="removeChannel(channel.channelId)" accessControl
                                   [accessControlAction]="['manage_channels']"

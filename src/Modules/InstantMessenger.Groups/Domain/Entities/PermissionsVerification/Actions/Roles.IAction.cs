@@ -132,9 +132,40 @@ namespace InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Action
 
                 return true;
             }
+        }
+
+        public class RenameRole : Action
+        {
+            public Permissions MemberPermissions { get; }
+            public IEnumerable<Role> MemberRoles { get; }
+            public Role RoleBeingRenamed { get; }
+            public override string Name => nameof(RenameRole);
+
+            public RenameRole(Member asMember, Permissions memberPermissions, IEnumerable<Role> memberRoles, Role roleBeingRenamed) : base(asMember)
+            {
+                MemberPermissions = memberPermissions;
+                MemberRoles = memberRoles;
+                RoleBeingRenamed = roleBeingRenamed;
+            }
+
+            public override bool CanExecute()
+            {
+                if (AsMember.IsOwner)
+                    return true;
+                if (!MemberPermissions.Has(Permission.Administrator, Permission.ManageRoles))
+                    return false;
+
+                var memberHighestRole = GetRoleWithHighestPriority(MemberRoles);
+
+                if (RoleBeingRenamed.Priority >= memberHighestRole.Priority)
+                    return false;
+
+                return true;
+            }
 
 
         }
+
 
         public class MoveDownRoleInHierarchy : Action
         {

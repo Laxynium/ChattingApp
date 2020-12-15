@@ -47,6 +47,12 @@ import {ChannelsEffects} from 'src/app/home/groups/store/channels/effects';
 import {ChannelsService} from 'src/app/home/groups/services/channels.service';
 import {MemberPermissionOverridesComponent} from 'src/app/home/groups/components/channel/member-permission-overrides/member-permission-overrides.component';
 import {MemberPermissionOverridesModal} from 'src/app/home/groups/components/channel/member-permission-overrides/member-permission-overrides.modal';
+import {RenameRoleComponent} from './components/rename-role/rename-role.component';
+import {RenameChannelComponent} from './components/rename-channel/rename-channel.component';
+import {RenameGroupComponent} from './components/rename-group/rename-group.component';
+import {RenameRoleModal} from 'src/app/home/groups/components/rename-role/rename-role.modal';
+import {RenameChannelModal} from 'src/app/home/groups/components/rename-channel/rename-channel.modal';
+import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rename-group.modal';
 
 @NgModule({
   declarations: [
@@ -76,6 +82,12 @@ import {MemberPermissionOverridesModal} from 'src/app/home/groups/components/cha
     RolePermissionOverridesModal,
     MemberPermissionOverridesComponent,
     MemberPermissionOverridesModal,
+    RenameRoleComponent,
+    RenameRoleModal,
+    RenameChannelComponent,
+    RenameChannelModal,
+    RenameGroupComponent,
+    RenameGroupModal,
   ],
   imports: [
     CommonModule,

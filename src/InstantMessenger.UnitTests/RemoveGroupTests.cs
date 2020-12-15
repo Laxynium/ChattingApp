@@ -47,7 +47,7 @@ namespace InstantMessenger.UnitTests
                     .AsOwner()
                     .CreateRole("role1")
                     .AddPermission("Administrator")
-                    //.AddPermission("ManageGroup")
+                    .AddPermission("ManageGroup")
                     .AddPermission("ManageRoles")
                     .AddPermission("ManageChannels").Build()
                     .CreateMember().AssignRole(1).Build()

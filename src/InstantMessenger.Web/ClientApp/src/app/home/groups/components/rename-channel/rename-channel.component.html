@@ -1,0 +1,14 @@
+<form [formGroup]="form" (ngSubmit)="renameChannel()">
+  <div class="form-group">
+    <label for="channelName">Channel name</label>
+    <div class="input-group">
+      <input class="form-control" formControlName="channelName" name="channelName" type="text" />
+    </div>
+    <div *ngIf="channelName.invalid && (channelName.dirty || channelName.touched)" class="text-danger">
+      <div *ngIf="channelName.errors.required">Channel name is required</div>
+    </div>
+  </div>
+  <button [disabled]="form.invalid || ($renamingChannel | async)" type="submit" class="btn btn-primary">
+    Rename
+  </button>
+</form>

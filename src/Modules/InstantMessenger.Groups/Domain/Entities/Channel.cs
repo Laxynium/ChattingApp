@@ -15,7 +15,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public IEnumerable<MemberPermissionOverride> MemberPermissionOverrides => _memberPermissionOverrides.ToList();
 
         public GroupId GroupId { get; }
-        public ChannelName Name { get; }
+        public ChannelName Name { get; private set; }
 
         private Channel(){}
 
@@ -109,6 +109,11 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void Remove()
         {
             Apply(new ChannelRemovedEvent(Id, GroupId, Name));
+        }
+
+        public void Rename(ChannelName name)
+        {
+            Name = name;
         }
 
         private void ReplaceOverride(RolePermissionOverride @override) => ReplaceOverride(_rolePermissionOverrides, @override);

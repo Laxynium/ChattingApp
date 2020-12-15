@@ -1,4 +1,5 @@
 import {createAction, props} from '@ngrx/store';
+import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 
 export enum ActionTypes {
@@ -17,6 +18,10 @@ export enum ActionTypes {
   GET_CHANNEL_MEMBER_PERMISSION_OVERRIDES = '[Groups] Get channel member permission overrides',
   GET_CHANNEL_MEMBER_PERMISSION_OVERRIDES_SUCCESS = '[Groups] Get channel member permission overrides success',
   GET_CHANNEL_MEMBER_PERMISSION_OVERRIDES_FAILURE = '[Groups] Get channel member permission overrides failure',
+
+  RENAME_CHANNEL = '[Groups] Rename channel',
+  RENAME_CHANNEL_SUCCESS = '[Groups] Rename channel success',
+  RENAME_CHANNEL_FAILURE = '[Groups] Rename channel failure',
 }
 
 export const updateChannelRolePermissionOverridesAction = createAction(
@@ -103,4 +108,16 @@ export const getChannelMemberPermissionOverridesSuccessAction = createAction(
 );
 export const getChannelMemberPermissionOverridesFailureAction = createAction(
   ActionTypes.GET_CHANNEL_MEMBER_PERMISSION_OVERRIDES_FAILURE
+);
+
+export const renameChannelAction = createAction(
+  ActionTypes.RENAME_CHANNEL,
+  props<{channel: ChannelDto}>()
+);
+export const renameChannelSuccessAction = createAction(
+  ActionTypes.RENAME_CHANNEL_SUCCESS,
+  props<{channel: ChannelDto}>()
+);
+export const renameChannelFailureAction = createAction(
+  ActionTypes.RENAME_CHANNEL_FAILURE
 );

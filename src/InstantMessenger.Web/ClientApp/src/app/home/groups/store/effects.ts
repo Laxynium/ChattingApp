@@ -40,11 +40,15 @@ import {
   removeGroupAction,
   removeGroupFailureAction,
   removeGroupSuccessAction,
+  renameGroupAction,
+  renameGroupFailureAction,
+  renameGroupSuccessAction,
   revokeInvitationAction,
   revokeInvitationFailureAction,
   revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
+import {ToastService} from 'src/app/shared/toasts/toast.service';
 import {mapToError} from 'src/app/shared/types/error.response';
 import {v4 as guid} from 'uuid';
 
@@ -112,6 +116,34 @@ export class GroupsEffects {
         );
       })
     )
+  );
+
+  $renameGroup = createEffect(() =>
+    this.actions$.pipe(
+      ofType(renameGroupAction),
+      switchMap((request) => {
+        return this.groupsService.renameGroup(request.group).pipe(
+          map(() => renameGroupSuccessAction({group: request.group})),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              renameGroupFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $renameGroupSuccess = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(renameGroupSuccessAction),
+        tap(() => {
+          this.toasts.showSuccess(`Channel successfully renamed`);
+        })
+      ),
+    {dispatch: false}
   );
 
   $generateInvitation = createEffect(() =>
@@ -303,6 +335,7 @@ export class GroupsEffects {
   constructor(
     private actions$: Actions,
     private groupsService: GroupsService,
-    private router: Router
+    private router: Router,
+    private toasts: ToastService
   ) {}
 }

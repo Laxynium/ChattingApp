@@ -22,7 +22,7 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         private readonly HashSet<Role> _roles = new HashSet<Role>();
         public IEnumerable<Role> Roles => _roles.ToList();
-        public GroupName Name { get; }
+        public GroupName Name { get; private set; }
         public DateTimeOffset CreatedAt { get; }
 
         private Group(){}
@@ -46,8 +46,15 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void Remove(UserId userId) => new Action.DeleteGroup(GetMember(userId))
         .Execute(() =>
         {
-            Apply(new GroupRemovedEvent(Id, Name, CreatedAt,Members));
+            Apply(new GroupRemovedEvent(Id, Name, CreatedAt, Members));
         });
+
+        public void Rename(UserId userId, GroupName name) => new Action.RenameGroup(GetMember(userId),GetMemberPermissions(userId))
+        .Execute(() =>
+        {
+            Name = name;
+        });
+
 
         public void LeaveGroup(UserId userId)
         {
@@ -95,6 +102,19 @@ namespace InstantMessenger.Groups.Domain.Entities
             _roles.Remove(role);
             Apply(new RoleRemovedEvent());
         });
+
+        public void RenameRole(UserId userId, RoleId roleId, RoleName roleName) => new Action.RenameRole(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), GetRole(roleId))
+            .Execute(() =>
+            {
+                var role = GetRole(roleId);
+
+                if (role == GetEveryoneRole())
+                    throw new EveryoneRoleCannotBeRenamedException();
+
+                role.Rename(roleName);
+                
+                Apply(new RoleRenamedEvent());
+            });
 
         public void AddMember(UserId userIdOfMember, MemberName memberName, IClock clock)
         {
@@ -202,6 +222,15 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void RemoveChannel(UserId userId, Channel channel) => new Action.RemoveChannel(GetMember(userId),GetMemberPermissions(userId),channel,GetEveryoneRole())
             .Execute(channel.Remove);
 
+        public void RenameChannel(UserId userId, Channel channel, ChannelName name) => new Action.RemoveChannel(
+                GetMember(userId),
+                GetMemberPermissions(userId),
+                channel,
+                GetEveryoneRole()
+            )
+            .Execute(() => channel.Rename(name));
+
+
         public void AllowPermission(UserId userId, Channel channel, RoleId roleId, Permission permission) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
             .Execute(() =>
         {
@@ -255,6 +284,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             return message;
         }
 
+
         public bool CanAccessChannel(UserId userId, Channel channel)
         {
             var member = GetMember(userId);
@@ -306,6 +336,7 @@ namespace InstantMessenger.Groups.Domain.Entities
 
             var generalActions = new List<(AllowedActions action,Permission permission)>
             {
+                (AllowedActions.ManageGroup,Permission.ManageGroup),
                 (AllowedActions.ManageInvitations,Permission.ManageInvitations),
                 (AllowedActions.ManageChannelsGeneral, Permission.ManageChannels),
                 (AllowedActions.ManageRolesGeneral, Permission.ManageRoles),

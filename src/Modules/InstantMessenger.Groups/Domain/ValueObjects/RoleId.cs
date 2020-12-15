@@ -1,9 +1,9 @@
 ﻿using System;
-using CSharpFunctionalExtensions;
+using InstantMessenger.Shared.BuildingBlocks;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
-    public class RoleId : SimpleValueObject<Guid>
+    public class RoleId : EntityId
     {
         private RoleId() : base(default) { }
         private RoleId(Guid value) : base(value)

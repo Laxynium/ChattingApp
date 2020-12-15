@@ -8,12 +8,14 @@ export const rolesSelector = createSelector(
   groupsFeatureSelector,
   (s: GroupsStateInterface): RoleDto[] =>
     s.roles
+      .toList()
       .slice()
       .sort((a, b) => {
         if (a.priority == -1) return -1;
         return compare(a.priority, b.priority);
       })
       .reverse()
+      .toArray()
 );
 
 export const creatingRoleSelector = createSelector(

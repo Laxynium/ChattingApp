@@ -11,13 +11,10 @@ namespace InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForMember
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public DenyPermissionForMemberHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public DenyPermissionForMemberHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(DenyPermissionForMemberCommand command)
@@ -28,8 +25,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForMember
                           throw new ChannelNotFoundException(ChannelId.From(command.ChannelId));
 
             group.DenyPermission(UserId.From(command.UserId),channel,UserId.From(command.MemberUserId),Permission.FromName(command.Permission));
-
-            await _unitOfWork.Commit();
         }
     }
 }

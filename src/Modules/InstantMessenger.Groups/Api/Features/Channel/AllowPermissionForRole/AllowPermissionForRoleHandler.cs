@@ -11,13 +11,10 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForRole
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public AllowPermissionForRoleHandler(IGroupRepository groupRepository, IChannelRepository channelRepository, IUnitOfWork unitOfWork)
+        public AllowPermissionForRoleHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(AllowPermissionForRoleCommand command)
@@ -33,9 +30,6 @@ namespace InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForRole
                 RoleId.From(command.RoleId),
                 Permission.FromName(command.Permission)
             );
-
-
-            await _unitOfWork.Commit();
         }
     }
 }

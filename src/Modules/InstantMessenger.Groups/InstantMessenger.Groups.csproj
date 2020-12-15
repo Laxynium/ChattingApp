@@ -49,7 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\Features\Group\ChangeName\" />
     <Folder Include="Api\Features\Group\ChangeAvatar\" />
     <Folder Include="Api\Features\Members\Ban\" />
     <Folder Include="Api\Features\Members\ChangeOwnNickname\" />
@@ -57,7 +56,6 @@
     <Folder Include="Api\Features\Messages\AttachFile\" />
     <Folder Include="Api\Features\Messages\Mention\" />
     <Folder Include="Api\Features\Messages\AddReaction\" />
-    <Folder Include="Api\Features\Channel\EditChannel\" />
     <Folder Include="Api\Features\Messages\EmbedLink\" />
   </ItemGroup>
 

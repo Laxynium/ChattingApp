@@ -90,7 +90,7 @@ namespace InstantMessenger.UnitTests.PermissionOverrides
 
         [Theory]
         [InlineData("Administrator")]
-        //[InlineData("ManageGroup")]
+        [InlineData("ManageGroup")]
         [InlineData("Kick")]
         //[InlineData("Ban")]
         [InlineData("ManageInvitations")]

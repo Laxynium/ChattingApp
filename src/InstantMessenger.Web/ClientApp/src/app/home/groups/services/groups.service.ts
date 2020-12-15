@@ -49,6 +49,10 @@ export class GroupsService {
     return this.http.delete(`${this.groupApi}/${request.groupId}`);
   }
 
+  public renameGroup(request: GroupDto): Observable<Object> {
+    return this.http.put(`${this.groupApi}/${request.groupId}`, request);
+  }
+
   public generateInvitation(
     request: GenerateInvitationRequest
   ): Observable<{groupId: string; invitationId: string; code: string}> {

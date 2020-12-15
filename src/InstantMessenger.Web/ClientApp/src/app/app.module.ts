@@ -46,6 +46,7 @@ import {
   faSlash,
   faChevronUp,
   faChevronDown,
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
@@ -107,7 +108,8 @@ export class AppModule {
       faCheckCircle,
       faSlash,
       faChevronUp,
-      faChevronDown
+      faChevronDown,
+      faEdit
     );
   }
 }

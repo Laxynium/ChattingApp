@@ -23,6 +23,9 @@ import {
   removeRoleAction,
   removeRoleFailureAction,
   removeRoleSuccessAction,
+  renameRoleAction,
+  renameRoleFailureAction,
+  renameRoleSuccessAction,
   updateRolePermissionsAction,
   updateRolePermissionsFailureAction,
   updateRolePermissionsSuccessAction,
@@ -165,6 +168,34 @@ export class RolesEffects {
         ofType(removeRoleSuccessAction),
         tap(() => {
           this.toasts.showSuccess(`Role successfully removed`);
+        })
+      ),
+    {dispatch: false}
+  );
+
+  $renameRole = createEffect(() =>
+    this.actions$.pipe(
+      ofType(renameRoleAction),
+      switchMap((request) => {
+        return this.rolesService.renameRole(request.role).pipe(
+          map(() => renameRoleSuccessAction({role: request.role})),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              renameRoleFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $renameRoleSuccess = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(renameRoleSuccessAction),
+        tap(() => {
+          this.toasts.showSuccess(`Role successfully renamed`);
         })
       ),
     {dispatch: false}
