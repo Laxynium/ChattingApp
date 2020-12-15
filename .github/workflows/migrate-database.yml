@@ -29,7 +29,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Run dotnet tools
         run: |
-          dotnet tool install --global dotnet-ef
+          dotnet tool install --global dotnet-ef --version 3.1
           dotnet tool restore
-          cd 
           dotnet ef dbcontext list --project src/InstantMessenger.Api
