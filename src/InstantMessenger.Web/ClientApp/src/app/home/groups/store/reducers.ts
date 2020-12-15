@@ -68,6 +68,8 @@ import {
   getRolesAction,
   getRolesFailureAction,
   getRolesSuccessAction,
+  moveDownRoleSuccessAction,
+  moveUpRoleSuccessAction,
   removeRoleAction,
   removeRoleFailureAction,
   removeRoleSuccessAction,
@@ -363,6 +365,15 @@ const groupsReducer = createReducer(
   })),
   on(removeRoleFailureAction, (s, a) => ({
     ...s,
+  })),
+
+  on(moveUpRoleSuccessAction, (s, a) => ({
+    ...s,
+    roles: [...a.roles],
+  })),
+  on(moveDownRoleSuccessAction, (s, a) => ({
+    ...s,
+    roles: [...a.roles],
   })),
 
   on(getRolePermissionsAction, (s, a) => ({

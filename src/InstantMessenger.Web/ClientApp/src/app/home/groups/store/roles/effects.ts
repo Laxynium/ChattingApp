@@ -14,6 +14,12 @@ import {
   getRolesAction,
   getRolesFailureAction,
   getRolesSuccessAction,
+  moveDownRoleAction,
+  moveDownRoleFailureAction,
+  moveDownRoleSuccessAction,
+  moveUpRoleAction,
+  moveUpRoleFailureAction,
+  moveUpRoleSuccessAction,
   removeRoleAction,
   removeRoleFailureAction,
   removeRoleSuccessAction,
@@ -162,6 +168,40 @@ export class RolesEffects {
         })
       ),
     {dispatch: false}
+  );
+
+  $moveUpRole = createEffect(() =>
+    this.actions$.pipe(
+      ofType(moveUpRoleAction),
+      switchMap((request) => {
+        return this.rolesService.moveUpRole(request).pipe(
+          map((response) => moveUpRoleSuccessAction({roles: response})),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              moveUpRoleFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $moveDownRole = createEffect(() =>
+    this.actions$.pipe(
+      ofType(moveDownRoleAction),
+      switchMap((request) => {
+        return this.rolesService.moveDownRole(request).pipe(
+          map((response) => moveDownRoleSuccessAction({roles: response})),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              moveDownRoleFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
   );
 
   constructor(

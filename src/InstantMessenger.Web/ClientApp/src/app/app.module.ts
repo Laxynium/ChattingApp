@@ -44,6 +44,8 @@ import {
   faTimesCircle,
   faCheckCircle,
   faSlash,
+  faChevronUp,
+  faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
@@ -103,7 +105,9 @@ export class AppModule {
       faPaperPlane,
       faTimesCircle,
       faCheckCircle,
-      faSlash
+      faSlash,
+      faChevronUp,
+      faChevronDown
     );
   }
 }

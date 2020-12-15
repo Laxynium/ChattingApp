@@ -6,6 +6,8 @@ import {filter, first} from 'rxjs/operators';
 import {ManageRolePermissionsModal} from 'src/app/home/groups/components/manage-role-permissions/manage-role-permissions.modal';
 import {
   getRolesAction,
+  moveDownRoleAction,
+  moveUpRoleAction,
   removeRoleAction,
 } from 'src/app/home/groups/store/roles/actions';
 import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
@@ -43,6 +45,18 @@ export class RolesComponent implements OnInit {
       },
     });
     modalRef.componentInstance.role = role;
+  }
+
+  moveUp(role: RoleDto) {
+    this.store.dispatch(
+      moveUpRoleAction({groupId: role.groupId, roleId: role.roleId})
+    );
+  }
+
+  moveDown(role: RoleDto) {
+    this.store.dispatch(
+      moveDownRoleAction({groupId: role.groupId, roleId: role.roleId})
+    );
   }
 
   removeRole(role: RoleDto) {

@@ -30,6 +30,14 @@ export enum ActionTypes {
   REMOVE_PERMISSION = '[Groups] Remove permission',
   REMOVE_PERMISSION_SUCCESS = '[Groups] Remove permission success',
   REMOVE_PERMISSION_FAILURE = '[Groups] Remove permission failure',
+
+  MOVE_UP_ROLE = '[Groups] Move up role',
+  MOVE_UP_ROLE_SUCCESS = '[Groups] Move up role success',
+  MOVE_UP_ROLE_FAILURE = '[Groups] Move up role failure',
+
+  MOVE_DOWN_ROLE = '[Groups] Move down role',
+  MOVE_DOWN_ROLE_SUCCESS = '[Groups] Move down role success',
+  MOVE_DOWN_ROLE_FAILURE = '[Groups] Move down role failure',
 }
 
 export const getRolesAction = createAction(
@@ -120,4 +128,28 @@ export const removePermissionSuccessAction = createAction(
 );
 export const removePermissionFailureAction = createAction(
   ActionTypes.REMOVE_PERMISSION_FAILURE
+);
+
+export const moveUpRoleAction = createAction(
+  ActionTypes.MOVE_UP_ROLE,
+  props<{groupId: string; roleId: string}>()
+);
+export const moveUpRoleSuccessAction = createAction(
+  ActionTypes.MOVE_UP_ROLE_SUCCESS,
+  props<{roles: RoleDto[]}>()
+);
+export const moveUpRoleFailureAction = createAction(
+  ActionTypes.MOVE_UP_ROLE_FAILURE
+);
+
+export const moveDownRoleAction = createAction(
+  ActionTypes.MOVE_DOWN_ROLE,
+  props<{groupId: string; roleId: string}>()
+);
+export const moveDownRoleSuccessAction = createAction(
+  ActionTypes.MOVE_DOWN_ROLE_SUCCESS,
+  props<{roles: RoleDto[]}>()
+);
+export const moveDownRoleFailureAction = createAction(
+  ActionTypes.MOVE_DOWN_ROLE_FAILURE
 );

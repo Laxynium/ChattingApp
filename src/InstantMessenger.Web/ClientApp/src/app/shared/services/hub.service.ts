@@ -70,14 +70,13 @@ export class HubService {
     currentUser: CurrentUserInterface,
     hub: Hub
   ): HubConnection {
-    return (
-      new HubConnectionBuilder()
-        .withUrl(`${environment.apiUrl}/${hub.hubName}`, {
-          accessTokenFactory: () => currentUser.token,
-        })
-        // .configureLogging(LogLevel.Debug)
-        .build()
-    );
+    return new HubConnectionBuilder()
+      .withUrl(`${environment.apiUrl}/${hub.hubName}`, {
+        accessTokenFactory: () => currentUser.token,
+      })
+      .withAutomaticReconnect()
+      .configureLogging(LogLevel.Information)
+      .build();
   }
 
   private registerHandlers(connection: HubConnection, hub: Hub) {

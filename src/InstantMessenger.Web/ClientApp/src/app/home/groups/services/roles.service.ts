@@ -102,6 +102,21 @@ export class RolesService {
       `${this.rolesApi(r.groupId)}/${r.roleId}/permissions/${r.permissionName}`
     );
   }
+
+  public moveUpRole(r: {
+    groupId: string;
+    roleId: string;
+  }): Observable<RoleDto[]> {
+    return this.http
+      .put(`${this.rolesApi(r.groupId)}/move-up`, r)
+      .pipe(concatMap((_) => this.getRoles({groupId: r.groupId})));
+  }
+
+  public moveDownRole(r: {groupId: string; roleId: string}) {
+    return this.http
+      .put(`${this.rolesApi(r.groupId)}/move-down`, r)
+      .pipe(concatMap((_) => this.getRoles({groupId: r.groupId})));
+  }
 }
 
 interface PermissionResponseDto {
