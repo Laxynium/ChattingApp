@@ -43,7 +43,6 @@ export class GroupComponent implements OnInit {
     this.$currentGroup = this.store.pipe(select(currentGroupSelector));
     this.$channels = this.store.pipe(select(channelsSelector));
     this.$groupId = this.route.params.pipe(map((p) => p['id']));
-    //routerLink="channels/{{channel.channelId}}"
   }
 
   ngOnInit(): void {
@@ -52,18 +51,12 @@ export class GroupComponent implements OnInit {
       this.store.dispatch(getChannelsAction({groupId: groupId}));
       this.store.dispatch(getAllowedActionsAction({groupId: groupId}));
     });
-    // this.$currentGroup.subscribe((g) => {
-    //   this.store.dispatch(getChannelsAction({groupId: g.groupId}));
-    // });
-    // this.$currentGroup.subscribe((g) => {
-    //   if (!g) {
-    //     // this.router.navigateByUrl('/groups');
-    //   } else {
-    //     this.store.dispatch(getChannelsAction({groupId: g.groupId}));
-    //     this.store.dispatch(getAllowedActionsAction({groupId: g.groupId}));
-    //   }
-    // });
   }
+
+  ngAfterViewInit(): void {
+    this.channelsNav.select(1);
+  }
+
   navigateToChannel($event) {
     const nextChannelId = $event.nextId;
     this.$groupId.pipe(first()).subscribe((groupId) => {

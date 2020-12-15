@@ -30,6 +30,20 @@ export class ChannelsService {
     );
   }
 
+  public updateMemberPermissionOverrides(r: {
+    groupId: string;
+    channelId: string;
+    memberUserId: string;
+    overrides: PermissionOverrideDto[];
+  }): Observable<Object> {
+    return this.http.put(
+      `${this.channelsApi(r.groupId)}/${
+        r.channelId
+      }/permission-overrides/member`,
+      r
+    );
+  }
+
   public getRolePermissionOverrides(r: {
     groupId: string;
     channelId: string;
@@ -42,9 +56,41 @@ export class ChannelsService {
         }/permission-overrides/role/${r.roleId}`
       ),
       this.http.get<PermissionResponseDto[]>(
+        `${this.channelsApi(r.groupId)}/${r.channelId}/permission-overrides`
+      )
+    ).pipe(
+      map(([os, ps]) => {
+        return ps.reduce(
+          (agg: PermissionOverrideDto[], cur: PermissionResponseDto) => {
+            return [
+              ...agg,
+              <PermissionOverrideDto>{
+                permission: cur.name,
+                type: os.some((o) => o.permission == cur.name)
+                  ? os.find((o) => o.permission == cur.name).type
+                  : PermissionOverrideTypeDto.Neutral,
+              },
+            ];
+          },
+          []
+        );
+      })
+    );
+  }
+
+  public getMemberPermissionOverrides(r: {
+    groupId: string;
+    channelId: string;
+    memberUserId: string;
+  }): Observable<PermissionOverrideDto[]> {
+    return zip(
+      this.http.get<PermissionOverrideDto[]>(
         `${this.channelsApi(r.groupId)}/${
           r.channelId
-        }/permission-overrides/role`
+        }/permission-overrides/member/${r.memberUserId}`
+      ),
+      this.http.get<PermissionResponseDto[]>(
+        `${this.channelsApi(r.groupId)}/${r.channelId}/permission-overrides`
       )
     ).pipe(
       map(([os, ps]) => {

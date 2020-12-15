@@ -21,13 +21,16 @@ namespace InstantMessenger.Groups.Domain.Entities
             //.Add(Permission.MentionRoles)
             .Add(Permission.SendMessages)
             .Add(Permission.ReadMessages);
+
+        public ChannelId ChannelId { get; }
         public Permission Permission { get; }
         public OverrideType Type { get; }
 
-        protected PermissionOverride(Permission permission, OverrideType type)
+        protected PermissionOverride(ChannelId channelId, Permission permission, OverrideType type)
         {
             if (!_validPermissions.Contains(permission))
                 throw new InvalidPermissionOverride(permission.Name);
+            ChannelId = channelId;
             Permission = permission;
             Type = type;
         }
@@ -43,13 +46,14 @@ namespace InstantMessenger.Groups.Domain.Entities
     {
         public RoleId RoleId { get; }
 
-        public RolePermissionOverride(RoleId roleId, Permission permission, OverrideType type) : base(permission, type)
+        public RolePermissionOverride(ChannelId channelId, RoleId roleId, Permission permission, OverrideType type) : base(channelId, permission, type)
         {
             RoleId = roleId;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
+            yield return ChannelId;
             yield return RoleId;
             yield return Permission;
         }
@@ -59,13 +63,14 @@ namespace InstantMessenger.Groups.Domain.Entities
     {
         public UserId UserIdOfMember { get; }
 
-        public MemberPermissionOverride(UserId userIdOfMember, Permission permission, OverrideType type) : base(permission, type)
+        public MemberPermissionOverride(ChannelId channelId, UserId userIdOfMember, Permission permission, OverrideType type) : base(channelId,permission, type)
         {
             UserIdOfMember = userIdOfMember;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
+            yield return ChannelId;
             yield return UserIdOfMember;
             yield return Permission;
         }

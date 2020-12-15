@@ -214,7 +214,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             channel.DenyPermission(GetRole(roleId), permission);
         });
 
-        public void RemoveOverride(UserId userId, Channel channel, Permission permission, RoleId roleId) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
+        public void RemoveOverride(UserId userId, Channel channel, RoleId roleId, Permission permission) => new Action.AllowPermissionForRole(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
             .Execute(() =>
         {
             channel.RemoveOverride(GetRole(roleId), permission);
@@ -234,7 +234,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             channel.DenyPermission(GetMember(userIdOfMember), permission);
         });
 
-        public void RemoveOverride(UserId userId, Channel channel, Permission permission, UserId userIfOfMember) 
+        public void RemoveOverride(UserId userId, Channel channel, UserId userIfOfMember, Permission permission) 
             => new Action.RemoveOverrideForMember(
                     GetMember(userId), 
                     GetMemberPermissions(userId), 

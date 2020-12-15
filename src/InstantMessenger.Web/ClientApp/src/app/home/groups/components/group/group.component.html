@@ -43,7 +43,7 @@
                     <div class="d-flex">
                       <ul ngbNav #nav="ngbNav" class="nav-pills w-100" orientation="vertical" roles="false"
                         (navChange)="navigateToChannel($event)">
-                        <li *ngFor="let channel of $channels | async" ngbNavItem="{{ channel.channelId }}">
+                        <li *ngFor="let channel of $channels | async" [ngbNavItem]="channel.channelId">
                           <a ngbNavLink class="d-flex justify-content-between">
                             <span>{{ channel.channelName }}</span>
                             <div ngbDropdown class="d-inline-block" placement="left-top" container="body"

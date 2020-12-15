@@ -3,6 +3,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
+import {MemberPermissionOverridesModal} from 'src/app/home/groups/components/channel/member-permission-overrides/member-permission-overrides.modal';
 import {RolePermissionOverridesModal} from 'src/app/home/groups/components/channel/role-permission-overrides/role-permission-overrides.modal';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {getMembersAction} from 'src/app/home/groups/store/members/actions';
@@ -56,7 +57,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
                 </div>
                 <button
                   class="btn btn-outline-primary"
-                  (click)="openManageRolesPermissions(member)"
+                  (click)="openManageMemberPermissions(member)"
                 >
                   <fa-icon [icon]="['fas', 'sign-in-alt']"></fa-icon>
                 </button>
@@ -119,7 +120,14 @@ export class ManageChannelPermissionsModal implements OnInit {
         this.store.dispatch(getMembersAction({groupId: g.groupId}));
       });
   }
-  openManageMemberPermissions(member: MemberDto) {}
+  openManageMemberPermissions(member: MemberDto) {
+    const modal = this.modalService.open(MemberPermissionOverridesModal, {
+      scrollable: true,
+      beforeDismiss: () => false,
+    });
+    modal.componentInstance.member = member;
+    modal.componentInstance.channel = this.channel;
+  }
   openManageRolesPermissions(role: RoleDto) {
     const modal = this.modalService.open(RolePermissionOverridesModal, {
       scrollable: true,

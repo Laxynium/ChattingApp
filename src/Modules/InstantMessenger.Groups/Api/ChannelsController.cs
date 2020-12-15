@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
 using InstantMessenger.Groups.Api.Features.Channel.RemoveChannel;
+using InstantMessenger.Groups.Api.Features.Channel.UpdateMemberPermissionOverride;
 using InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverride;
 using InstantMessenger.Groups.Api.Features.Messages.SendMessage;
 using InstantMessenger.Groups.Api.Queries;
@@ -63,6 +64,21 @@ namespace InstantMessenger.Groups.Api
             return Ok();
         }
 
+        [HttpPut("{channelId}/permission-overrides/member")]
+        public async Task<IActionResult> UpdateMemberPermissionOverrides(UpdateMemberPermissionOverrideApiRequest request)
+        {
+            await _facade.SendAsync(
+                new UpdateMemberPermissionOverrideCommand(
+                    User.GetUserId(),
+                    request.GroupId,
+                    request.ChannelId,
+                    request.MemberUserId,
+                    request.Overrides
+                )
+            );
+            return Ok();
+        }
+
         [HttpGet("{channelId}/permission-overrides/role/{roleId}")]
         public async Task<IActionResult> GetRolePermissionOverrides(Guid groupId, Guid channelId, Guid roleId)
         {
@@ -70,7 +86,14 @@ namespace InstantMessenger.Groups.Api
             return Ok(result);
         }
 
-        [HttpGet("{channelId}/permission-overrides/role")]
+        [HttpGet("{channelId}/permission-overrides/member/{memberUserId}")]
+        public async Task<IActionResult> GetMemberPermissionOverrides(Guid groupId, Guid channelId, Guid memberUserId)
+        {
+            var result = await _facade.QueryAsync(new GetChannelMemberPermissionOverridesQuery(groupId, channelId, memberUserId));
+            return Ok(result);
+        }
+
+        [HttpGet("{channelId}/permission-overrides")]
         public async Task<IActionResult> GetAvailablePermissionOverrides(Guid groupId, Guid channelId)
         {
             var result = await _facade.QueryAsync(new GetAvailablePermissionOverridesQuery());

@@ -43,7 +43,6 @@ export class AccessControlDirective {
       if (aa.get('all')) {
         return;
       }
-      console.log(this.action);
       const hide = this.action
         .map((a) => aa.get(a))
         .map((a) => this.isVisible(a))

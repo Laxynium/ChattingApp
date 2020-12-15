@@ -8,19 +8,19 @@ using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
 
-namespace InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverride
+namespace InstantMessenger.Groups.Api.Features.Channel.UpdateMemberPermissionOverride
 {
-    internal sealed class UpdateRolePermissionOverrideCommandHandler :ICommandHandler<UpdateRolePermissionOverrideCommand>
+    internal sealed class UpdateMemberPermissionOverrideCommandHandler :ICommandHandler<UpdateMemberPermissionOverrideCommand>
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
 
-        public UpdateRolePermissionOverrideCommandHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
+        public UpdateMemberPermissionOverrideCommandHandler(IGroupRepository groupRepository, IChannelRepository channelRepository)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
         }
-        public async Task HandleAsync(UpdateRolePermissionOverrideCommand command)
+        public async Task HandleAsync(UpdateMemberPermissionOverrideCommand command)
         {
             var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ??
                         throw new GroupNotFoundException(GroupId.From(command.GroupId));
@@ -35,7 +35,7 @@ namespace InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverr
             }
         }
 
-        private static IEnumerable<Action> ConvertToOverrideActions(UpdateRolePermissionOverrideCommand command, Domain.Entities.Group group, Domain.Entities.Channel channel)
+        private static IEnumerable<Action> ConvertToOverrideActions(UpdateMemberPermissionOverrideCommand command, Domain.Entities.Group group, Domain.Entities.Channel channel)
         {
             return command.Overrides.Select(x => x.Type switch
             {
@@ -49,7 +49,7 @@ namespace InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverr
                 => group.AllowPermission(
                     UserId.From(command.UserId),
                     channel,
-                    RoleId.From(command.RoleId),
+                    UserId.From(command.MemberUserId),
                     p
                 );
 
@@ -57,7 +57,7 @@ namespace InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverr
                 => group.DenyPermission(
                     UserId.From(command.UserId),
                     channel,
-                    RoleId.From(command.RoleId),
+                    UserId.From(command.MemberUserId),
                     p
                 );
 
@@ -65,7 +65,7 @@ namespace InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverr
                 => group.RemoveOverride(
                     UserId.From(command.UserId),
                     channel,
-                    RoleId.From(command.RoleId),
+                    UserId.From(command.MemberUserId),
                     p
                 );
         }

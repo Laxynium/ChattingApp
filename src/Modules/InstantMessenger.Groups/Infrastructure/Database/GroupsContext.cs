@@ -202,7 +202,10 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                 b =>
                 {
                     b.ToTable("ChannelMemberPermissionOverrides");
-                    b.HasKey(x => new {x.UserIdOfMember, x.Permission});
+                    b.HasKey(x => new {x.ChannelId,x.UserIdOfMember, x.Permission});
+                    b.Property(x => x.ChannelId)
+                        .HasConversion(x => x.Value, x => ChannelId.From(x))
+                        .IsRequired();
                     b.Property(x => x.UserIdOfMember)
                         .HasConversion(x=>x.Value,x=>UserId.From(x))
                         .IsRequired();
@@ -220,7 +223,10 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                 b =>
                 {
                     b.ToTable("ChannelRolePermissionOverrides");
-                    b.HasKey(x => new {x.RoleId, x.Permission});
+                    b.HasKey(x => new { x.ChannelId, x.RoleId, x.Permission });
+                    b.Property(x => x.ChannelId)
+                        .HasConversion(x => x.Value, x => ChannelId.From(x))
+                        .IsRequired();
                     b.Property(x => x.RoleId)
                         .HasConversion(x=>x.Value,x=>RoleId.From(x))
                         .IsRequired();

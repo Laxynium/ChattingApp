@@ -43,7 +43,7 @@ namespace InstantMessenger.Groups.Api.Features.Channel.RemoveOverrideForRole
             var group = await _groupRepository.GetAsync(GroupId.From(command.GroupId)) ?? throw new GroupNotFoundException(GroupId.From(command.GroupId));
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId));
 
-            group.RemoveOverride(UserId.From(command.UserId), channel, Permission.FromName(command.Permission), RoleId.From(command.RoleId));
+            group.RemoveOverride(UserId.From(command.UserId), channel, RoleId.From(command.RoleId), Permission.FromName(command.Permission));
 
             await _unitOfWork.Commit();
         }

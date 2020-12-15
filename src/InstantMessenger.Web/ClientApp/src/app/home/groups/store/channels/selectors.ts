@@ -3,12 +3,12 @@ import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
 import {groupsFeatureSelector} from 'src/app/home/groups/store/selectors';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 
-export const roleOverridesSelector = createSelector(
+export const overridesSelector = createSelector(
   groupsFeatureSelector,
-  (s: GroupsStateInterface): PermissionOverrideDto[] => s.roleOverrides
+  (s: GroupsStateInterface): PermissionOverrideDto[] => s.overrides
 );
 
-export const roleOverridesLoadingSelector = createSelector(
+export const overridesLoadingSelector = createSelector(
   groupsFeatureSelector,
-  (s: GroupsStateInterface): boolean => s.roleOverridesLoading
+  (s: GroupsStateInterface): boolean => s.overridesLoading
 );

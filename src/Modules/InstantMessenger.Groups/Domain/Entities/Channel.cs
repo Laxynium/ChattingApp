@@ -85,16 +85,16 @@ namespace InstantMessenger.Groups.Domain.Entities
         }
 
         public void AllowPermission(Role role, Permission permission) 
-            => ReplaceOverride(new RolePermissionOverride(role.Id, permission, OverrideType.Allow));
+            => ReplaceOverride(new RolePermissionOverride(Id,role.Id, permission, OverrideType.Allow));
 
         public void DenyPermission(Role role, Permission permission) 
-            => ReplaceOverride(new RolePermissionOverride(role.Id, permission, OverrideType.Deny));
+            => ReplaceOverride(new RolePermissionOverride(Id, role.Id, permission, OverrideType.Deny));
 
         public void AllowPermission(Member member, Permission permission) 
-            => ReplaceOverride(new MemberPermissionOverride(member.UserId, permission, OverrideType.Allow));
+            => ReplaceOverride(new MemberPermissionOverride(Id, member.UserId, permission, OverrideType.Allow));
 
         public void DenyPermission(Member member, Permission permission) 
-            => ReplaceOverride(new MemberPermissionOverride(member.UserId, permission, OverrideType.Deny));
+            => ReplaceOverride(new MemberPermissionOverride(Id, member.UserId, permission, OverrideType.Deny));
 
         public void RemoveOverride(Member member, Permission permission) 
             => RemoveOverride(_memberPermissionOverrides,_memberPermissionOverrides

@@ -45,6 +45,8 @@ import {RolePermissionOverridesComponent} from './components/channel/role-permis
 import {RolePermissionOverridesModal} from 'src/app/home/groups/components/channel/role-permission-overrides/role-permission-overrides.modal';
 import {ChannelsEffects} from 'src/app/home/groups/store/channels/effects';
 import {ChannelsService} from 'src/app/home/groups/services/channels.service';
+import {MemberPermissionOverridesComponent} from 'src/app/home/groups/components/channel/member-permission-overrides/member-permission-overrides.component';
+import {MemberPermissionOverridesModal} from 'src/app/home/groups/components/channel/member-permission-overrides/member-permission-overrides.modal';
 
 @NgModule({
   declarations: [
@@ -72,6 +74,8 @@ import {ChannelsService} from 'src/app/home/groups/services/channels.service';
     ChannelComponent,
     RolePermissionOverridesComponent,
     RolePermissionOverridesModal,
+    MemberPermissionOverridesComponent,
+    MemberPermissionOverridesModal,
   ],
   imports: [
     CommonModule,

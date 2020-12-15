@@ -92,9 +92,13 @@ import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
 import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-control/actions';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 import {
+  getChannelMemberPermissionOverridesAction,
+  getChannelMemberPermissionOverridesFailureAction,
+  getChannelMemberPermissionOverridesSuccessAction,
   getChannelRolePermissionOverridesAction,
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
+  updateChannelMemberPermissionOverridesSuccessAction,
   updateChannelRolePermissionOverridesSuccessAction,
 } from 'src/app/home/groups/store/channels/actions';
 
@@ -126,8 +130,8 @@ export interface GroupsStateInterface {
 
   currentChannel: ChannelDto | null;
 
-  roleOverrides: PermissionOverrideDto[];
-  roleOverridesLoading: boolean;
+  overrides: PermissionOverrideDto[];
+  overridesLoading: boolean;
 }
 
 const initialState: GroupsStateInterface = {
@@ -156,8 +160,8 @@ const initialState: GroupsStateInterface = {
   allowedActions: Map(),
   currentChannel: null,
 
-  roleOverrides: [],
-  roleOverridesLoading: false,
+  overrides: [],
+  overridesLoading: false,
 };
 
 const groupsReducer = createReducer(
@@ -453,20 +457,38 @@ const groupsReducer = createReducer(
 
   on(getChannelRolePermissionOverridesAction, (s, a) => ({
     ...s,
-    roleOverridesLoading: true,
+    overridesLoading: true,
   })),
   on(getChannelRolePermissionOverridesSuccessAction, (s, a) => ({
     ...s,
-    roleOverridesLoading: false,
-    roleOverrides: a.overrides,
+    overridesLoading: false,
+    overrides: a.overrides,
   })),
   on(getChannelRolePermissionOverridesFailureAction, (s, a) => ({
     ...s,
-    roleOverridesLoading: false,
+    overridesLoading: false,
   })),
   on(updateChannelRolePermissionOverridesSuccessAction, (s, a) => ({
     ...s,
-    roleOverrides: a.overrides,
+    overrides: a.overrides,
+  })),
+
+  on(getChannelMemberPermissionOverridesAction, (s, a) => ({
+    ...s,
+    overridesLoading: true,
+  })),
+  on(getChannelMemberPermissionOverridesSuccessAction, (s, a) => ({
+    ...s,
+    overridesLoading: false,
+    overrides: a.overrides,
+  })),
+  on(getChannelMemberPermissionOverridesFailureAction, (s, a) => ({
+    ...s,
+    overridesLoading: false,
+  })),
+  on(updateChannelMemberPermissionOverridesSuccessAction, (s, a) => ({
+    ...s,
+    overrides: a.overrides,
   }))
 );
 

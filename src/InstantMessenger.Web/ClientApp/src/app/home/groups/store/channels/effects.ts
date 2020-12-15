@@ -5,9 +5,15 @@ import {of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {ChannelsService} from 'src/app/home/groups/services/channels.service';
 import {
+  getChannelMemberPermissionOverridesAction,
+  getChannelMemberPermissionOverridesFailureAction,
+  getChannelMemberPermissionOverridesSuccessAction,
   getChannelRolePermissionOverridesAction,
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
+  updateChannelMemberPermissionOverridesAction,
+  updateChannelMemberPermissionOverridesFailureAction,
+  updateChannelMemberPermissionOverridesSuccessAction,
   updateChannelRolePermissionOverridesAction,
   updateChannelRolePermissionOverridesFailureAction,
   updateChannelRolePermissionOverridesSuccessAction,
@@ -70,6 +76,64 @@ export class ChannelsEffects {
           catchError((response: HttpErrorResponse) =>
             of(
               getChannelRolePermissionOverridesFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $updateChannelMemberPermissionOverrides = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateChannelMemberPermissionOverridesAction),
+      switchMap((request) => {
+        return this.ChannelsService.updateMemberPermissionOverrides(
+          request
+        ).pipe(
+          map((r) =>
+            updateChannelMemberPermissionOverridesSuccessAction(request)
+          ),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              updateChannelMemberPermissionOverridesFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+  $updateChannelMemberPermissionSucessOverrides = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(updateChannelMemberPermissionOverridesSuccessAction),
+        tap((r) => {
+          this.toasts.showSuccess(
+            'Role permissions overrides updated successfully.'
+          );
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
+  $getChannelMemberPermissionOverrides = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getChannelMemberPermissionOverridesAction),
+      switchMap((request) => {
+        return this.ChannelsService.getMemberPermissionOverrides(request).pipe(
+          map((r) =>
+            getChannelMemberPermissionOverridesSuccessAction({
+              groupId: request.groupId,
+              memberUserId: request.memberUserId,
+              channelId: request.channelId,
+              overrides: r,
+            })
+          ),
+          catchError((response: HttpErrorResponse) =>
+            of(
+              getChannelMemberPermissionOverridesFailureAction(),
               requestFailedAction({error: mapToError(response)})
             )
           )

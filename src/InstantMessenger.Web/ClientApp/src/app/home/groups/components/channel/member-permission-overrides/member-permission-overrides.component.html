@@ -1,0 +1,26 @@
+<div>
+  <div *ngIf="$overridesLoading | async">
+    <fa-icon [icon]="['fas','spinner']" spin=true></fa-icon>
+  </div>
+  <ul *ngIf="!($overridesLoading | async)" class="list-group">
+    <li *ngFor="let override of $overrides | async"
+      class="list-group-item d-flex justify-content-between align-items-center">
+      <span>{{override.permission}}</span>
+      <div class="btn-group btn-group-toggle" ngbRadioGroup [ngModel]="override.type" [name]="override.permission"
+        (change)="onOverrideChange($event)">
+        <label ngbButtonLabel class="btn-outline-danger">
+          <input ngbButton type="radio" [value]="OverrideType.Deny">
+          <fa-icon [icon]="['fas','times-circle']"></fa-icon>
+        </label>
+        <label ngbButtonLabel class="btn-outline-secondary">
+          <input ngbButton type="radio" [value]="OverrideType.Neutral">
+          <fa-icon [icon]="['fas','slash']" rotate="270"></fa-icon>
+        </label>
+        <label ngbButtonLabel class="btn-outline-success">
+          <input ngbButton type="radio" [value]="OverrideType.Allow">
+          <fa-icon [icon]="['fas','check-circle']"></fa-icon>
+        </label>
+      </div>
+    </li>
+  </ul>
+</div>
