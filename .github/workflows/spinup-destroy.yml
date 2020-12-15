@@ -7,7 +7,7 @@ env:
   PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
   AZURE_RESOURCE_GROUP: instantmessenger
   AZURE_APP_PLAN: instantmessenger
-  AZURE_LOCATION: '"Central Europe"'
+  AZURE_LOCATION: '"westeurope"'
   #################################################
   ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
   #################################################
