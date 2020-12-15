@@ -57,7 +57,7 @@ jobs:
       - name: Create Azure Sql Database
         if: success()
         run: |
-          az sql db create --name ${{ env.AZURE_DATABASE}} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{ env.AZURE_DATABASE_SERVER}} --tier basic 
+          az sql db create --name ${{ env.AZURE_DATABASE}} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{ env.AZURE_DATABASE_SERVER}} --tier Basic 
       - name: Allow Azure Application to Access Database
         if: success()
         run: |
