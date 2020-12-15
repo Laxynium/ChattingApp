@@ -31,4 +31,5 @@ jobs:
         run: |
           dotnet tool install --global dotnet-ef
           dotnet tool restore
-          dotnet ef dbcontext list
+          cd 
+          dotnet ef dbcontext list --project src/InstantMessenger.Api
