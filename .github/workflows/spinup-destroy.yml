@@ -53,7 +53,7 @@ jobs:
       - name: Create Azure Sql Server
         if: success()
         run: |
-          az sql server create --name ${{ env.AZURE_DATABASE_SERVER}} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --location ${{env.AZURE_LOCATION}} --admin-user ${{secrects.AZURE_DATABASE_LOGIN}} --admin-password ${{secrects.AZURE_DATABASE_PASSWORD}}
+          az sql server create --name ${{ env.AZURE_DATABASE_SERVER}} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --location ${{env.AZURE_LOCATION}} --admin-user ${{secrets.AZURE_DATABASE_LOGIN}} --admin-password ${{secrets.AZURE_DATABASE_PASSWORD}}
       - name: Create Azure Sql Database
         if: success()
         run: |
