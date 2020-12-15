@@ -12,6 +12,7 @@ import {
 import {sendMessageSuccessAction} from 'src/app/home/groups/store/messages/actions';
 import {
   addRoleToMemberSuccessAction,
+  getMemberRolesAction,
   removeRoleFromMemberSuccessAction,
 } from 'src/app/home/groups/store/members/actions';
 import {getRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
@@ -74,24 +75,12 @@ const onMessageCreated: HubMethod<MessageDto> = (store, data) => {
 
 const onRoleAddedToMember: HubMethod<MemberRoleDto> = (store, data) => {
   store.dispatch(
-    addRoleToMemberSuccessAction({
-      memberRole: {
-        groupId: data.role.groupId,
-        userId: data.userId,
-        role: data.role,
-      },
-    })
+    getMemberRolesAction({groupId: data.role.groupId, userId: data.userId})
   );
 };
 const onRoleRemovedFromMember: HubMethod<MemberRoleDto> = (store, data) => {
   store.dispatch(
-    removeRoleFromMemberSuccessAction({
-      memberRole: {
-        groupId: data.role.groupId,
-        userId: data.userId,
-        role: data.role,
-      },
-    })
+    getMemberRolesAction({groupId: data.role.groupId, userId: data.userId})
   );
 };
 const onPermissionAddedToRole: HubMethod<RolePermissionDto> = (store, data) => {

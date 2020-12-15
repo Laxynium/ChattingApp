@@ -433,7 +433,10 @@ const groupsReducer = createReducer(
 
   on(addRoleToMemberSuccessAction, (s, a) => ({
     ...s,
-    memberRoles: [...s.memberRoles, a.memberRole.role],
+    memberRoles:
+      s.memberRoles.findIndex((x) => x.roleId == a.memberRole.role.roleId) == -1
+        ? [...s.memberRoles, a.memberRole.role]
+        : [...s.memberRoles],
   })),
 
   on(removeRoleFromMemberAction, (s, a) => ({
