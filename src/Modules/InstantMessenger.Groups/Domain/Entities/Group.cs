@@ -124,7 +124,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             var everyoneRole = GetEveryoneRole();
             var newMember = Member.Create(userIdOfMember, memberName, everyoneRole, clock);
             _members.Add(newMember);
-            Apply(new DomainEvents());
+            Apply(new MemberAddedToGroupEvent());
         }
 
         public void KickMember(UserId userId, UserId userIdOfMember) => new Action.KickMember(GetMember(userId), GetMemberPermissions(userId),GetRoles(userId),GetMember(userIdOfMember), GetRoles(userIdOfMember))
@@ -249,6 +249,24 @@ namespace InstantMessenger.Groups.Domain.Entities
             channel.RemoveOverride(GetRole(roleId), permission);
         });
 
+        public void UpdateOverrides(UserId userId, Channel channel, RoleId roleId,
+            IEnumerable<(Permission permission, PermissionOverrideType type)> overrideActions)
+        {
+           var actions = overrideActions.Select(x=>x.type switch
+           {
+               PermissionOverrideType.Allow => (System.Action)(()=> AllowPermission(userId, channel, roleId, x.permission)),
+               PermissionOverrideType.Deny => ()=>DenyPermission(userId, channel, roleId, x.permission),
+               PermissionOverrideType.Neutral => ()=>RemoveOverride(userId, channel, roleId, x.permission),
+               _ => throw new InvalidPermissionOverride(x.permission.Name)
+           });
+           foreach (var action in actions)
+           {
+               action.Invoke();
+           }
+
+           Apply(new ChannelRolePermissionOverridesChangedEvent(Id, channel.Id, roleId, channel.RolePermissionOverrides));
+        }
+
         public void AllowPermission(UserId userId, Channel channel, UserId userIdOfMember, Permission permission) 
             => new Action.AllowPermissionForMember(GetMember(userId), GetMemberPermissions(userId), channel, GetEveryoneRole(), permission)
             .Execute(() =>
@@ -273,6 +291,24 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             channel.RemoveOverride(GetMember(userIfOfMember), permission);
         });
+
+        public void UpdateOverrides(UserId userId, Channel channel, UserId memberUserId,
+            IEnumerable<(Permission permission, PermissionOverrideType type)> overrideActions)
+        {
+            var actions = overrideActions.Select(x => x.type switch
+            {
+                PermissionOverrideType.Allow => (System.Action)(() => AllowPermission(userId, channel, memberUserId, x.permission)),
+                PermissionOverrideType.Deny => () => DenyPermission(userId, channel, memberUserId, x.permission),
+                PermissionOverrideType.Neutral => () => RemoveOverride(userId, channel, memberUserId, x.permission),
+                _ => throw new InvalidPermissionOverride(x.permission.Name)
+            });
+            foreach (var action in actions)
+            {
+                action.Invoke();
+            }
+
+            Apply(new ChannelMemberPermissionOverridesChanged(Id, channel.Id, memberUserId, channel.RolePermissionOverrides));
+        }
 
         public Message SendMessage(UserId userId, Channel channel, MessageId messageId, MessageContent content, IClock clock)
         {

@@ -18,7 +18,7 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
                     e.ExpirationTime.ToDto(),e.UsageCounter.ToDto()),
                 Domain.Events.InvitationRevokedEvent e =>new Api.IntegrationEvents.InvitationRevokedEvent(e.GroupId, e.InvitationId, e.InvitationCode, 
                     e.ExpirationTime.ToDto(), e.UsageCounter.ToDto()),
-                Domain.Events.DomainEvents e =>new Api.IntegrationEvents.MemberAddedToGroupEvent(),
+                Domain.Events.MemberAddedToGroupEvent e =>new Api.IntegrationEvents.MemberAddedToGroupEvent(),
                 Domain.Events.MemberKickedFromGroupEvent e =>new Api.IntegrationEvents.MemberKickedFromGroupEvent(),
                 Domain.Events.MemberLeftGroupEvent e =>new Api.IntegrationEvents.MemberLeftGroupEvent(),
                 Domain.Events.RoleCreatedEvent e =>new Api.IntegrationEvents.RoleCreatedEvent(),
@@ -29,6 +29,19 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
                 Domain.Events.PermissionRemovedFromRoleEvent e =>new Api.IntegrationEvents.PermissionRemovedFromRoleEvent(e.GroupId, e.RoleId, e.PermissionName, e.PermissionValue),
                 Domain.Events.ChannelCreatedEvent e =>new Api.IntegrationEvents.ChannelCreatedEvent(e.ChannelId, e.GroupId, e.ChannelName),
                 Domain.Events.ChannelRemovedEvent e =>new Api.IntegrationEvents.ChannelRemovedEvent(e.ChannelId, e.GroupId, e.ChannelName),
+                Domain.Events.ChannelMemberPermissionOverridesChanged e => new Api.IntegrationEvents.ChannelMemberPermissionOverridesChangedEvent(
+                        e.GroupId,
+                        e.ChannelId,
+                        e.UserId,
+                        e.Overrides.Select(o => new PermissionOverrideDto {Permission = o.Permission.Name, Type = (OverrideTypeDto) o.Type})
+                    ),
+                Domain.Events.ChannelRolePermissionOverridesChangedEvent e => new Api.IntegrationEvents.ChannelRolePermissionOverridesChangedEvent(
+                    e.GroupId,
+                    e.ChannelId,
+                    e.RoleId,
+                    e.Overrides.Select(
+                        o => new PermissionOverrideDto{Permission = o.Permission.Name,Type = (OverrideTypeDto) o.Type})
+                    ),
                 Domain.Events.MessageCreatedEvent e => new Api.IntegrationEvents.MessageCreatedEvent(e.MessageId, e.GroupId, e.ChannelId, e.SenderId, e.Content.Value, e.CreatedAt),
                 _ => Maybe<IIntegrationEvent>.None
             };

@@ -17,6 +17,7 @@ import {
 } from 'src/app/home/groups/store/members/actions';
 import {getRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
 import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
+import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 
 interface GroupDto {
   groupId: string;
@@ -50,6 +51,18 @@ interface RoleDto {
 interface MemberRoleDto {
   userId: string;
   role: RoleDto;
+}
+interface RolePermissionOverridesDto {
+  groupId: string;
+  channelId: string;
+  roleId: string;
+  overrides: PermissionOverrideDto;
+}
+interface MemberPermissionOverridesDto {
+  groupId: string;
+  channelId: string;
+  userId: string;
+  overrides: PermissionOverrideDto;
 }
 interface AllowedActionDto {
   groupId: string;
@@ -97,6 +110,15 @@ const onPermissionRemovedFromRole: HubMethod<RolePermissionDto> = (
     getRolePermissionsAction({groupId: data.groupId, roleId: data.roleId})
   );
 };
+
+const onRolePermissionOverridesChanged: HubMethod<RolePermissionOverridesDto> = (
+  store,
+  data
+) => {};
+const onMemberPermissionOverridesChanged: HubMethod<MemberPermissionOverridesDto> = (
+  store,
+  data
+) => {};
 
 const onAllowedActionsChanged: HubMethod<AllowedActionDto> = (store, data) => {
   store.dispatch(getAllowedActionsAction({groupId: data.groupId}));

@@ -180,6 +180,38 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
         }
     }
 
+    public class ChannelRolePermissionOverridesChangedEvent : IIntegrationEvent
+    {
+        public Guid GroupId { get; }
+        public Guid ChannelId { get; }
+        public Guid RoleId { get; }
+        public IEnumerable<PermissionOverrideDto> Overrides { get; }
+
+        public ChannelRolePermissionOverridesChangedEvent(Guid groupId, Guid channelId, Guid roleId, IEnumerable<PermissionOverrideDto> overrides)
+        {
+            GroupId = groupId;
+            ChannelId = channelId;
+            RoleId = roleId;
+            Overrides = overrides;
+        }
+    }
+    public class ChannelMemberPermissionOverridesChangedEvent : IIntegrationEvent
+    {
+        public Guid GroupId { get; }
+        public Guid ChannelId { get; }
+        public Guid UserId { get; }
+        public IEnumerable<PermissionOverrideDto> Overrides { get; }
+
+        public ChannelMemberPermissionOverridesChangedEvent(Guid groupId, Guid channelId, Guid userId, IEnumerable<PermissionOverrideDto> overrides)
+        {
+            GroupId = groupId;
+            ChannelId = channelId;
+            UserId = userId;
+            Overrides = overrides;
+        }
+    }
+
+
     public class ChannelRenamedEvent : IIntegrationEvent
     {
     }

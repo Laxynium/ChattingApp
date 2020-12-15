@@ -27,47 +27,9 @@ namespace InstantMessenger.Groups.Api.Features.Channel.UpdateRolePermissionOverr
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId)) ??
                           throw new ChannelNotFoundException(ChannelId.From(command.ChannelId));
 
-            var overrideActions = ConvertToOverrideActions(command, group, channel);
-
-            foreach (var action in overrideActions)
-            {
-                action.Invoke();
-            }
+            group.UpdateOverrides(UserId.From(command.UserId), channel, RoleId.From(command.RoleId), 
+                command.Overrides.Select(o=>(Permission.FromName(o.Permission), (PermissionOverrideType)o.Type)));
         }
 
-        private static IEnumerable<Action> ConvertToOverrideActions(UpdateRolePermissionOverrideCommand command, Domain.Entities.Group group, Domain.Entities.Channel channel)
-        {
-            return command.Overrides.Select(x => x.Type switch
-            {
-                PermissionOverrideTypeCommandItem.Allow => (Action) (() => Allow(Permission.FromName(x.Permission))),
-                PermissionOverrideTypeCommandItem.Deny=> () => Deny(Permission.FromName(x.Permission)),
-                PermissionOverrideTypeCommandItem.Neutral => () => Remove(Permission.FromName(x.Permission)),
-                _ => throw new InvalidPermissionOverride(x.Permission)
-            });
-
-            void Allow(Permission p)
-                => group.AllowPermission(
-                    UserId.From(command.UserId),
-                    channel,
-                    RoleId.From(command.RoleId),
-                    p
-                );
-
-            void Deny(Permission p)
-                => group.DenyPermission(
-                    UserId.From(command.UserId),
-                    channel,
-                    RoleId.From(command.RoleId),
-                    p
-                );
-
-            void Remove(Permission p)
-                => group.RemoveOverride(
-                    UserId.From(command.UserId),
-                    channel,
-                    RoleId.From(command.RoleId),
-                    p
-                );
-        }
     }
 }

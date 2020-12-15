@@ -27,47 +27,8 @@ namespace InstantMessenger.Groups.Api.Features.Channel.UpdateMemberPermissionOve
             var channel = await _channelRepository.GetAsync(group.Id, ChannelId.From(command.ChannelId)) ??
                           throw new ChannelNotFoundException(ChannelId.From(command.ChannelId));
 
-            var overrideActions = ConvertToOverrideActions(command, group, channel);
-
-            foreach (var action in overrideActions)
-            {
-                action.Invoke();
-            }
-        }
-
-        private static IEnumerable<Action> ConvertToOverrideActions(UpdateMemberPermissionOverrideCommand command, Domain.Entities.Group group, Domain.Entities.Channel channel)
-        {
-            return command.Overrides.Select(x => x.Type switch
-            {
-                PermissionOverrideTypeCommandItem.Allow => (Action) (() => Allow(Permission.FromName(x.Permission))),
-                PermissionOverrideTypeCommandItem.Deny=> () => Deny(Permission.FromName(x.Permission)),
-                PermissionOverrideTypeCommandItem.Neutral => () => Remove(Permission.FromName(x.Permission)),
-                _ => throw new InvalidPermissionOverride(x.Permission)
-            });
-
-            void Allow(Permission p)
-                => group.AllowPermission(
-                    UserId.From(command.UserId),
-                    channel,
-                    UserId.From(command.MemberUserId),
-                    p
-                );
-
-            void Deny(Permission p)
-                => group.DenyPermission(
-                    UserId.From(command.UserId),
-                    channel,
-                    UserId.From(command.MemberUserId),
-                    p
-                );
-
-            void Remove(Permission p)
-                => group.RemoveOverride(
-                    UserId.From(command.UserId),
-                    channel,
-                    UserId.From(command.MemberUserId),
-                    p
-                );
+            group.UpdateOverrides(UserId.From(command.UserId), channel, UserId.From(command.MemberUserId),
+                command.Overrides.Select(o => (Permission.FromName(o.Permission), (PermissionOverrideType)o.Type)));
         }
     }
 }

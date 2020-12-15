@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InstantMessenger.Groups.Api.IntegrationEvents;
 using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Groups.Api.ResponseDtos;
-using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -35,6 +35,8 @@ namespace InstantMessenger.Groups.Api.Hubs
         public Task OnChannelCreated(ChannelDto dto);
         public Task OnChannelRemoved(ChannelDto dto);
         public Task OnMessageCreated(GroupMessageView data);
+        public Task OnRolePermissionOverridesChanged(ChannelRolePermissionOverridesChangedEvent data);
+        public Task OnMemberPermissionOverridesChanged(ChannelMemberPermissionOverridesChangedEvent data);
         public Task OnAllowedActionsChanged(AllowedActionDto data);
     }
 
