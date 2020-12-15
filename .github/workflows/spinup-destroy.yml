@@ -1,0 +1,17 @@
+name: Configure Azure environment
+
+on: 
+  pull_request:
+    types: [labeled]
+env:
+  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
+  AZURE_RESOURCE_GROUP: instantmessenger
+  AZURE_APP_PLAN: instantmessenger
+  AZURE_LOCATION: '"Central Europe"'
+  #################################################
+  ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
+  #################################################
+  #################################################
+  ### REPLACE USERNAME WITH GH USERNAME         ###
+  AZURE_WEBAPP_NAME: instantmessenger
+  #################################################
