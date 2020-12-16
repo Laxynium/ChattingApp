@@ -3,25 +3,15 @@ name: Angular
 on: 
   workflow_dispatch:
 env:
-  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
-  AZURE_RESOURCE_GROUP: instantmessenger
-  AZURE_APP_PLAN: instantmessenger
-  AZURE_LOCATION: '"westeurope"'
-  AZURE_WEBAPP_NAME: instantmessengerweb
+  AZURE_WEBAPP_NAME: instantmessenger
 jobs:  
   build:
     runs-on: ubuntu-latest
     steps:
         - name: Check out the repo
-          uses: actions/checkout@v2
-        - name: Current directory
-          run: |
-            pwd
-        - name: List all
-          run: |
-            ls -la                
-        -
-          name: Build and Push
+          uses: actions/checkout@v2              
+        
+        - name: Build and Push
           id: docker_build
           uses: docker/build-push-action@v1          
           with:
@@ -30,7 +20,7 @@ jobs:
             tag_with_ref: true
             path: src/InstantMessenger.Web/ClientApp
             dockerfile: src/InstantMessenger.Web/ClientApp/Dockerfile
-            repository: ${{ secrets.DOCKERHUB_USERNAME }}/instantmessengerweb            
+            repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_WEBAPP_NAME}}            
   deploy:
     runs-on: ubuntu-latest  
     name: 'Deploy to Azure app service container'
