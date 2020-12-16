@@ -41,6 +41,9 @@ jobs:
     steps:
         - name: Check out the repo
           uses: actions/checkout@v2
+        - name: Current directory
+          run: |
+            pwd
         -
           name: Build and Push
           id: docker_build
