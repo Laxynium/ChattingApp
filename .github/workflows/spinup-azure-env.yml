@@ -13,6 +13,7 @@ env:
   #################################################
   ### REPLACE USERNAME WITH GH USERNAME         ###
   AZURE_WEBAPP_NAME: instantmessenger
+  AZURE_CLIENT_WEBAPP_NAME: instantmessengerweb
   #################################################  
   ############### AZURE SQLDATABASE  ##############
   AZURE_DATABASE_SERVER: instantmessenger
@@ -41,10 +42,11 @@ jobs:
         if: success()
         run: |
           az appservice plan create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{env.AZURE_APP_PLAN}} --is-linux --sku B1 --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-      - name: Create webapp resource
+      
+      - name: Create api webapp resource
         if: success()
         run: |
-          az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+          az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}          
       - name: Configure webapp to use Docker hub
         if: success()
         run: |
@@ -53,6 +55,15 @@ jobs:
         if: success()
         run: |
           az webapp log config --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --application-logging filesystem --docker-container-logging filesystem --web-server-logging filesystem
+      
+      - name: Create client webapp container
+        run: |
+          az webapp create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --plan ${{env.AZURE_APP_PLAN}} --name ${{env.AZURE_CLIENT_WEBAPP_NAME}} --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - name: Configure client webapp to use Docker hub
+        if: success()
+        run: |
+          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.DOCKERHUB_TOKEN}} --docker-registry-server-url https://index.docker.io --docker-registry-server-user ${{secrets.DOCKERHUB_USERNAME}} --name ${{ env.AZURE_CLIENT_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}          
+      
       #####Setup azure sql server############
       - name: Create Azure Sql Server
         if: success()
