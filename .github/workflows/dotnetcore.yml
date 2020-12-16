@@ -7,7 +7,7 @@ env:
   ################## AZURE APP SERVICES ########### 
   AZURE_API_WEBAPP_NAME: api-instantmessenger
   AZURE_WEBAPP_NAME: instantmessenger
-  AZURE_WEBAPP_URL: https://${{env.AZURE_WEBAPP_NAME}}.azurewebsites.net
+  AZURE_WEBAPP_URL: https://instantmessenger.azurewebsites.net
   #################################################   
   ############### AZURE SQLDATABASE  ##############
   AZURE_DATABASE_SERVER: instantmessenger
