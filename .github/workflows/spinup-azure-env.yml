@@ -21,7 +21,7 @@ env:
 jobs:  
   setup-up-azure-resources:    
     runs-on: ubuntu-latest
-    
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -35,6 +35,8 @@ jobs:
         if: success()
         run: |
           az group create --location ${{env.AZURE_LOCATION}} --name ${{env.AZURE_RESOURCE_GROUP}} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+
+      ###### Setup app service container# #####
       - name: Create Azure app service plan
         if: success()
         run: |
@@ -48,6 +50,7 @@ jobs:
         run: |
           az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.DOCKERHUB_TOKEN}} --docker-registry-server-url https://index.docker.io --docker-registry-server-user ${{secrets.DOCKERHUB_USERNAME}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
       
+      #####Setup azure sql server############
       - name: Create Azure Sql Server
         if: success()
         run: |
