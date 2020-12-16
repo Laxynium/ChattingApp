@@ -1,8 +1,6 @@
 name: Update database
 
 on: 
-  pull_request:
-    types: [labeled]
   workflow_dispatch:
 env:
   PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
@@ -21,8 +19,7 @@ env:
   AZURE_DATABASE: instantmessengerdb
   #################################################
 jobs:  
-  setup-up-azure-resources:
-    if: contains(github.event.pull_request.labels.*.name, 'migrate database')
+  setup-up-azure-resources:    
     runs-on: ubuntu-latest
     
     steps:
