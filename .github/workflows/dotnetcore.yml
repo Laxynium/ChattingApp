@@ -1,8 +1,6 @@
 name: .NET Core
 
 on: 
-  push:
-    branches: master
   workflow_dispatch:
 env:
   PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
