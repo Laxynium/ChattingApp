@@ -29,6 +29,7 @@ jobs:
     - 
       name:  Build with dotnet
       run:  dotnet build --configuration Release
+      
   publish_image:
     name: Publish Image
     runs-on: ubuntu-latest
@@ -47,6 +48,7 @@ jobs:
             repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_API_WEBAPP_NAME}}
                         
   deploy:
+    needs: [publish_image]
     runs-on: ubuntu-latest  
     name: 'Deploy to Azure Containers Instances'
     
