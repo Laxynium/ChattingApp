@@ -28,5 +28,6 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
             tag_with_ref: true
-            path: src/InstantMessenger.Web/ClientApp                  
+            path: src/InstantMessenger.Web/ClientApp
+            dockerfile: src/InstantMessenger.Web/ClientApp/Dockerfile
             repository: ${{ secrets.DOCKERHUB_USERNAME }}/instantmessengerweb
