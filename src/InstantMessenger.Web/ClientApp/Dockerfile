@@ -9,4 +9,5 @@ RUN npm run build
 # Stage 2: Run
 FROM nginx:1.17.1-alpine
 # Copy compiled files from previous build stage
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist/InstantMessengerWeb /usr/share/nginx/html
