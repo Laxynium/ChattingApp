@@ -7,7 +7,7 @@ env:
   AZURE_APP_PLAN: instantmessenger
   AZURE_LOCATION: '"westeurope"'
   ############## AZURE WEB APP ####################
-  AZURE_API_WEBAPP_NAME: api.instantmessenger
+  AZURE_API_WEBAPP_NAME: api-instantmessenger
   AZURE_WEBAPP_NAME: instantmessenger
   #################################################  
   ############### AZURE SQLDATABASE  ##############
