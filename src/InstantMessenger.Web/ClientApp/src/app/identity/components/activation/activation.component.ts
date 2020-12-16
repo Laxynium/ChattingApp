@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store, select} from '@ngrx/store';
-import {activateAction} from '../../store/actions/activate.actions';
-import {ActivateRequestInterface} from '../../types/activateRequest.interface';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {isSubmittingSelector} from '../../store/selectors';
+import {ActivateRequestInterface} from 'src/app/identity/types/activateRequest.interface';
+import {activateAction} from 'src/app/identity/store/actions/activate.actions';
 
 @Component({
   selector: 'app-login',
