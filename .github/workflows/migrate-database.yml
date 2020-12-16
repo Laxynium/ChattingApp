@@ -59,8 +59,8 @@ jobs:
       
       - name: Update database
         shell: pwsh
-        run: |                 
-          dotnet ef database update --project src/InstantMessenger.Api --context InstantMessenger.Groups.Infrastructure.Database.GroupsContext
+        run: |
+          ./scripts/update-database.ps1
       
       - name: Remove Azure Sql Server Firewall Rule
         run: |
