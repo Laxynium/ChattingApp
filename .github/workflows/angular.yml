@@ -22,6 +22,7 @@ jobs:
             dockerfile: src/InstantMessenger.Web/ClientApp/Dockerfile
             repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_WEBAPP_NAME}}            
   deploy:
+    needs: [build]
     runs-on: ubuntu-latest  
     name: 'Deploy to Azure app service container'
     
