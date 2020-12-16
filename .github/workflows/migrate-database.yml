@@ -52,10 +52,14 @@ jobs:
         run: |
           az sql server firewall-rule create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{env.AZURE_DATABASE_SERVER}} --name allow_github_action --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --start-ip-address ${{ steps.ip.outputs.ipv4}} --end-ip-address ${{ steps.ip.outputs.ipv4}}
       
-      - name: Run dotnet tools
+      - name: Install dotnet tools
         run: |
           dotnet tool install --global dotnet-ef --version 3.1.9
           dotnet ef dbcontext list --project src/InstantMessenger.Api
+      
+      - name: Update database
+        shell: pwsh
+        run: |                 
           dotnet ef database update --project src/InstantMessenger.Api --context InstantMessenger.Groups.Infrastructure.Database.GroupsContext
       
       - name: Remove Azure Sql Server Firewall Rule
