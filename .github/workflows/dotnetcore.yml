@@ -6,6 +6,8 @@ env:
   AZURE_RESOURCE_GROUP: instantmessenger
   ################## AZURE APP SERVICES ########### 
   AZURE_API_WEBAPP_NAME: api.instantmessenger
+  AZURE_WEBAPP_NAME: instantmessenger
+  AZURE_WEBAPP_URL: https://${{env.AZURE_WEBAPP_NAME}}.azurewebsites.net
   #################################################   
   ############### AZURE SQLDATABASE  ##############
   AZURE_DATABASE_SERVER: instantmessenger
@@ -42,7 +44,7 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
             tag_with_ref: true
-            repository: ${{ secrets.DOCKERHUB_USERNAME }}/chatting_app
+            repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_API_WEBAPP_NAME}}
                         
   deploy:
     runs-on: ubuntu-latest  
@@ -59,21 +61,13 @@ jobs:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-#       - name: 'Deploy'
-#         uses: 'azure/aci-deploy@v1'
-#         with:
-#           resource-group: ${{secrets.RESOURCE_GROUP}}
-#           dns-name-label: ${{secrets.RESOURCE_GROUP}}${{github.run_number}}
-#           image: ${{secrets.REGISTRY_LOGIN_SERVER}}/${{secrets.DOCKERHUB_USERNAME}}/chatting-app
-#           name: instant-messenger
-#           location: 'west europe'
       - name: Setup env variables and connection strings
         shell: pwsh
         run: |
-          az webapp config appsettings set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --settings ${{secrets.APP_SETTINGS}}
+          az webapp config appsettings set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --settings ${{secrets.APP_SETTINGS}} --settings IdentityOptions__ClientAppUrlBase=${{env.AZURE_WEBAPP_URL}}
           az webapp config connection-string set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --connection-string-type SQLServer --settings InstantMessengerDb="Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{env.AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password=${{secrets.AZURE_DATABASE_PASSWORD}};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       - name: Deploy web app container
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{env.AZURE_API_WEBAPP_NAME}}
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/chatting_app
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_API_WEBAPP_NAME}}
