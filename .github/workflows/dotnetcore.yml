@@ -3,17 +3,10 @@ name: .NET Core
 on: 
   workflow_dispatch:
 env:
-  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
   AZURE_RESOURCE_GROUP: instantmessenger
-  AZURE_APP_PLAN: instantmessenger
-  AZURE_LOCATION: '"westeurope"'
-  #################################################
-  ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
-  #################################################
-  #################################################
-  ### REPLACE USERNAME WITH GH USERNAME         ###
-  AZURE_WEBAPP_NAME: instantmessenger
-  #################################################  
+  ################## AZURE APP SERVICES ########### 
+  AZURE_API_WEBAPP_NAME: api.instantmessenger
+  #################################################   
   ############### AZURE SQLDATABASE  ##############
   AZURE_DATABASE_SERVER: instantmessenger
   AZURE_DATABASE: instantmessengerdb
@@ -77,10 +70,10 @@ jobs:
       - name: Setup env variables and connection strings
         shell: pwsh
         run: |
-          az webapp config appsettings set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --settings ${{secrets.APP_SETTINGS}}
-          az webapp config connection-string set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_WEBAPP_NAME }} --connection-string-type SQLServer --settings InstantMessengerDb="Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{env.AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password=${{secrets.AZURE_DATABASE_PASSWORD}};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+          az webapp config appsettings set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --settings ${{secrets.APP_SETTINGS}}
+          az webapp config connection-string set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --connection-string-type SQLServer --settings InstantMessengerDb="Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{env.AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password=${{secrets.AZURE_DATABASE_PASSWORD}};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       - name: Deploy web app container
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{env.AZURE_WEBAPP_NAME}}
+          app-name: ${{env.AZURE_API_WEBAPP_NAME}}
           images: ${{ secrets.DOCKERHUB_USERNAME }}/chatting_app
