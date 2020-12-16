@@ -45,11 +45,14 @@ jobs:
         if: success()
         run: |
           az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-      - name: Configure webapp to use GitHub Packages
+      - name: Configure webapp to use Docker hub
         if: success()
         run: |
           az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.DOCKERHUB_TOKEN}} --docker-registry-server-url https://index.docker.io --docker-registry-server-user ${{secrets.DOCKERHUB_USERNAME}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-      
+      - name: Enable Logging
+        if: success()
+        run: |
+          az webapp log config --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --application-logging filesystem --docker-container-logging filesystem --web-server-logging filesystem
       #####Setup azure sql server############
       - name: Create Azure Sql Server
         if: success()
