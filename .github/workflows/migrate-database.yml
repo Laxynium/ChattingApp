@@ -27,8 +27,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Use production connection string
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'src/InstantMessenger.Api/appsettings.json'
+        env:
+          ConnectionStrings.InstantMessengerDb: "Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password={secrets.AZURE_DATABASE_PASSWORD};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+      - name: Dump Appsettings.json
+        run: |
+          cat src/InstantMessenger.Api/appsettings.json
       - name: Run dotnet tools
         run: |
-          dotnet tool install --global dotnet-ef --version 3.1
+          dotnet tool install --global dotnet-ef --version 3.1.9
           pwd
           dotnet ef dbcontext list --project src/InstantMessenger.Api
