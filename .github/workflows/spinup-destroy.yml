@@ -1,0 +1,82 @@
+name: Configure Azure environment
+
+on: 
+  pull_request:
+    types: [labeled]
+env:
+  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
+  AZURE_RESOURCE_GROUP: instantmessenger
+  AZURE_APP_PLAN: instantmessenger
+  AZURE_LOCATION: '"westeurope"'
+  #################################################
+  ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
+  #################################################
+  #################################################
+  ### REPLACE USERNAME WITH GH USERNAME         ###
+  AZURE_WEBAPP_NAME: instantmessenger
+  #################################################  
+  ############### AZURE SQLDATABASE  ##############
+  AZURE_DATABASE_SERVER: instantmessenger
+  AZURE_DATABASE: instantmessengerdb
+  #################################################
+jobs:  
+  setup-up-azure-resources:
+    if: contains(github.event.pull_request.labels.*.name, 'spin up environment')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+      - name: Create Azure resource group
+        if: success()
+        run: |
+          az group create --location ${{env.AZURE_LOCATION}} --name ${{env.AZURE_RESOURCE_GROUP}} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - name: Create Azure app service plan
+        if: success()
+        run: |
+          az appservice plan create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{env.AZURE_APP_PLAN}} --is-linux --sku B1 --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - name: Create webapp resource
+        if: success()
+        run: |
+          az webapp create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --plan ${{ env.AZURE_APP_PLAN }} --name ${{ env.AZURE_WEBAPP_NAME }}  --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      - name: Configure webapp to use GitHub Packages
+        if: success()
+        run: |
+          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.DOCKERHUB_TOKEN}} --docker-registry-server-url https://index.docker.io --docker-registry-server-user ${{secrets.DOCKERHUB_USERNAME}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      
+      - name: Create Azure Sql Server
+        if: success()
+        run: |
+          az sql server create --name ${{ env.AZURE_DATABASE_SERVER}} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --location ${{env.AZURE_LOCATION}} --admin-user ${{secrets.AZURE_DATABASE_LOGIN}} --admin-password ${{secrets.AZURE_DATABASE_PASSWORD}}
+      - name: Create Azure Sql Database
+        if: success()
+        run: |
+          az sql db create --name ${{ env.AZURE_DATABASE}} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{ env.AZURE_DATABASE_SERVER}} --tier Basic 
+      - name: Allow Azure Application to Access Database
+        if: success()
+        run: |
+          az sql server firewall-rule create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{ env.AZURE_DATABASE_SERVER}} -n allow_apps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0                                
+  destroy-azure-resources:
+    runs-on: ubuntu-latest
+
+    if: contains(github.event.pull_request.labels.*.name, 'destroy environment')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Destroy Azure environment
+        if: success()
+        run: |
+          az group delete --name ${{env.AZURE_RESOURCE_GROUP}} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --yes

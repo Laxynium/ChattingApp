@@ -1,0 +1,67 @@
+name: Update database
+
+on: 
+  pull_request:
+    types: [labeled]
+env:
+  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
+  AZURE_RESOURCE_GROUP: instantmessenger
+  AZURE_APP_PLAN: instantmessenger
+  AZURE_LOCATION: '"westeurope"'
+  #################################################
+  ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
+  #################################################
+  #################################################
+  ### REPLACE USERNAME WITH GH USERNAME         ###
+  AZURE_WEBAPP_NAME: instantmessenger
+  #################################################  
+  ############### AZURE SQLDATABASE  ##############
+  AZURE_DATABASE_SERVER: instantmessenger
+  AZURE_DATABASE: instantmessengerdb
+  #################################################
+jobs:  
+  setup-up-azure-resources:
+    if: contains(github.event.pull_request.labels.*.name, 'migrate database')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Use production connection string
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'src/InstantMessenger.Api/appsettings.json'
+        env:
+          ConnectionStrings.InstantMessengerDb: "Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{env.AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password=${{secrets.AZURE_DATABASE_PASSWORD}};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+      
+      - name: Dump Appsettings.json
+        run: |
+          cat src/InstantMessenger.Api/appsettings.json        
+      
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Public IP
+        id: ip
+        uses: haythem/public-ip@v1.2        
+      
+      - name: Add Azure Sql Server Firewall Rule
+        run: |
+          az sql server firewall-rule create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{env.AZURE_DATABASE_SERVER}} --name allow_github_action --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --start-ip-address ${{ steps.ip.outputs.ipv4}} --end-ip-address ${{ steps.ip.outputs.ipv4}}
+      
+      - name: Install dotnet tools
+        run: |
+          dotnet tool install --global dotnet-ef --version 3.1.9
+          dotnet ef dbcontext list --project src/InstantMessenger.Api
+      
+      - name: Update database
+        shell: pwsh
+        run: |
+          ./scripts/update-database.ps1
+      
+      - name: Remove Azure Sql Server Firewall Rule
+        run: |
+          az sql server firewall-rule delete --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{env.AZURE_DATABASE_SERVER}} --name allow_github_action --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
