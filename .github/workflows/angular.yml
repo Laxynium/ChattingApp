@@ -30,4 +30,23 @@ jobs:
             tag_with_ref: true
             path: src/InstantMessenger.Web/ClientApp
             dockerfile: src/InstantMessenger.Web/ClientApp/Dockerfile
-            repository: ${{ secrets.DOCKERHUB_USERNAME }}/instantmessengerweb
+            repository: ${{ secrets.DOCKERHUB_USERNAME }}/instantmessengerweb            
+  deploy:
+    runs-on: ubuntu-latest  
+    name: 'Deploy to Azure app service container'
+    
+    steps:
+      - name: 'Login'
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+      - uses: azure/docker-login@v1
+        with:
+          login-server: https://index.docker.io/v1/
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}      
+      - name: Deploy web app container
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{env.AZURE_WEBAPP_NAME}}
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/instantmessengerweb
