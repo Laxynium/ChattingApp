@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -22,7 +23,8 @@ namespace InstantMessenger.Shared.MailKit
             using var scope = _logger.BeginScope("Mail sending");
             using var client = new SmtpClient();
             _logger.LogInformation("Trying to connected with smtp server ...");
-            await client.ConnectAsync(_mailKitOptions.Host,_mailKitOptions.Port, _mailKitOptions.UseSsl);
+            await client.ConnectAsync(_mailKitOptions.Host,_mailKitOptions.Port, _mailKitOptions.UseSsl
+                ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto);
             
             if (_mailKitOptions.Authenticate)
             {
