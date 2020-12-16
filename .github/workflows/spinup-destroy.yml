@@ -48,7 +48,7 @@ jobs:
       - name: Configure webapp to use GitHub Packages
         if: success()
         run: |
-          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.GITHUB_TOKEN}} --docker-registry-server-url https://docker.pkg.github.com --docker-registry-server-user ${{github.actor}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
+          az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.DOCKERHUB_TOKEN}} --docker-registry-server-url https://index.docker.io --docker-registry-server-user ${{secrets.DOCKERHUB_USERNAME}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
       
       - name: Create Azure Sql Server
         if: success()
