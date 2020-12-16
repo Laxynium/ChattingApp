@@ -3,17 +3,7 @@ name: Update database
 on: 
   workflow_dispatch:
 env:
-  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
   AZURE_RESOURCE_GROUP: instantmessenger
-  AZURE_APP_PLAN: instantmessenger
-  AZURE_LOCATION: '"westeurope"'
-  #################################################
-  ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
-  #################################################
-  #################################################
-  ### REPLACE USERNAME WITH GH USERNAME         ###
-  AZURE_WEBAPP_NAME: instantmessenger
-  #################################################  
   ############### AZURE SQLDATABASE  ##############
   AZURE_DATABASE_SERVER: instantmessenger
   AZURE_DATABASE: instantmessengerdb
