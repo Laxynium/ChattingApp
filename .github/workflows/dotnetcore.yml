@@ -3,7 +3,22 @@ name: .NET Core
 on: 
   push:
     branches: master
-
+env:
+  PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
+  AZURE_RESOURCE_GROUP: instantmessenger
+  AZURE_APP_PLAN: instantmessenger
+  AZURE_LOCATION: '"westeurope"'
+  #################################################
+  ### USER PROVIDED VALUES ARE REQUIRED BELOW   ###
+  #################################################
+  #################################################
+  ### REPLACE USERNAME WITH GH USERNAME         ###
+  AZURE_WEBAPP_NAME: instantmessenger
+  #################################################  
+  ############### AZURE SQLDATABASE  ##############
+  AZURE_DATABASE_SERVER: instantmessenger
+  AZURE_DATABASE: instantmessengerdb
+  #################################################
 jobs:
   build:
     
@@ -46,11 +61,23 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{secrets.AZURE_CREDENTIALS}}
-      - name: 'Deploy'
-        uses: 'azure/aci-deploy@v1'
+      - uses: azure/docker-login@v1
+         with:
+          login-server: ${{secrets.REGISTRY_LOGIN_SERVER}}
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+#       - name: 'Deploy'
+#         uses: 'azure/aci-deploy@v1'
+#         with:
+#           resource-group: ${{secrets.RESOURCE_GROUP}}
+#           dns-name-label: ${{secrets.RESOURCE_GROUP}}${{github.run_number}}
+#           image: ${{secrets.REGISTRY_LOGIN_SERVER}}/${{secrets.DOCKERHUB_USERNAME}}/chatting-app
+#           name: instant-messenger
+#           location: 'west europe'
+      
+      - name: Deploy web app container
+        uses: azure/webapps-deploy@v2
         with:
-          resource-group: ${{secrets.RESOURCE_GROUP}}
-          dns-name-label: ${{secrets.RESOURCE_GROUP}}${{github.run_number}}
-          image: ${{secrets.REGISTRY_LOGIN_SERVER}}/${{secrets.DOCKERHUB_USERNAME}}/chatting-app
-          name: instant-messenger
-          location: 'west europe'
+          app-name: ${{env.AZURE_WEBAPP_NAME}}
+          images: https://hub.docker.com/repository/docker/${{ secrets.DOCKERHUB_USERNAME }}/chatting_app
