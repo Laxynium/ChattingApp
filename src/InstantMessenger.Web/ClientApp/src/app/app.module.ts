@@ -65,10 +65,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     StoreModule.forRoot([]),
     IdentityModule,
     HomeModule,
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
+    !environment.production
+      ? StoreDevtoolsModule.instrument({
+          maxAge: 25,
+          logOnly: environment.production,
+        })
+      : [],
     EffectsModule.forRoot([RequestFailedEffect]),
     FontAwesomeModule,
   ],
