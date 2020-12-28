@@ -68,6 +68,8 @@ jobs:
         run: |
           az webapp config appsettings set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --settings ${{secrets.APP_SETTINGS}} IdentityOptions__ClientAppUrlBase=${{env.AZURE_WEBAPP_URL}}
           az webapp config connection-string set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --connection-string-type SQLServer --settings InstantMessengerDb="Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{env.AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password=${{secrets.AZURE_DATABASE_PASSWORD}};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+          APP_INSIGHTS_CS=$(az monitor app-insights component show --app ${{ env.AZURE_API_WEBAPP_NAME }} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --query connectionString -o tsv)
+          az webapp config appsettings set --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{ env.AZURE_API_WEBAPP_NAME }} --settings ApplicationInsights__ConnectionString="$APP_INSIGHTS_CS"
       - name: Deploy web app container
         uses: azure/webapps-deploy@v2
         with:
