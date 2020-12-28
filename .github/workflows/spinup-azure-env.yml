@@ -58,7 +58,12 @@ jobs:
         if: success()
         run: |
           az webapp config container set --docker-custom-image-name nginx --docker-registry-server-password ${{secrets.DOCKERHUB_TOKEN}} --docker-registry-server-url https://index.docker.io --docker-registry-server-user ${{secrets.DOCKERHUB_USERNAME}} --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}          
-  
+    ###### Setup application insights
+      - name : Create Azure App Insights
+        if: success()
+        run: |
+          az extension add -n application-insights
+          az monitor app-insights component create --app ${{env.AZURE_API_WEBAPP_NAME}} --location ${{env.AZURE_LOCATION}} --kind web -g ${{env.AZURE_RESOURCE_GROUP}} --application-type web
   setup-azure-database:
     name: Setup azure sql server
     runs-on: ubuntu-latest
