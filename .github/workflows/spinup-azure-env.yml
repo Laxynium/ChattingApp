@@ -1,5 +1,4 @@
 name: Configure Azure environment
-
 on: 
   workflow_dispatch:    
 env:
@@ -14,30 +13,31 @@ env:
   AZURE_DATABASE_SERVER: instantmessenger
   AZURE_DATABASE: instantmessengerdb
   #################################################
-jobs:  
-  setup-up-azure-resources:    
+jobs:
+  setup-up-resopurce-group:
     runs-on: ubuntu-latest
-      
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        
+    steps: 
       - name: Azure login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+          creds: ${{ secrets.AZURE_CREDENTIALS }}        
       - name: Create Azure resource group
         if: success()
         run: |
           az group create --location ${{env.AZURE_LOCATION}} --name ${{env.AZURE_RESOURCE_GROUP}} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-
+  setup-up-azure-resources:    
+    runs-on: ubuntu-latest
+    needs: [setup-up-resopurce-group]      
+    steps:   
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       ###### Setup app service container# #####
       - name: Create Azure app service plan
         if: success()
         run: |
-          az appservice plan create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{env.AZURE_APP_PLAN}} --is-linux --sku B1 --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
-      
+          az appservice plan create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --name ${{env.AZURE_APP_PLAN}} --is-linux --sku B1 --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}     
       - name: Create api webapp resource
         if: success()
         run: |
@@ -49,8 +49,7 @@ jobs:
       - name: Enable Logging
         if: success()
         run: |
-          az webapp log config --name ${{ env.AZURE_API_WEBAPP_NAME }} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --application-logging filesystem --docker-container-logging filesystem --web-server-logging filesystem
-      
+          az webapp log config --name ${{ env.AZURE_API_WEBAPP_NAME }} --resource-group ${{env.AZURE_RESOURCE_GROUP}} --application-logging filesystem --docker-container-logging filesystem --web-server-logging filesystem      
       - name: Create client webapp container
         run: |
           az webapp create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --plan ${{env.AZURE_APP_PLAN}} --name ${{env.AZURE_WEBAPP_NAME}} --deployment-container-image-name nginx --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
@@ -67,15 +66,12 @@ jobs:
   setup-azure-database:
     name: Setup azure sql server
     runs-on: ubuntu-latest
+    needs: [setup-up-resopurce-group]
     steps:
       - name: Azure login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Create Azure resource group
-        if: success()
-        run: |
-          az group create --location ${{env.AZURE_LOCATION}} --name ${{env.AZURE_RESOURCE_GROUP}} --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}          
+          creds: ${{ secrets.AZURE_CREDENTIALS }}        
       - name: Create Azure Sql Server
         if: success()
         run: |
