@@ -1,5 +1,4 @@
 name: .NET Core
-
 on: 
   workflow_dispatch:
 env:
@@ -14,10 +13,8 @@ env:
   AZURE_DATABASE: instantmessengerdb
   #################################################
 jobs:
-  build:
-    
-    runs-on: ubuntu-latest
-    
+  build: 
+    runs-on: ubuntu-latest    
     steps:
     -
       uses:   actions/checkout@v1
@@ -33,7 +30,6 @@ jobs:
   publish_image:
     name: Publish Image
     runs-on: ubuntu-latest
-
     steps:
         - name: Check out the repo
           uses: actions/checkout@v2
@@ -45,13 +41,11 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
             tag_with_ref: true
-            repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_API_WEBAPP_NAME}}
-                        
+            repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_API_WEBAPP_NAME}}                        
   deploy:
     needs: [publish_image]
     runs-on: ubuntu-latest  
-    name: 'Deploy to Azure Containers Instances'
-    
+    name: 'Deploy to Azure Containers Instances'  
     steps:
       - name: 'Login'
         uses: azure/login@v1
@@ -61,8 +55,7 @@ jobs:
         with:
           login-server: https://index.docker.io/v1/
           username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+          password: ${{ secrets.DOCKERHUB_TOKEN }}     
       - name: Setup env variables and connection strings
         shell: pwsh
         run: |
@@ -76,3 +69,36 @@ jobs:
         with:
           app-name: ${{env.AZURE_API_WEBAPP_NAME}}
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.AZURE_API_WEBAPP_NAME}}
+  migrate_database:
+    needs: [deploy]
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2      
+      - name: Use production connection string
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'src/InstantMessenger.Api/appsettings.json'
+        env:
+          ConnectionStrings.InstantMessengerDb: "Server=tcp:${{env.AZURE_DATABASE_SERVER}}.database.windows.net,1433;Initial Catalog=${{env.AZURE_DATABASE}};Persist Security Info=False;User ID=${{secrets.AZURE_DATABASE_LOGIN}};Password=${{secrets.AZURE_DATABASE_PASSWORD}};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"     
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}    
+      - name: Public IP
+        id: ip
+        uses: haythem/public-ip@v1.2              
+      - name: Add Azure Sql Server Firewall Rule
+        run: |
+          az sql server firewall-rule create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{env.AZURE_DATABASE_SERVER}} --name allow_github_action --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --start-ip-address ${{ steps.ip.outputs.ipv4}} --end-ip-address ${{ steps.ip.outputs.ipv4}}      
+      - name: Install dotnet tools
+        run: |
+          dotnet tool install --global dotnet-ef --version 3.1.9
+          dotnet ef dbcontext list --project src/InstantMessenger.Api     
+      - name: Update database
+        shell: pwsh
+        run: |
+          ./scripts/update-database.ps1    
+      - name: Remove Azure Sql Server Firewall Rule
+        run: |
+          az sql server firewall-rule delete --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{env.AZURE_DATABASE_SERVER}} --name allow_github_action --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}}
