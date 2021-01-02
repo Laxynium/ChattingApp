@@ -5,7 +5,7 @@ using InstantMessenger.Shared.MessageBrokers;
 
 namespace InstantMessenger.Shared.Decorators.UoW
 {
-    public class IntegrationEventsPublisher
+    public class IntegrationEventsPublisher : IIntegrationEventsPublisher
     {
         private readonly IMessageBroker _messageBroker;
         private readonly List<IIntegrationEvent> _events = new List<IIntegrationEvent>();

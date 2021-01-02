@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace InstantMessenger.Friendships.Api.Features.SendInvitation
+﻿namespace InstantMessenger.Friendships.Api.Features.SendInvitation
 {
     public class SendFriendshipInvitationApiRequest
     {

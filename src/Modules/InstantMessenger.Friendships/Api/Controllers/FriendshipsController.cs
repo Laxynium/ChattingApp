@@ -6,32 +6,28 @@ using InstantMessenger.Friendships.Api.Features.RejectInvitation;
 using InstantMessenger.Friendships.Api.Features.RemoveFromFriendships;
 using InstantMessenger.Friendships.Api.Features.SendInvitation;
 using InstantMessenger.Friendships.Api.Queries;
-using InstantMessenger.Shared.Messages.Commands;
-using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InstantMessenger.Friendships.Api
+namespace InstantMessenger.Friendships.Api.Controllers
 {
     [ApiController]
     [Route("api/friendships")]
     [Authorize]
     public class FriendshipsController : ControllerBase
     {
-        private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IQueryDispatcher _queryDispatcher;
+        private readonly FriendshipsModuleFacade _facade;
 
-        public FriendshipsController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+        public FriendshipsController(FriendshipsModuleFacade facade)
         {
-            _commandDispatcher = commandDispatcher;
-            _queryDispatcher = queryDispatcher;
+            _facade = facade;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(SendFriendshipInvitationApiRequest request)
         {
-            await _commandDispatcher.SendAsync(
+            await _facade.SendAsync(
                 new SendFriendshipInvitationCommand(User.GetUserId(), request.ReceiverNickname));
             return Ok();
         }
@@ -39,7 +35,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpPost("invitations/accept")]
         public async Task<IActionResult> Post(AcceptFriendshipInvitationApiRequest request)
         {
-            await _commandDispatcher.SendAsync(
+            await _facade.SendAsync(
                 new AcceptFriendshipInvitationCommand(request.InvitationId, User.GetUserId()));
             return Ok();
         }
@@ -47,7 +43,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpPost("invitations/reject")]
         public async Task<IActionResult> Post(RejectFriendshipInvitationApiRequest request)
         {
-            await _commandDispatcher.SendAsync(
+            await _facade.SendAsync(
                 new RejectFriendshipInvitationCommand(request.InvitationId, User.GetUserId()));
             return Ok();
         }
@@ -55,7 +51,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpPost("invitations/cancel")]
         public async Task<IActionResult> Post(CancelFriendshipInvitationApiRequest request)
         {
-            await _commandDispatcher.SendAsync(
+            await _facade.SendAsync(
                 new CancelFriendshipInvitationCommand(request.InvitationId, User.GetUserId()));
             return Ok();
         }
@@ -63,7 +59,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpDelete("{friendshipId}")]
         public async Task<IActionResult> Delete(Guid friendshipId)
         {
-            await _commandDispatcher.SendAsync(
+            await _facade.SendAsync(
                 new RemoveFromFriendshipsCommand(User.GetUserId(), friendshipId));
             return Ok();
         }
@@ -72,7 +68,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpGet("invitations/pending")]
         public async Task<IActionResult> GetPending()
         {
-            var result = await _queryDispatcher.QueryAsync(new GetAllPendingInvitationsQuery(User.GetUserId()));
+            var result = await _facade.QueryAsync(new GetAllPendingInvitationsQuery(User.GetUserId()));
 
             return Ok(result);
         }
@@ -80,7 +76,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpGet("invitations/pending/incoming")]
         public async Task<IActionResult> GetIncomingPending()
         {
-            var result = await _queryDispatcher.QueryAsync(new GetIncomingPendingInvitationsQuery(User.GetUserId()));
+            var result = await _facade.QueryAsync(new GetIncomingPendingInvitationsQuery(User.GetUserId()));
 
             return Ok(result);
         }
@@ -88,7 +84,7 @@ namespace InstantMessenger.Friendships.Api
         [HttpGet()]
         public async Task<IActionResult> GetFriendships()
         {
-            var result = await _queryDispatcher.QueryAsync(new GetFriendshipsQuery(User.GetUserId()));
+            var result = await _facade.QueryAsync(new GetFriendshipsQuery(User.GetUserId()));
 
             return Ok(result);
         }

@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
-using InstantMessenger.Friendships.Domain;
 using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Friendships.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstantMessenger.Friendships.Infrastructure.Database
+namespace InstantMessenger.Friendships.Infrastructure.Database.Rules
 {
     internal sealed class UniquePendingInvitationRule : IUniquePendingInvitationRule
     {
