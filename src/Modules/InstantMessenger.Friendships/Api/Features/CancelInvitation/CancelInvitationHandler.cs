@@ -3,7 +3,6 @@ using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.ValueObjects;
-using InstantMessenger.Shared.MessageBrokers;
 using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Friendships.Api.Features.CancelInvitation

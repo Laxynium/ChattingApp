@@ -2,7 +2,6 @@
 using InstantMessenger.Friendships.Infrastructure.Database;
 using InstantMessenger.Shared.Decorators;
 using InstantMessenger.Shared.Decorators.UoW;
-using InstantMessenger.Shared.MessageBrokers;
 using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Friendships.Infrastructure.Decorators
@@ -13,9 +12,9 @@ namespace InstantMessenger.Friendships.Infrastructure.Decorators
     {
         private readonly ICommandHandler<TCommand> _innerHandler;
         private readonly UnitOfWork<FriendshipsContext> _unitOfWork;
-        private readonly IntegrationEventsPublisher _integrationEventsPublisher;
+        private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
 
-        public CommandHandlerTransactionDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<FriendshipsContext> unitOfWork, IntegrationEventsPublisher integrationEventsPublisher)
+        public CommandHandlerTransactionDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<FriendshipsContext> unitOfWork, IIntegrationEventsPublisher integrationEventsPublisher)
         {
             _innerHandler = innerHandler;
             _unitOfWork = unitOfWork;

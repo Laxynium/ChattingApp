@@ -4,6 +4,8 @@ using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Friendships.Infrastructure;
 using InstantMessenger.Friendships.Infrastructure.Database;
+using InstantMessenger.Friendships.Infrastructure.Database.Repositories;
+using InstantMessenger.Friendships.Infrastructure.Database.Rules;
 using InstantMessenger.Friendships.Infrastructure.Decorators;
 using InstantMessenger.Shared.Decorators.UoW;
 using InstantMessenger.Shared.IntegrationEvents;

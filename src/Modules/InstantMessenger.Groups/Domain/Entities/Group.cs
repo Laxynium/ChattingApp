@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
-using InstantMessenger.Groups.Api.Queries;
 using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Messages.Entities;

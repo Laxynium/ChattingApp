@@ -4,7 +4,7 @@ using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstantMessenger.Friendships.Infrastructure.Database
+namespace InstantMessenger.Friendships.Infrastructure.Database.Repositories
 {
     internal sealed class InvitationRepository : IInvitationRepository
     {
