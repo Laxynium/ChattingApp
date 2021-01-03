@@ -137,6 +137,8 @@ const hubProvider: HubHandlersProvider = () => ({
   onPermissionAddedToRole: onPermissionAddedToRole,
   onPermissionRemovedFromRole: onPermissionRemovedFromRole,
   onAllowedActionsChanged: onAllowedActionsChanged,
+  onRolePermissionOverridesChanged: onRolePermissionOverridesChanged,
+  onMemberPermissionOverridesChanged: onMemberPermissionOverridesChanged,
 });
 
 export const groupsHub: Hub = {
