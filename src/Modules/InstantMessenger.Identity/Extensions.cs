@@ -19,6 +19,7 @@ using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
 using InstantMessenger.Shared.Mvc;
+using InstantMessenger.Shared.Outbox;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -108,7 +109,7 @@ namespace InstantMessenger.Identity
                         o.UseSqlServer(connectionString, x=>x.MigrationsHistoryTable("__EFMigrationsHistory", "Identity"));
                     }
                 )
-                .AddUnitOfWork<IdentityContext,DomainEventMapper>()
+                .AddUnitOfWork<IdentityContext,DomainEventMapper>(outbox: true)
                 .AddScoped<IUniqueEmailRule, UniqueEmailRule>()
                 .AddScoped<IUniqueNicknameRule, UniqueNicknameRule>()
                 .AddScoped<IUserRepository, UserRepository>()

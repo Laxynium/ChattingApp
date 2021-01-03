@@ -10,11 +10,11 @@ namespace InstantMessenger.Shared.Decorators.UoW
     public class DomainEventPublisher<TDbContext> where TDbContext : DbContext
     {
         private readonly DomainEventsAccessor<TDbContext> _accessor;
-        private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
+        private readonly IIntegrationEventsPublisher<TDbContext> _integrationEventsPublisher;
         private readonly IEnumerable<IDomainEventMapper> _mappers;
         private readonly IDomainEventDispatcher _dispatcher;
 
-        public DomainEventPublisher(DomainEventsAccessor<TDbContext> accessor, IIntegrationEventsPublisher integrationEventsPublisher,
+        public DomainEventPublisher(DomainEventsAccessor<TDbContext> accessor, IIntegrationEventsPublisher<TDbContext> integrationEventsPublisher,
             IEnumerable<IDomainEventMapper> mappers,
             IDomainEventDispatcher dispatcher)
         {

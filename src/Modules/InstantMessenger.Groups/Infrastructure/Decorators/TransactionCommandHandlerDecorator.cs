@@ -12,9 +12,9 @@ namespace InstantMessenger.Groups.Infrastructure.Decorators
     {
         private readonly ICommandHandler<TCommand> _innerHandler;
         private readonly UnitOfWork<GroupsContext> _unitOfWork;
-        private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
+        private readonly IIntegrationEventsPublisher<GroupsContext> _integrationEventsPublisher;
 
-        public TransactionCommandHandlerDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<GroupsContext> unitOfWork, IIntegrationEventsPublisher integrationEventsPublisher)
+        public TransactionCommandHandlerDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<GroupsContext> unitOfWork, IIntegrationEventsPublisher<GroupsContext> integrationEventsPublisher)
         {
             _innerHandler = innerHandler;
             _unitOfWork = unitOfWork;

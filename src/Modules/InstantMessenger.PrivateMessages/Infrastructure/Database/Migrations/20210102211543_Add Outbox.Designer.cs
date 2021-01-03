@@ -4,14 +4,16 @@ using InstantMessenger.PrivateMessages.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InstantMessenger.PrivateMessages.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PrivateMessagesContext))]
-    partial class PrivateMessagesContextModelSnapshot : ModelSnapshot
+    [Migration("20210102211543_Add Outbox")]
+    partial class AddOutbox
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

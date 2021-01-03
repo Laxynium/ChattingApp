@@ -1,5 +1,6 @@
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Shared.BuildingBlocks;
+using InstantMessenger.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,6 +20,7 @@ namespace InstantMessenger.Identity.Infrastructure.Database
             modelBuilder.HasDefaultSchema("Identity");
             Build(modelBuilder.Entity<User>());
             Build(modelBuilder.Entity<ActivationLink>());
+            modelBuilder.ApplyConfiguration(new OutboxEntityConfiguration());
         }
 
         private static void Build(EntityTypeBuilder<ActivationLink> builder)

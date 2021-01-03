@@ -12,9 +12,9 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Decorators
     {
         private readonly ICommandHandler<TCommand> _innerHandler;
         private readonly UnitOfWork<PrivateMessagesContext> _unitOfWork;
-        private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
+        private readonly IIntegrationEventsPublisher<PrivateMessagesContext> _integrationEventsPublisher;
 
-        public TransactionCommandHandlerDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<PrivateMessagesContext> unitOfWork, IIntegrationEventsPublisher integrationEventsPublisher)
+        public TransactionCommandHandlerDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<PrivateMessagesContext> unitOfWork, IIntegrationEventsPublisher<PrivateMessagesContext> integrationEventsPublisher)
         {
             _innerHandler = innerHandler;
             _unitOfWork = unitOfWork;

@@ -1,6 +1,6 @@
-﻿using InstantMessenger.PrivateMessages.Domain;
-using InstantMessenger.PrivateMessages.Domain.Entities;
+﻿using InstantMessenger.PrivateMessages.Domain.Entities;
 using InstantMessenger.PrivateMessages.Domain.ValueObjects;
+using InstantMessenger.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,6 +21,8 @@ namespace InstantMessenger.PrivateMessages.Infrastructure.Database
             BuildConversation(modelBuilder.Entity<Conversation>());
 
             BuildMessage(modelBuilder.Entity<Message>());
+
+            modelBuilder.ApplyConfiguration(new OutboxEntityConfiguration());
         }
 
         private static void BuildMessage(EntityTypeBuilder<Message> message)
