@@ -482,10 +482,10 @@ const groupsReducer = createReducer(
   })),
   on(sendMessageSuccessAction, (s, a) => ({
     ...s,
-    currentChannelMessages: s.currentChannelMessages.set(
-      a.message.messageId,
-      a.message
-    ),
+    currentChannelMessages:
+      s.currentChannel && s.currentChannel.channelId == a.message.channelId
+        ? s.currentChannelMessages.set(a.message.messageId, a.message)
+        : s.currentChannelMessages,
   })),
 
   on(getAllowedActionsSuccessAction, (s, a) => ({

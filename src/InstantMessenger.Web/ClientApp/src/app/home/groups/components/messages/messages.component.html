@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="input-area" accessControl [accessControlAction]="['send_messages']"
-      [accessControlChannelId]="$channelId | async" [accessControlGroupId]="$groupId">
+      [accessControlChannelId]="$channelId | async" [accessControlGroupId]="$groupId | async">
       <div class="input">
         <textarea [(ngModel)]="messageContent" name="content" class="text-area"
           (keyup.control.enter)="sendMessage()"></textarea>
