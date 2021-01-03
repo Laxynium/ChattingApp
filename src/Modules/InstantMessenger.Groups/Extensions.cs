@@ -14,6 +14,7 @@ using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
+using InstantMessenger.Shared.Outbox;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -57,12 +58,13 @@ namespace InstantMessenger.Groups
                         using var scope = provider.CreateScope();
                         var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
                             .GetConnectionString("InstantMessengerDb");
+                        o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                         o.UseSqlServer(
                             connectionString,
                             x => x.MigrationsHistoryTable("__EFMigrationsHistory_Views", "Groups")
                         );
                     })
-                .AddUnitOfWork<GroupsContext, DomainEventsMapper>()
+                .AddUnitOfWork<GroupsContext, DomainEventsMapper>(outbox:true)
                 .AddTransient<GroupsModuleFacade>()
                 .AddScoped<IGroupRepository, GroupRepository>()
                 .AddScoped<IInvitationRepository, InvitationRepository>()

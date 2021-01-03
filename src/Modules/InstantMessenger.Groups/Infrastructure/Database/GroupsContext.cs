@@ -4,6 +4,7 @@ using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.ValueObjects;
+using InstantMessenger.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,6 +39,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             modelBuilder.Entity<Invitation>(Build);
             modelBuilder.Entity<Channel>(Build);
             modelBuilder.Entity<Message>(Build);
+            modelBuilder.ApplyConfiguration(new OutboxEntityConfiguration());
         }
 
         private static void Build(EntityTypeBuilder<Invitation> invitation)

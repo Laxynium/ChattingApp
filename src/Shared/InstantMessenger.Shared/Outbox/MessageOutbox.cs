@@ -26,7 +26,6 @@ namespace InstantMessenger.Shared.Outbox
             var outboxMessageSet = _dbContext.Set<OutboxMessage>();
             var outboxMessage = new OutboxMessage(Guid.NewGuid(), DateTime.UtcNow, serialized);
             await outboxMessageSet.AddAsync(outboxMessage);
-            await _dbContext.SaveChangesAsync();
         }
     }
 }

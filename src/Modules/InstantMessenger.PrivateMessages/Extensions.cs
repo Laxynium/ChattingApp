@@ -45,7 +45,7 @@ namespace InstantMessenger.PrivateMessages
                         );
                     }
                 )
-                .AddUnitOfWork<PrivateMessagesContext,DomainEventMapper>()
+                .AddUnitOfWork<PrivateMessagesContext,DomainEventMapper>(outbox: true)
                 .AddScoped<IConversationRepository, ConversationRepository>()
                 .AddScoped<IMessageRepository, MessageRepository>();
             return services;

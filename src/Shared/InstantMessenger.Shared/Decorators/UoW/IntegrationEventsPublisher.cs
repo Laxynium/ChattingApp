@@ -5,12 +5,12 @@ using InstantMessenger.Shared.MessageBrokers;
 
 namespace InstantMessenger.Shared.Decorators.UoW
 {
-    public class IntegrationEventsPublisher : IIntegrationEventsPublisher
+    public class InMemoryIntegrationEventsPublisher<TDbContext> : IIntegrationEventsPublisher<TDbContext>
     {
         private readonly IMessageBroker _messageBroker;
         private readonly List<IIntegrationEvent> _events = new List<IIntegrationEvent>();
 
-        public IntegrationEventsPublisher(IMessageBroker messageBroker)
+        public InMemoryIntegrationEventsPublisher(IMessageBroker messageBroker)
         {
             _messageBroker = messageBroker;
         }

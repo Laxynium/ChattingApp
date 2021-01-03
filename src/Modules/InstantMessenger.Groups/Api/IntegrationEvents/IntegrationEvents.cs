@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using InstantMessenger.Groups.Api.ResponseDtos;
 using InstantMessenger.Shared.IntegrationEvents;
 
@@ -10,13 +11,13 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
         public Guid GroupId { get; }
         public string GroupName { get; }
         public DateTimeOffset CreatedAt { get; }
-        public IEnumerable<Guid> AllowedUsers { get; }
+        public IReadOnlyList<Guid> AllowedUsers { get; }
         public GroupRemovedEvent(Guid groupId, string groupName, DateTimeOffset createdAt, IEnumerable<Guid> allowedUsers)
         {
             GroupId = groupId;
             GroupName = groupName;
             CreatedAt = createdAt;
-            AllowedUsers = allowedUsers;
+            AllowedUsers = allowedUsers.ToList();
         }
     }
 
@@ -185,14 +186,14 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
         public Guid GroupId { get; }
         public Guid ChannelId { get; }
         public Guid RoleId { get; }
-        public IEnumerable<PermissionOverrideDto> Overrides { get; }
+        public IReadOnlyList<PermissionOverrideDto> Overrides { get; }
 
         public ChannelRolePermissionOverridesChangedEvent(Guid groupId, Guid channelId, Guid roleId, IEnumerable<PermissionOverrideDto> overrides)
         {
             GroupId = groupId;
             ChannelId = channelId;
             RoleId = roleId;
-            Overrides = overrides;
+            Overrides = overrides.ToList();
         }
     }
     public class ChannelMemberPermissionOverridesChangedEvent : IIntegrationEvent
@@ -207,7 +208,7 @@ namespace InstantMessenger.Groups.Api.IntegrationEvents
             GroupId = groupId;
             ChannelId = channelId;
             UserId = userId;
-            Overrides = overrides;
+            Overrides = overrides.ToList();
         }
     }
 

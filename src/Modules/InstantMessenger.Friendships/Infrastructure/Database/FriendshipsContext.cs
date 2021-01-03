@@ -1,5 +1,6 @@
 ﻿using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.ValueObjects;
+using InstantMessenger.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,6 +21,8 @@ namespace InstantMessenger.Friendships.Infrastructure.Database
             BuildInvitation(modelBuilder.Entity<Invitation>());
 
             BuildFriendship(modelBuilder.Entity<Friendship>());
+
+            modelBuilder.ApplyConfiguration(new OutboxEntityConfiguration());
         }
 
         private static void BuildInvitation(EntityTypeBuilder<Invitation> invitation)

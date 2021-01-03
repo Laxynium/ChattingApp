@@ -1,13 +1,17 @@
+using InstantMessenger.Shared.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace InstantMessenger.Shared.Outbox
 {
-    public class Extensions
+    internal static class Extensions
     {
-        public IServiceCollection AddOutbox<TDbContext>(IServiceCollection serviceCollection) where TDbContext : DbContext
+        public static IServiceCollection AddOutbox<TDbContext>(this IServiceCollection serviceCollection) where TDbContext : DbContext
         {
-            serviceCollection.AddTransient<IMessageOutbox, MessageOutbox<TDbContext>>();
+            var options = serviceCollection.TryGetOptions<OutboxOptions>("outbox");
+            if(options is {})
+                serviceCollection.AddSingleton(options);
+            serviceCollection.AddTransient<MessageOutbox<TDbContext>>();
             serviceCollection.AddHostedService<OutboxProcessor<TDbContext>>();
             return serviceCollection;
         }

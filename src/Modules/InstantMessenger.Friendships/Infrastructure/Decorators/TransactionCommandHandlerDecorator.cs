@@ -12,9 +12,9 @@ namespace InstantMessenger.Friendships.Infrastructure.Decorators
     {
         private readonly ICommandHandler<TCommand> _innerHandler;
         private readonly UnitOfWork<FriendshipsContext> _unitOfWork;
-        private readonly IIntegrationEventsPublisher _integrationEventsPublisher;
+        private readonly IIntegrationEventsPublisher<FriendshipsContext> _integrationEventsPublisher;
 
-        public CommandHandlerTransactionDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<FriendshipsContext> unitOfWork, IIntegrationEventsPublisher integrationEventsPublisher)
+        public CommandHandlerTransactionDecorator(ICommandHandler<TCommand> innerHandler, UnitOfWork<FriendshipsContext> unitOfWork, IIntegrationEventsPublisher<FriendshipsContext> integrationEventsPublisher)
         {
             _innerHandler = innerHandler;
             _unitOfWork = unitOfWork;
