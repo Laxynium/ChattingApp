@@ -1,6 +1,4 @@
-﻿using InstantMessenger.Identity.Domain.Exceptions;
-
-namespace InstantMessenger.Identity.Domain.Entities
+﻿namespace InstantMessenger.Identity.Domain.Exceptions
 {
     public class ImageFormatNotSupportedException : DomainException
     {

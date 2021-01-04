@@ -1,7 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
 
-namespace InstantMessenger.Identity.Domain.Entities
+namespace InstantMessenger.Identity.Domain.ValueObjects
 {
     public class Nickname : SimpleValueObject<string>
     {
