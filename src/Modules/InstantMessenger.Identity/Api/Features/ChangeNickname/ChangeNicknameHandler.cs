@@ -2,7 +2,7 @@
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.Rules;
-using InstantMessenger.Shared.BuildingBlocks;
+using InstantMessenger.Identity.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
 
 namespace InstantMessenger.Identity.Api.Features.ChangeNickname

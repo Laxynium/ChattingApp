@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Identity.Domain.Entities;
+using InstantMessenger.Identity.Domain.ValueObjects;
 using InstantMessenger.Identity.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;
 using Microsoft.EntityFrameworkCore;

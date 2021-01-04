@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Identity.Domain.Entities;
+using InstantMessenger.Identity.Domain.ValueObjects;
 
 namespace InstantMessenger.Identity.Domain.Rules
 {
