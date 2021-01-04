@@ -22,12 +22,10 @@ namespace InstantMessenger.Groups.Api.Features.Members.LeaveGroup
     internal sealed class LeaveGroupHandler : ICommandHandler<LeaveGroupCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public LeaveGroupHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public LeaveGroupHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(LeaveGroupCommand command)
         {
@@ -35,8 +33,6 @@ namespace InstantMessenger.Groups.Api.Features.Members.LeaveGroup
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.LeaveGroup(UserId.From(command.UserId));
-
-            await _unitOfWork.Commit();
         }
     }
 }

@@ -8,7 +8,6 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
     internal sealed class InvitationUsedEventHandler : IDomainEventHandler<InvitationUsedDomainEvent>
     {
         private readonly GroupsModuleFacade _facade;
-        
 
         public InvitationUsedEventHandler(GroupsModuleFacade facade)
         {

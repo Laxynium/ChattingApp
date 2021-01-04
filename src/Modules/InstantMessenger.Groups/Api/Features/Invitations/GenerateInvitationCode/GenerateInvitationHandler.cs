@@ -16,20 +16,17 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCod
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IInvitationRepository _invitationRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IUniqueInvitationCodeRule _uniqueInvitationCodeRule;
         private readonly IClock _clock;
 
         public GenerateInvitationHandler(
             IGroupRepository groupRepository,
             IInvitationRepository invitationRepository,
-            IUnitOfWork unitOfWork,
             IUniqueInvitationCodeRule uniqueInvitationCodeRule,
             IClock clock)
         {
             _groupRepository = groupRepository;
             _invitationRepository = invitationRepository;
-            _unitOfWork = unitOfWork;
             _uniqueInvitationCodeRule = uniqueInvitationCodeRule;
             _clock = clock;
         }
@@ -51,7 +48,6 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCod
             );
 
             await _invitationRepository.AddAsync(invitation);
-            await _unitOfWork.Commit();
         }
 
         private ExpirationTime GetExpirationTime(GenerateInvitationCommand command)

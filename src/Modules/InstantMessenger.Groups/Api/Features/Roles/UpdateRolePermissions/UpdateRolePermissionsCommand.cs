@@ -39,12 +39,9 @@ namespace InstantMessenger.Groups.Api.Features.Roles.UpdateRolePermissions
     public class UpdateRolePermissionsCommandHandler : ICommandHandler<UpdateRolePermissionsCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public UpdateRolePermissionsCommandHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public UpdateRolePermissionsCommandHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(UpdateRolePermissionsCommand command)
         {
@@ -61,8 +58,6 @@ namespace InstantMessenger.Groups.Api.Features.Roles.UpdateRolePermissions
             {
                 action.Invoke();
             }
-
-            await _unitOfWork.Commit();
         }
     }
 }

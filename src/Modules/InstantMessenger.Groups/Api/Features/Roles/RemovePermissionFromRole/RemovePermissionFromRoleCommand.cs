@@ -25,12 +25,9 @@ namespace InstantMessenger.Groups.Api.Features.Roles.RemovePermissionFromRole
     public class RemovePermissionFromRoleHandler : ICommandHandler<RemovePermissionFromRoleCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public RemovePermissionFromRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public RemovePermissionFromRoleHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(RemovePermissionFromRoleCommand command)
         {
@@ -38,8 +35,6 @@ namespace InstantMessenger.Groups.Api.Features.Roles.RemovePermissionFromRole
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.RemovePermissionFromRole(UserId.From(command.UserId), RoleId.From(command.RoleId), Permission.FromName(command.PermissionName));
-
-            await _unitOfWork.Commit();
         }
     }
 

@@ -25,12 +25,10 @@ namespace InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole
     public class AddPermissionToRoleHandler : ICommandHandler<AddPermissionToRoleCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public AddPermissionToRoleHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public AddPermissionToRoleHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(AddPermissionToRoleCommand command)
         {
@@ -38,8 +36,6 @@ namespace InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
             
             group.AddPermissionToRole(UserId.From(command.UserId), RoleId.From(command.RoleId), Permission.FromName(command.PermissionName));
-
-            await _unitOfWork.Commit();
         }
     }
 }

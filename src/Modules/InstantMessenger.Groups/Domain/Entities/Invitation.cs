@@ -62,6 +62,7 @@ namespace InstantMessenger.Groups.Domain.Entities
                 throw new InvalidInvitationException();
 
             UsageCounter = UsageCounter.Use();
+            Apply(new InvitationUsedDomainEvent(userId, this.Id, group.Id));
         }
 
         public void Revoke(UserId userId)

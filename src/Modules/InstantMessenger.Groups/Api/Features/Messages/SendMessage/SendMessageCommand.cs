@@ -34,15 +34,13 @@ namespace InstantMessenger.Groups.Api.Features.Messages.SendMessage
         private readonly IGroupRepository _groupRepository;
         private readonly IChannelRepository _channelRepository;
         private readonly IMessageRepository _messageRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IClock _clock;
 
-        public SendMessageHandler(IGroupRepository groupRepository, IChannelRepository channelRepository,IMessageRepository messageRepository, IUnitOfWork unitOfWork, IClock clock)
+        public SendMessageHandler(IGroupRepository groupRepository, IChannelRepository channelRepository,IMessageRepository messageRepository, IClock clock)
         {
             _groupRepository = groupRepository;
             _channelRepository = channelRepository;
             _messageRepository = messageRepository;
-            _unitOfWork = unitOfWork;
             _clock = clock;
         }
 
@@ -59,7 +57,6 @@ namespace InstantMessenger.Groups.Api.Features.Messages.SendMessage
             var message = group.SendMessage(UserId.From(command.UserId), channel, MessageId.From(command.MessageId), MessageContent.Create(command.Content), _clock);
 
             await _messageRepository.AddAsync(message);
-            await _unitOfWork.Commit();
         }
     }
 }

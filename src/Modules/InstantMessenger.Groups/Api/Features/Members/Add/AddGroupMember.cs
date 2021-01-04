@@ -25,17 +25,14 @@ namespace InstantMessenger.Groups.Api.Features.Members.Add
     internal sealed class AddGroupHandler : ICommandHandler<AddGroupMember>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IModuleClient _moduleClient;
         private readonly IClock _clock;
 
         public AddGroupHandler(IGroupRepository groupRepository, 
-            IUnitOfWork unitOfWork,
             IModuleClient moduleClient,
             IClock clock)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
             _moduleClient = moduleClient;
             _clock = clock;
         }
@@ -46,8 +43,6 @@ namespace InstantMessenger.Groups.Api.Features.Members.Add
 
             var user = await _moduleClient.GetAsync<UserDto>("/identity/me", new MeQuery(command.UserIdOfMember));
             group.AddMember(UserId.From(command.UserIdOfMember), MemberName.Create(user.Nickname),_clock);
-
-            await _unitOfWork.Commit();
         }
     }
 }

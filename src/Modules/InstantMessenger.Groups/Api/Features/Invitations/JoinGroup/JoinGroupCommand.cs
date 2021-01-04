@@ -5,7 +5,6 @@ using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
-using InstantMessenger.Shared.Messages.Events;
 using NodaTime;
 
 namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
@@ -26,18 +25,13 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IInvitationRepository _invitationRepository;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IClock _clock;
-        private readonly IDomainEventDispatcher _domainEventDispatcher;
 
-        public JoinGroupHandler(IGroupRepository groupRepository, IInvitationRepository invitationRepository, IUnitOfWork unitOfWork, IClock clock,
-            IDomainEventDispatcher domainEventDispatcher)
+        public JoinGroupHandler(IGroupRepository groupRepository, IInvitationRepository invitationRepository, IClock clock)
         {
             _groupRepository = groupRepository;
             _invitationRepository = invitationRepository;
-            _unitOfWork = unitOfWork;
             _clock = clock;
-            _domainEventDispatcher = domainEventDispatcher;
         }
         public async Task HandleAsync(JoinGroupCommand command)
         {
@@ -46,10 +40,6 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
             var group = await _groupRepository.GetAsync(invitation.GroupId) ?? throw new GroupNotFoundException(invitation.GroupId);
 
             invitation.Use(UserId.From(command.UserId), group, _clock);
-
-            await _unitOfWork.Commit();
-
-            await _domainEventDispatcher.PublishAsync(new InvitationUsedDomainEvent(command.UserId, invitation.Id.Value, invitation.GroupId.Value));
         }
     }
 }
