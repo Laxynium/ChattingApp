@@ -24,12 +24,10 @@ namespace InstantMessenger.Groups.Api.Features.Members.Kick
     internal sealed class KickMemberHandler : ICommandHandler<KickMemberCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public KickMemberHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public KickMemberHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(KickMemberCommand command)
         {
@@ -37,8 +35,6 @@ namespace InstantMessenger.Groups.Api.Features.Members.Kick
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.KickMember(UserId.From(command.UserId), UserId.From(command.UserIdOfMember));
-
-            await _unitOfWork.Commit();
         }
     }
 }

@@ -26,12 +26,10 @@ namespace InstantMessenger.Groups.Api.Features.Members.AssignRole
     internal sealed class AssignRoleToMemberHandler : ICommandHandler<AssignRoleToMemberCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public AssignRoleToMemberHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public AssignRoleToMemberHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(AssignRoleToMemberCommand command)
         {
@@ -39,8 +37,6 @@ namespace InstantMessenger.Groups.Api.Features.Members.AssignRole
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.AssignRole(UserId.From(command.UserId), UserId.From(command.UserIdOfMember), RoleId.From(command.RoleId));
-
-            await _unitOfWork.Commit();
         }
     }
 }

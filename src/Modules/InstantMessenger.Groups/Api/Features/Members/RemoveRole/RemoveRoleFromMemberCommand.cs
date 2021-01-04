@@ -26,12 +26,10 @@ namespace InstantMessenger.Groups.Api.Features.Members.RemoveRole
     internal sealed class RemoveRoleFromMemberHandler : ICommandHandler<RemoveRoleFromMemberCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public RemoveRoleFromMemberHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public RemoveRoleFromMemberHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(RemoveRoleFromMemberCommand command)
         {
@@ -39,8 +37,6 @@ namespace InstantMessenger.Groups.Api.Features.Members.RemoveRole
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.RemoveRoleFromMember(UserId.From(command.UserId), UserId.From(command.UserIdOfMember), RoleId.From(command.RoleId));
-
-            await _unitOfWork.Commit();
         }
     }
 }

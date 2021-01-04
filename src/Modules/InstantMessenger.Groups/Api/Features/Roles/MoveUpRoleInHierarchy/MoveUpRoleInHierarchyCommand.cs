@@ -35,12 +35,10 @@ namespace InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy
     internal sealed class MoveUpRoleInHierarchyHandler : ICommandHandler<MoveUpRoleInHierarchyCommand>
     {
         private readonly IGroupRepository _groupRepository;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public MoveUpRoleInHierarchyHandler(IGroupRepository groupRepository, IUnitOfWork unitOfWork)
+        public MoveUpRoleInHierarchyHandler(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _unitOfWork = unitOfWork;
         }
         public async Task HandleAsync(MoveUpRoleInHierarchyCommand command)
         {
@@ -48,8 +46,6 @@ namespace InstantMessenger.Groups.Api.Features.Roles.MoveUpRoleInHierarchy
             var group = await _groupRepository.GetAsync(groupId) ?? throw new GroupNotFoundException(groupId);
 
             group.MoveUpRole(UserId.From(command.UserId), RoleId.From(command.RoleId));
-
-            await _unitOfWork.Commit();
         }
     }
 }
