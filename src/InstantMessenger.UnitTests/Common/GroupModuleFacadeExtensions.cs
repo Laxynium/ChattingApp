@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using InstantMessenger.Groups;
-using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
-using InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForMember;
-using InstantMessenger.Groups.Api.Features.Channel.AllowPermissionForRole;
-using InstantMessenger.Groups.Api.Features.Channel.DenyPermissionForRole;
-using InstantMessenger.Groups.Api.Features.Group.Create;
-using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
-using InstantMessenger.Groups.Api.Features.Members.Add;
-using InstantMessenger.Groups.Api.Features.Members.AssignRole;
-using InstantMessenger.Groups.Api.Features.Members.RemoveRole;
-using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
-using InstantMessenger.Groups.Api.Features.Roles.AddRole;
-using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Application.Features.Channel.AddChannel;
+using InstantMessenger.Groups.Application.Features.Channel.AllowPermissionForMember;
+using InstantMessenger.Groups.Application.Features.Channel.AllowPermissionForRole;
+using InstantMessenger.Groups.Application.Features.Channel.DenyPermissionForRole;
+using InstantMessenger.Groups.Application.Features.Group.Create;
+using InstantMessenger.Groups.Application.Features.Invitations.GenerateInvitationCode;
+using InstantMessenger.Groups.Application.Features.Members.Add;
+using InstantMessenger.Groups.Application.Features.Members.AssignRole;
+using InstantMessenger.Groups.Application.Features.Members.RemoveRole;
+using InstantMessenger.Groups.Application.Features.Roles.AddPermissionToRole;
+using InstantMessenger.Groups.Application.Features.Roles.AddRole;
+using InstantMessenger.Groups.Application.Queries;
 
 namespace InstantMessenger.UnitTests.Common
 {

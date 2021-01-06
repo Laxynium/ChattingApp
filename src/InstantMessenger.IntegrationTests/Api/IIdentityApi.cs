@@ -1,12 +1,12 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using InstantMessenger.Identity.Api.Features.ChangeNickname;
-using InstantMessenger.Identity.Api.Features.PasswordReset;
-using InstantMessenger.Identity.Api.Features.SendPasswordReset;
-using InstantMessenger.Identity.Api.Features.SignIn;
-using InstantMessenger.Identity.Api.Features.SignUp;
-using InstantMessenger.Identity.Api.Features.VerifyUser;
-using InstantMessenger.Identity.Api.Queries;
+using InstantMessenger.Identity.Application.Features.ChangeNickname;
+using InstantMessenger.Identity.Application.Features.PasswordReset;
+using InstantMessenger.Identity.Application.Features.SendPasswordReset;
+using InstantMessenger.Identity.Application.Features.SignIn;
+using InstantMessenger.Identity.Application.Features.SignUp;
+using InstantMessenger.Identity.Application.Features.VerifyUser;
+using InstantMessenger.Identity.Application.Queries;
 using RestEase;
 
 namespace InstantMessenger.IntegrationTests.Api

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Groups.Api.Features.Roles.AddRole;
-using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Application.Features.Roles.AddRole;
+using InstantMessenger.Groups.Application.Queries;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Xunit;

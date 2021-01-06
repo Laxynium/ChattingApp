@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Friendships.Api.Features.AcceptInvitation;
-using InstantMessenger.Friendships.Api.Features.SendInvitation;
-using InstantMessenger.Identity.Api.Features.SignIn;
-using InstantMessenger.Identity.Api.Features.SignUp;
-using InstantMessenger.Identity.Api.Features.VerifyUser;
+using InstantMessenger.Friendships.Application.Features.AcceptInvitation;
+using InstantMessenger.Friendships.Application.Features.SendInvitation;
+using InstantMessenger.Identity.Application.Features.SignIn;
+using InstantMessenger.Identity.Application.Features.SignUp;
+using InstantMessenger.Identity.Application.Features.VerifyUser;
 using InstantMessenger.IntegrationTests.Api;
-using InstantMessenger.PrivateMessages.Api.Queries;
+using InstantMessenger.PrivateMessages.Application.Queries;
 using InstantMessenger.Shared.MailKit;
 
 namespace InstantMessenger.IntegrationTests.Common

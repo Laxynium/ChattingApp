@@ -1,5 +1,5 @@
-﻿using InstantMessenger.PrivateMessages.Api.Hubs;
-using InstantMessenger.PrivateMessages.Api.IntegrationEvents;
+﻿using InstantMessenger.PrivateMessages.Application.Hubs;
+using InstantMessenger.PrivateMessages.Application.IntegrationEvents;
 using InstantMessenger.PrivateMessages.Domain;
 using InstantMessenger.PrivateMessages.Infrastructure;
 using InstantMessenger.PrivateMessages.Infrastructure.Database;

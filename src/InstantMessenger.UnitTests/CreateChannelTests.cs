@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Groups.Api.Features.Channel.AddChannel;
-using InstantMessenger.Groups.Api.Queries;
-using InstantMessenger.Groups.Api.ResponseDtos;
+using InstantMessenger.Groups.Application.Features.Channel.AddChannel;
+using InstantMessenger.Groups.Application.Queries;
+using InstantMessenger.Groups.Application.ResponseDtos;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;

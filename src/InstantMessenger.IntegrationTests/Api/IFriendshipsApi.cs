@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InstantMessenger.Friendships.Api.Features.AcceptInvitation;
-using InstantMessenger.Friendships.Api.Features.RejectInvitation;
-using InstantMessenger.Friendships.Api.Features.SendInvitation;
-using InstantMessenger.Friendships.Api.Queries;
+using InstantMessenger.Friendships.Application.Features.AcceptInvitation;
+using InstantMessenger.Friendships.Application.Features.RejectInvitation;
+using InstantMessenger.Friendships.Application.Features.SendInvitation;
+using InstantMessenger.Friendships.Application.Queries;
 using RestEase;
 
 namespace InstantMessenger.IntegrationTests.Api

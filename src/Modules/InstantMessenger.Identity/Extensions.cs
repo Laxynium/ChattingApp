@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Identity.Api.Features.SignIn;
-using InstantMessenger.Identity.Api.Features.SignUp;
-using InstantMessenger.Identity.Api.IntegrationEvents;
-using InstantMessenger.Identity.Api.Queries;
+using InstantMessenger.Identity.Application.Features.SignIn;
+using InstantMessenger.Identity.Application.Features.SignUp;
+using InstantMessenger.Identity.Application.IntegrationEvents;
+using InstantMessenger.Identity.Application.Queries;
 using InstantMessenger.Identity.Domain.Entities;
 using InstantMessenger.Identity.Domain.Repositories;
 using InstantMessenger.Identity.Domain.Rules;

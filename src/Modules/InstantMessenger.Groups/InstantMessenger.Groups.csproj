@@ -49,14 +49,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\Features\Group\ChangeAvatar\" />
-    <Folder Include="Api\Features\Members\Ban\" />
-    <Folder Include="Api\Features\Members\ChangeOwnNickname\" />
-    <Folder Include="Api\Features\Members\ChangeOthersNicknames\" />
-    <Folder Include="Api\Features\Messages\AttachFile\" />
-    <Folder Include="Api\Features\Messages\Mention\" />
-    <Folder Include="Api\Features\Messages\AddReaction\" />
-    <Folder Include="Api\Features\Messages\EmbedLink\" />
+    <Folder Include="Application\Features\Group\ChangeAvatar\" />
+    <Folder Include="Application\Features\Members\Ban\" />
+    <Folder Include="Application\Features\Members\ChangeOwnNickname\" />
+    <Folder Include="Application\Features\Members\ChangeOthersNicknames\" />
+    <Folder Include="Application\Features\Messages\AttachFile\" />
+    <Folder Include="Application\Features\Messages\Mention\" />
+    <Folder Include="Application\Features\Messages\AddReaction\" />
+    <Folder Include="Application\Features\Messages\EmbedLink\" />
   </ItemGroup>
 
 </Project>

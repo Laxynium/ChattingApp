@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InstantMessenger.PrivateMessages.Api.Features.MarkMessageAsRead;
-using InstantMessenger.PrivateMessages.Api.Features.SendMessage;
-using InstantMessenger.PrivateMessages.Api.Queries;
+using InstantMessenger.PrivateMessages.Application.Features.MarkMessageAsRead;
+using InstantMessenger.PrivateMessages.Application.Features.SendMessage;
+using InstantMessenger.PrivateMessages.Application.Queries;
 using RestEase;
 
 namespace InstantMessenger.IntegrationTests.Api

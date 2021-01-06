@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.PrivateMessages.Api.Features.CreateConversation;
+using InstantMessenger.PrivateMessages.Application.Features.CreateConversation;
 using InstantMessenger.Shared.IntegrationEvents;
 using InstantMessenger.Shared.Messages.Commands;
 
