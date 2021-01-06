@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Group.ChangeName;
@@ -25,7 +24,7 @@ using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InstantMessenger.Groups.Api
+namespace InstantMessenger.Groups.Api.Controllers
 {
     [ApiController]
     [Authorize]

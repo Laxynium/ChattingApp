@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using InstantMessenger.Groups.Api.Features.Members.Add;
-using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Events;
 using InstantMessenger.Shared.Messages.Events;
 
 namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
 {
-    internal sealed class InvitationUsedEventHandler : IDomainEventHandler<InvitationUsedDomainEvent>
+    internal sealed class InvitationUsedEventHandler : IDomainEventHandler<InvitationUsedEvent>
     {
         private readonly GroupsModuleFacade _facade;
 
@@ -15,7 +15,7 @@ namespace InstantMessenger.Groups.Api.Features.Invitations.JoinGroup
         
         }
 
-        public async Task HandleAsync(InvitationUsedDomainEvent @event)
+        public async Task HandleAsync(InvitationUsedEvent @event)
         {
             await _facade.SendAsync(new AddGroupMember(@event.GroupId, @event.UserId));
         }

@@ -11,7 +11,7 @@ using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InstantMessenger.Groups.Api
+namespace InstantMessenger.Groups.Api.Controllers
 {
     [ApiController]
     [Authorize]
