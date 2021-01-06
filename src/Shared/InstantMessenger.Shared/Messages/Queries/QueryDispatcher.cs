@@ -19,12 +19,5 @@ namespace InstantMessenger.Shared.Messages.Queries
             var task = (Task<TResult>)handler.HandleAsync((dynamic) query);
             return await task;
         }
-
-        public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query) where TQuery : class, IQuery<TResult>
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var handler = scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
-            return await handler.HandleAsync(query);
-        }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using InstantMessenger.Shared.IntegrationEvents;
-using InstantMessenger.Shared.Modules;
 
 namespace InstantMessenger.Friendships.Api.IntegrationEvents
 {
-    [ProcessAlsoInternally]
     public class FriendshipInvitationAcceptedIntegrationEvent : IIntegrationEvent
     {
         public Guid InvitationId { get; }

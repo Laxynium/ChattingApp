@@ -1,15 +1,15 @@
 ﻿using System;
 using InstantMessenger.Shared.Messages.Events;
 
-namespace InstantMessenger.Groups.Domain
+namespace InstantMessenger.Groups.Domain.Events
 {
-    public class InvitationUsedDomainEvent : IDomainEvent
+    public class InvitationUsedEvent : IDomainEvent
     {
         public Guid UserId { get; }
         public Guid InvitationId { get; }
         public Guid GroupId { get; }
 
-        public InvitationUsedDomainEvent(Guid userId, Guid invitationId, Guid groupId)
+        public InvitationUsedEvent(Guid userId, Guid invitationId, Guid groupId)
         {
             UserId = userId;
             InvitationId = invitationId;

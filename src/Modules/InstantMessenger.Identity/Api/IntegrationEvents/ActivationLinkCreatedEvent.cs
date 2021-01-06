@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InstantMessenger.Shared.IntegrationEvents;
-using InstantMessenger.Shared.Modules;
 
 namespace InstantMessenger.Identity.Api.IntegrationEvents
 {
-    [ProcessAlsoInternally]
     public class ActivationLinkCreatedEvent : IIntegrationEvent
     {
         public Guid Id { get; }
