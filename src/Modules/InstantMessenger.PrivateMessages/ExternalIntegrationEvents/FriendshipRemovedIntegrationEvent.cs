@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.PrivateMessages.Api.Features.RemoveConversation;
+using InstantMessenger.PrivateMessages.Application.Features.RemoveConversation;
 using InstantMessenger.Shared.IntegrationEvents;
 using InstantMessenger.Shared.Messages.Commands;
 

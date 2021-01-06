@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Friendships.Api.Features.RejectInvitation;
-using InstantMessenger.Friendships.Api.Features.SendInvitation;
+using InstantMessenger.Friendships.Application.Features.RejectInvitation;
+using InstantMessenger.Friendships.Application.Features.SendInvitation;
 using InstantMessenger.Friendships.Domain;
 using InstantMessenger.Friendships.Domain.ValueObjects;
 using InstantMessenger.IntegrationTests.Api;

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Groups.Api.Features.Group.Create;
-using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Application.Features.Group.Create;
+using InstantMessenger.Groups.Application.Queries;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.Shared.Modules;
 using InstantMessenger.UnitTests.Common;

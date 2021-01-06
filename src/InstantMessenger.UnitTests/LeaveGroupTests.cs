@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Groups.Api.Features.Members.LeaveGroup;
-using InstantMessenger.Groups.Api.Queries;
+using InstantMessenger.Groups.Application.Features.Members.LeaveGroup;
+using InstantMessenger.Groups.Application.Queries;
 using InstantMessenger.Groups.Domain.Exceptions;
 using InstantMessenger.UnitTests.Common;
 using Xunit;

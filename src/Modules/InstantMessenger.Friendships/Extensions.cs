@@ -1,5 +1,5 @@
-﻿using InstantMessenger.Friendships.Api.Hubs;
-using InstantMessenger.Friendships.Api.IntegrationEvents;
+﻿using InstantMessenger.Friendships.Application.Hubs;
+using InstantMessenger.Friendships.Application.IntegrationEvents;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
 using InstantMessenger.Friendships.Infrastructure;

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Api.Features.Group.Create;
-using InstantMessenger.Groups.Api.Features.Invitations.GenerateInvitationCode;
-using InstantMessenger.Groups.Api.Features.Members.AssignRole;
-using InstantMessenger.Groups.Api.Features.Roles.AddPermissionToRole;
-using InstantMessenger.Groups.Api.Features.Roles.AddRole;
-using InstantMessenger.Groups.Api.Queries;
-using InstantMessenger.Groups.Api.ResponseDtos;
+using InstantMessenger.Groups.Application.Features.Group.Create;
+using InstantMessenger.Groups.Application.Features.Invitations.GenerateInvitationCode;
+using InstantMessenger.Groups.Application.Features.Members.AssignRole;
+using InstantMessenger.Groups.Application.Features.Roles.AddPermissionToRole;
+using InstantMessenger.Groups.Application.Features.Roles.AddRole;
+using InstantMessenger.Groups.Application.Queries;
+using InstantMessenger.Groups.Application.ResponseDtos;
 using RestEase;
 
 namespace InstantMessenger.IntegrationTests.Api

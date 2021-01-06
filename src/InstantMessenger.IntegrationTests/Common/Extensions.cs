@@ -1,5 +1,5 @@
 ﻿using System;
-using InstantMessenger.Identity.Api.Features.SignIn;
+using InstantMessenger.Identity.Application.Features.SignIn;
 
 namespace InstantMessenger.IntegrationTests.Common
 {

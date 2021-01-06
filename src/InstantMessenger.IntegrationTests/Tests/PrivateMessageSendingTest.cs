@@ -2,7 +2,7 @@
 using FluentAssertions;
 using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
-using InstantMessenger.PrivateMessages.Api.Features.SendMessage;
+using InstantMessenger.PrivateMessages.Application.Features.SendMessage;
 using Xunit;
 
 namespace InstantMessenger.IntegrationTests.Tests

@@ -1,5 +1,5 @@
-﻿using InstantMessenger.Groups.Api.Hubs;
-using InstantMessenger.Groups.Api.IntegrationEvents;
+﻿using InstantMessenger.Groups.Application.Hubs;
+using InstantMessenger.Groups.Application.IntegrationEvents;
 using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Repositories;

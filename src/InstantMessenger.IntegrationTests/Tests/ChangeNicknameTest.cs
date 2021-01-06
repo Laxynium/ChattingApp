@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
-using InstantMessenger.Identity.Api.Features.ChangeNickname;
+using InstantMessenger.Identity.Application.Features.ChangeNickname;
 using InstantMessenger.IntegrationTests.Api;
 using InstantMessenger.IntegrationTests.Common;
 using Xunit;
