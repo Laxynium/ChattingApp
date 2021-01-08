@@ -9,17 +9,17 @@ namespace InstantMessenger.Friendships.Domain.Entities
 {
     public class Friendship : Entity<FriendshipId>
     {
-        public PersonId FirstPerson { get; }
-        public PersonId SecondPerson { get; }
+        public PersonId FirstPersonId { get; }
+        public PersonId SecondPersonId { get; }
         public DateTimeOffset CreatedAt { get; }
 
         private Friendship(){}
-        private Friendship(FriendshipId id, PersonId firstPerson, PersonId secondPerson, DateTimeOffset createdAt):base(id)
+        private Friendship(FriendshipId id, PersonId firstPersonId, PersonId secondPersonId, DateTimeOffset createdAt):base(id)
         {
-            FirstPerson = firstPerson;
-            SecondPerson = secondPerson;
+            FirstPersonId = firstPersonId;
+            SecondPersonId = secondPersonId;
             CreatedAt = createdAt;
-            Apply(new FriendshipCreatedDomainEvent(id,firstPerson, secondPerson,createdAt));
+            Apply(new FriendshipCreatedDomainEvent(id,firstPersonId, secondPersonId,createdAt));
         }
 
         public static Friendship Create(PersonId firstPerson, PersonId secondPerson, IClock clock)
@@ -27,12 +27,12 @@ namespace InstantMessenger.Friendships.Domain.Entities
             return new Friendship(FriendshipId.Create(), firstPerson, secondPerson,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
         }
 
-        public void Remove(PersonId person)
+        public void Remove(PersonId personId)
         {
-            if(FirstPerson != person && SecondPerson != person)
+            if(FirstPersonId != personId && SecondPersonId != personId)
                 throw new FriendshipNotFoundException(Id);
 
-            Apply(new FriendshipRemovedDomainEvent(Id, FirstPerson, SecondPerson, CreatedAt));
+            Apply(new FriendshipRemovedDomainEvent(Id, FirstPersonId, SecondPersonId, CreatedAt));
         }
     }
 }

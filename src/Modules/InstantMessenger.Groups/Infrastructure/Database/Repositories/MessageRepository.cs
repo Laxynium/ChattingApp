@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstantMessenger.Groups.Infrastructure.Database
+namespace InstantMessenger.Groups.Infrastructure.Database.Repositories
 {
     internal sealed class MessageRepository : IMessageRepository
     {

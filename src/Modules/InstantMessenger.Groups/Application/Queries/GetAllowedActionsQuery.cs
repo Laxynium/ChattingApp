@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Groups.Infrastructure.Database;
 using InstantMessenger.Shared.Messages.Queries;

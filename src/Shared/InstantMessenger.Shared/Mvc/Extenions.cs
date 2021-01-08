@@ -43,5 +43,14 @@ namespace InstantMessenger.Shared.Mvc
         }
 
         public static Guid GetUserId(this ClaimsPrincipal user) =>  user.Identity.Name is null ? Guid.Empty : Guid.Parse(user.Identity.Name);
+
+        public static string GetConnectionString(this IServiceCollection services, string name)
+        {
+            using var provider = services.BuildServiceProvider();
+            using var scope = provider.CreateScope();
+            var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
+                .GetConnectionString(name);
+            return connectionString;
+        }
     }
 }

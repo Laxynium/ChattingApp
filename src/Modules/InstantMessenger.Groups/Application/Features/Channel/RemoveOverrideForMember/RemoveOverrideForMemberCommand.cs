@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Exceptions;
+using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
 

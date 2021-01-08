@@ -49,7 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Features\Group\ChangeAvatar\" />
     <Folder Include="Application\Features\Members\Ban\" />
     <Folder Include="Application\Features\Members\ChangeOwnNickname\" />
     <Folder Include="Application\Features\Members\ChangeOthersNicknames\" />
@@ -57,6 +56,8 @@
     <Folder Include="Application\Features\Messages\Mention\" />
     <Folder Include="Application\Features\Messages\AddReaction\" />
     <Folder Include="Application\Features\Messages\EmbedLink\" />
+    <Folder Include="Domain\Messages\Entities\" />
+    <Folder Include="Domain\Messages\ValueObjects\" />
   </ItemGroup>
 
 </Project>

@@ -4,6 +4,7 @@ using InstantMessenger.Friendships.Domain.Entities;
 using InstantMessenger.Friendships.Domain.Exceptions;
 using InstantMessenger.Friendships.Domain.Repositories;
 using InstantMessenger.Friendships.Domain.Rules;
+using InstantMessenger.Friendships.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Modules;
 using NodaTime;

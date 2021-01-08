@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using InstantMessenger.Friendships.Domain.Entities;
+using InstantMessenger.Friendships.Domain.ValueObjects;
 
 namespace InstantMessenger.Friendships.Domain.Rules
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using InstantMessenger.Groups.Application.Hubs;
 using InstantMessenger.Groups.Application.IntegrationEvents;
 using InstantMessenger.Groups.Application.ResponseDtos;
-using InstantMessenger.Groups.Domain;
+using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.IntegrationEvents;
 using Microsoft.AspNetCore.SignalR;
