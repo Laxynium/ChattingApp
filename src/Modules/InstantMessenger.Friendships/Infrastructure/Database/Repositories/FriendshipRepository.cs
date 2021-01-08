@@ -23,8 +23,8 @@ namespace InstantMessenger.Friendships.Infrastructure.Database.Repositories
         {
             return _context.Friendships.AnyAsync(
                 x => 
-                     x.FirstPerson == senderId && x.SecondPerson == receiverId || 
-                     x.FirstPerson == receiverId && x.SecondPerson == senderId
+                     x.FirstPersonId == senderId && x.SecondPersonId == receiverId || 
+                     x.FirstPersonId == receiverId && x.SecondPersonId == senderId
             );
         }
 

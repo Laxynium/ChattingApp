@@ -17,7 +17,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
         IQueryable<Channel> ChannelsQuery { get; }
         IQueryable<Message> MessagesQuery { get; }
     }
-    public class GroupsContext : DbContext, IQueryGroupContext
+    public class GroupsContext : DbContext
     {
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Invitation> Invitations { get; set; }

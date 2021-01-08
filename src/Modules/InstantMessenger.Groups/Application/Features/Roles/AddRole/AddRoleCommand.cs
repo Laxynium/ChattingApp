@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Exceptions;
+using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
 
@@ -22,7 +22,6 @@ namespace InstantMessenger.Groups.Application.Features.Roles.AddRole
             Name = name;
         }
     }
-
     internal sealed class AddRoleHandler : ICommandHandler<AddRoleCommand>
     {
         private readonly IGroupRepository _groupRepository;

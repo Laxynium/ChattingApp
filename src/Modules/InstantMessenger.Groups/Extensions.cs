@@ -1,11 +1,12 @@
 ﻿using InstantMessenger.Groups.Application.Hubs;
 using InstantMessenger.Groups.Application.IntegrationEvents;
-using InstantMessenger.Groups.Domain;
 using InstantMessenger.Groups.Domain.Messages;
 using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Infrastructure;
 using InstantMessenger.Groups.Infrastructure.Database;
+using InstantMessenger.Groups.Infrastructure.Database.Repositories;
+using InstantMessenger.Groups.Infrastructure.Database.Rules;
 using InstantMessenger.Groups.Infrastructure.Decorators;
 using InstantMessenger.Shared.Decorators.UoW;
 using InstantMessenger.Shared.IntegrationEvents;
@@ -13,10 +14,9 @@ using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
-using InstantMessenger.Shared.Outbox;
+using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -38,31 +38,16 @@ namespace InstantMessenger.Groups
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<GroupsContext>(
-                    o =>
-                    {
-                        using var provider = services.BuildServiceProvider();
-                        using var scope = provider.CreateScope();
-                        var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
-                            .GetConnectionString("InstantMessengerDb");
-                        o.UseSqlServer(
-                            connectionString,
-                            x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Groups")
-                        );
-                    }
+                    o => o.UseSqlServer(
+                        services.GetConnectionString("InstantMessengerDb"),
+                        x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Groups")
+                    )
                 )
-                .AddDbContext<GroupsViewContext>(
-                    o =>
-                    {
-                        using var provider = services.BuildServiceProvider();
-                        using var scope = provider.CreateScope();
-                        var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
-                            .GetConnectionString("InstantMessengerDb");
-                        o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                        o.UseSqlServer(
-                            connectionString,
-                            x => x.MigrationsHistoryTable("__EFMigrationsHistory_Views", "Groups")
-                        );
-                    })
+                .AddDbContext<GroupsViewContext>(o => o.UseSqlServer(
+                        services.GetConnectionString("InstantMessengerDb"),
+                        x => x.MigrationsHistoryTable("__EFMigrationsHistory_Views", "Groups")
+                    )
+                )
                 .AddUnitOfWork<GroupsContext, DomainEventsMapper>(outbox:true)
                 .AddTransient<GroupsModuleFacade>()
                 .AddScoped<IGroupRepository, GroupRepository>()

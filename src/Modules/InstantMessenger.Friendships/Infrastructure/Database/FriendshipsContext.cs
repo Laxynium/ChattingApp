@@ -60,11 +60,11 @@ namespace InstantMessenger.Friendships.Infrastructure.Database
             friendship.Property(x => x.CreatedAt)
                 .IsRequired();
 
-            friendship.Property(x => x.FirstPerson)
+            friendship.Property(x => x.FirstPersonId)
                 .HasConversion(x=>x.Value,x=>new PersonId(x))
                 .IsRequired();
 
-            friendship.Property(x => x.SecondPerson)
+            friendship.Property(x => x.SecondPersonId)
                 .HasConversion(x => x.Value, x => new PersonId(x))
                 .IsRequired();
         }

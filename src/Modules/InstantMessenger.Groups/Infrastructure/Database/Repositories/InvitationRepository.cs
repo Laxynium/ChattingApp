@@ -5,7 +5,7 @@ using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstantMessenger.Groups.Infrastructure.Database
+namespace InstantMessenger.Groups.Infrastructure.Database.Repositories
 {
     internal sealed class InvitationRepository : IInvitationRepository
     {

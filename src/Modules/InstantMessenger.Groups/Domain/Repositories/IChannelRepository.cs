@@ -2,7 +2,7 @@
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.ValueObjects;
 
-namespace InstantMessenger.Groups.Domain
+namespace InstantMessenger.Groups.Domain.Repositories
 {
     public interface IChannelRepository
     {

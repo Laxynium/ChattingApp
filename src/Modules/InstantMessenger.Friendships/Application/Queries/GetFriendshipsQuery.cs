@@ -35,12 +35,12 @@ namespace InstantMessenger.Friendships.Application.Queries
         }
         public async Task<IEnumerable<FriendshipDto>> HandleAsync(GetFriendshipsQuery query) =>
             await _context.Friendships.AsNoTracking()
-                .Where(x => x.FirstPerson == query.PersonId || x.SecondPerson == query.PersonId)
+                .Where(x => x.FirstPersonId == query.PersonId || x.SecondPersonId == query.PersonId)
                 .Select(x => new FriendshipDto
                 {
                     FriendshipId = x.Id,
-                    Me = x.FirstPerson == query.PersonId ? x.FirstPerson : x.SecondPerson,
-                    Friend = x.FirstPerson == query.PersonId ? x.SecondPerson : x.FirstPerson,
+                    Me = x.FirstPersonId == query.PersonId ? x.FirstPersonId : x.SecondPersonId,
+                    Friend = x.FirstPersonId == query.PersonId ? x.SecondPersonId : x.FirstPersonId,
                     CreatedAt = x.CreatedAt
                 }).ToListAsync();
     }

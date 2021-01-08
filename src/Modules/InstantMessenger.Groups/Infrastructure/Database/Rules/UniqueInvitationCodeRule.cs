@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace InstantMessenger.Groups.Infrastructure.Database
+namespace InstantMessenger.Groups.Infrastructure.Database.Rules
 {
     internal sealed class UniqueInvitationCodeRule : IUniqueInvitationCodeRule
     {
