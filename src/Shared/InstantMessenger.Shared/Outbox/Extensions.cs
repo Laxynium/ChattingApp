@@ -13,6 +13,7 @@ namespace InstantMessenger.Shared.Outbox
                 serviceCollection.AddSingleton(options);
             serviceCollection.AddTransient<MessageOutbox<TDbContext>>();
             serviceCollection.AddHostedService<OutboxProcessor<TDbContext>>();
+            serviceCollection.AddHostedService<CleanUpOutboxProcessor<TDbContext>>();
             return serviceCollection;
         }
     }
