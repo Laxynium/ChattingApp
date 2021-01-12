@@ -51,7 +51,6 @@ namespace InstantMessenger.Shared.Modules
             var path = moduleBroadcast.GetType().Name;
             var registrations = _moduleRegistry
                 .GetBroadcastRegistrations(path)
-                //.Where(r => r.ReceiverType.IsDefined(typeof(ProcessAlsoInternallyAttribute),true) || r.ReceiverType != moduleBroadcast.GetType())
                 .ToList();
 
             _logger.LogTrace($"Publishing message of type {moduleBroadcast.GetType().Name} to " +

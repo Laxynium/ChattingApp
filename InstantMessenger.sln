@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{3A575C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Shared", "src\Shared\InstantMessenger.Shared\InstantMessenger.Shared.csproj", "{11C9482E-EB68-4A16-A011-63C2674C6BE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.IntegrationTests", "src\InstantMessenger.IntegrationTests\InstantMessenger.IntegrationTests.csproj", "{7E2D2D18-88B3-48CB-AB0D-C11F1EE4D9DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.EndToEndTests", "src\InstantMessenger.EndToEndTests\InstantMessenger.EndToEndTests.csproj", "{7E2D2D18-88B3-48CB-AB0D-C11F1EE4D9DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BAB017B0-92CF-4CD7-A966-00F6F5D838FE}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,11 +30,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Groups", "src\Modules\InstantMessenger.Groups\InstantMessenger.Groups.csproj", "{4976948B-996C-47AD-87CC-0155F311F8D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.UnitTests", "src\InstantMessenger.UnitTests\InstantMessenger.UnitTests.csproj", "{14C085AB-A1EA-457E-B8AA-9D351524C0DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Groups.UnitTests", "src\InstantMessenger.Groups.UnitTests\InstantMessenger.Groups.UnitTests.csproj", "{14C085AB-A1EA-457E-B8AA-9D351524C0DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.Web", "src\InstantMessenger.Web\InstantMessenger.Web.csproj", "{E9ABDCAB-8F16-474C-869C-D25BB81154BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstantMessenger.SharedKernel", "src\Shared\InstantMessenger.SharedKernel\InstantMessenger.SharedKernel.csproj", "{7F51E238-31F0-4254-8666-2965AB824B86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstantMessenger.SharedKernel", "src\Shared\InstantMessenger.SharedKernel\InstantMessenger.SharedKernel.csproj", "{7F51E238-31F0-4254-8666-2965AB824B86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
