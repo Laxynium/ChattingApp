@@ -53,6 +53,7 @@ import {RenameGroupComponent} from './components/rename-group/rename-group.compo
 import {RenameRoleModal} from 'src/app/home/groups/components/rename-role/rename-role.modal';
 import {RenameChannelModal} from 'src/app/home/groups/components/rename-channel/rename-channel.modal';
 import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rename-group.modal';
+import {HomeModule} from 'src/app/home/home.module';
 
 @NgModule({
   declarations: [

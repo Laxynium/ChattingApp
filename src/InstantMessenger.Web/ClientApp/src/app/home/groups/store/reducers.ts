@@ -5,10 +5,6 @@ import {
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {
-  changeCurrentChannelAction,
-  changeCurrentGroupAction,
-  changeCurrentGroupFailureAction,
-  changeCurrentGroupSuccessAction,
   createChannelAction,
   createChannelFailureAction,
   createChannelSuccessAction,
@@ -30,7 +26,6 @@ import {
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
-  loadCurrentChannelAction,
   loadCurrentChannelSuccessAction,
   loadCurrentGroupAction,
   loadCurrentGroupFailureAction,
@@ -76,11 +71,6 @@ import {
   removeRoleSuccessAction,
   renameRoleSuccessAction,
 } from 'src/app/home/groups/store/roles/actions';
-import {
-  CurrentGroup,
-  EmptyCurrentGroup,
-  ICurrentGroup,
-} from 'src/app/home/groups/store/types/currentGroup';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
@@ -171,7 +161,7 @@ const initialState: GroupsStateInterface = {
 
 const groupsReducer = createReducer(
   initialState,
-  on(getGroupsAction, (s, a) => ({
+  on(getGroupsAction, (s) => ({
     ...s,
     groupsLoading: true,
   })),
@@ -180,12 +170,12 @@ const groupsReducer = createReducer(
     groups: a.groups,
     groupsLoading: false,
   })),
-  on(getGroupsFailureAction, (s, a) => ({
+  on(getGroupsFailureAction, (s) => ({
     ...s,
     groupsLoading: false,
   })),
 
-  on(getChannelsAction, (s, a) => ({
+  on(getChannelsAction, (s) => ({
     ...s,
   })),
   on(getChannelsSuccessAction, (s, a) => ({
@@ -198,29 +188,29 @@ const groupsReducer = createReducer(
         ? Map<string, MessageDto>()
         : s.currentChannelMessages,
   })),
-  on(getChannelsFailureAction, (s, a) => ({
+  on(getChannelsFailureAction, (s) => ({
     ...s,
   })),
 
-  on(createGroupAction, (s, a) => ({
+  on(createGroupAction, (s) => ({
     ...s,
   })),
   on(createGroupSuccessAction, (s, a) => ({
     ...s,
     groups: [...s.groups, a.group],
   })),
-  on(createGroupFailureAction, (s, a) => ({
+  on(createGroupFailureAction, (s) => ({
     ...s,
   })),
 
-  on(removeGroupAction, (s, a) => ({
+  on(removeGroupAction, (s) => ({
     ...s,
   })),
   on(removeGroupSuccessAction, (s, a) => ({
     ...s,
     groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
   })),
-  on(removeGroupFailureAction, (s, a) => ({
+  on(removeGroupFailureAction, (s) => ({
     ...s,
   })),
 
@@ -229,7 +219,7 @@ const groupsReducer = createReducer(
     currentGroup: {...s.currentGroup, name: a.group.name},
   })),
 
-  on(generateInvitationAction, (s, a) => ({
+  on(generateInvitationAction, (s) => ({
     ...s,
     generatedInvitation: {
       ...s.generatedInvitation,
@@ -246,7 +236,7 @@ const groupsReducer = createReducer(
       invitationId: a.invitationId,
     },
   })),
-  on(generateInvitationFailureAction, (s, a) => ({
+  on(generateInvitationFailureAction, (s) => ({
     ...s,
     generatedInvitation: {
       ...s.generatedInvitation,
@@ -257,7 +247,7 @@ const groupsReducer = createReducer(
     },
   })),
 
-  on(revokeInvitationAction, (s, a) => ({
+  on(revokeInvitationAction, (s) => ({
     ...s,
   })),
   on(revokeInvitationSuccessAction, (s, a) => ({
@@ -266,43 +256,43 @@ const groupsReducer = createReducer(
       ...s.invitations.filter((i) => i.invitationId != a.invitationId),
     ],
   })),
-  on(revokeInvitationFailureAction, (s, a) => ({
+  on(revokeInvitationFailureAction, (s) => ({
     ...s,
   })),
 
-  on(getInvitationsAction, (s, a) => ({
+  on(getInvitationsAction, (s) => ({
     ...s,
   })),
   on(getInvitationsSuccessAction, (s, a) => ({
     ...s,
     invitations: [...a.invitations],
   })),
-  on(getInvitationsFailureAction, (s, a) => ({
+  on(getInvitationsFailureAction, (s) => ({
     ...s,
   })),
 
-  on(joinGroupAction, (s, a) => ({
+  on(joinGroupAction, (s) => ({
     ...s,
   })),
-  on(joinGroupSuccessAction, (s, a) => ({
+  on(joinGroupSuccessAction, (s) => ({
     ...s,
   })),
-  on(joinGroupFailureAction, (s, a) => ({
+  on(joinGroupFailureAction, (s) => ({
     ...s,
   })),
 
-  on(loadCurrentGroupAction, (s, a) => ({
+  on(loadCurrentGroupAction, (s) => ({
     ...s,
   })),
   on(loadCurrentGroupSuccessAction, (s, a) => ({
     ...s,
     currentGroup: a.group,
   })),
-  on(loadCurrentGroupFailureAction, (s, a) => ({
+  on(loadCurrentGroupFailureAction, (s) => ({
     ...s,
   })),
 
-  on(createChannelAction, (s, a) => ({
+  on(createChannelAction, (s) => ({
     ...s,
   })),
   on(createChannelSuccessAction, (s, a) => ({
@@ -319,18 +309,18 @@ const groupsReducer = createReducer(
         })
       : s.allowedActions,
   })),
-  on(createChannelFailureAction, (s, a) => ({
+  on(createChannelFailureAction, (s) => ({
     ...s,
   })),
 
-  on(removeChannelAction, (s, a) => ({
+  on(removeChannelAction, (s) => ({
     ...s,
   })),
   on(removeChannelSuccessAction, (s, a) => ({
     ...s,
     channels: s.channels.remove(a.channelId),
   })),
-  on(removeChannelFailureAction, (s, a) => ({
+  on(removeChannelFailureAction, (s) => ({
     ...s,
   })),
 
@@ -347,18 +337,18 @@ const groupsReducer = createReducer(
     currentChannel: s.channels.get(a.channelId),
   })),
 
-  on(getRolesAction, (s, a) => ({
+  on(getRolesAction, (s) => ({
     ...s,
   })),
   on(getRolesSuccessAction, (s, a) => ({
     ...s,
     roles: Map(a.roles.map((r) => [r.roleId, r])),
   })),
-  on(getRolesFailureAction, (s, a) => ({
+  on(getRolesFailureAction, (s) => ({
     ...s,
   })),
 
-  on(createRoleAction, (s, a) => ({
+  on(createRoleAction, (s) => ({
     ...s,
     creatingRole: true,
   })),
@@ -367,19 +357,19 @@ const groupsReducer = createReducer(
     roles: s.roles.set(a.role.roleId, a.role),
     creatingRole: false,
   })),
-  on(createRoleFailureAction, (s, a) => ({
+  on(createRoleFailureAction, (s) => ({
     ...s,
     creatingRole: false,
   })),
 
-  on(removeRoleAction, (s, a) => ({
+  on(removeRoleAction, (s) => ({
     ...s,
   })),
   on(removeRoleSuccessAction, (s, a) => ({
     ...s,
     roles: s.roles.remove(a.roleId),
   })),
-  on(removeRoleFailureAction, (s, a) => ({
+  on(removeRoleFailureAction, (s) => ({
     ...s,
   })),
 
@@ -400,7 +390,7 @@ const groupsReducer = createReducer(
     roles: Map(a.roles.map((r) => [r.roleId, r])),
   })),
 
-  on(getRolePermissionsAction, (s, a) => ({
+  on(getRolePermissionsAction, (s) => ({
     ...s,
     rolePermissionsLoading: true,
   })),
@@ -409,12 +399,12 @@ const groupsReducer = createReducer(
     rolePermissionsLoading: false,
     rolePermissions: [...a.roles],
   })),
-  on(getRolePermissionsFailureAction, (s, a) => ({
+  on(getRolePermissionsFailureAction, (s) => ({
     ...s,
     rolePermissionsLoading: false,
   })),
 
-  on(getMembersAction, (s, a) => ({
+  on(getMembersAction, (s) => ({
     ...s,
     membersLoading: true,
   })),
@@ -423,12 +413,12 @@ const groupsReducer = createReducer(
     members: [...a.members],
     membersLoading: false,
   })),
-  on(getMembersFailureAction, (s, a) => ({
+  on(getMembersFailureAction, (s) => ({
     ...s,
     membersLoading: false,
   })),
 
-  on(kickMemberAction, (s, a) => ({
+  on(kickMemberAction, (s) => ({
     ...s,
   })),
   on(kickMemberSuccessAction, (s, a) => ({
@@ -439,19 +429,19 @@ const groupsReducer = createReducer(
       ),
     ],
   })),
-  on(kickMemberFailureAction, (s, a) => ({
+  on(kickMemberFailureAction, (s) => ({
     ...s,
     membersLoading: false,
   })),
 
-  on(getMemberRolesAction, (s, a) => ({
+  on(getMemberRolesAction, (s) => ({
     ...s,
   })),
   on(getMemberRolesSuccessAction, (s, a) => ({
     ...s,
     memberRoles: [...a.roles],
   })),
-  on(getMemberRolesFailureAction, (s, a) => ({
+  on(getMemberRolesFailureAction, (s) => ({
     ...s,
   })),
 
@@ -470,14 +460,14 @@ const groupsReducer = createReducer(
     ],
   })),
 
-  on(getMessagesAction, (s, a) => ({
+  on(getMessagesAction, (s) => ({
     ...s,
   })),
   on(getMessagesSuccessAction, (s, a) => ({
     ...s,
     currentChannelMessages: Map(a.messages.map((m) => [m.messageId, m])),
   })),
-  on(getMessagesFailureAction, (s, a) => ({
+  on(getMessagesFailureAction, (s) => ({
     ...s,
   })),
   on(sendMessageSuccessAction, (s, a) => ({
@@ -493,7 +483,7 @@ const groupsReducer = createReducer(
     allowedActions: Map(a.allowedActions.map((a) => [a.name, a])),
   })),
 
-  on(getChannelRolePermissionOverridesAction, (s, a) => ({
+  on(getChannelRolePermissionOverridesAction, (s) => ({
     ...s,
     overridesLoading: true,
   })),
@@ -502,7 +492,7 @@ const groupsReducer = createReducer(
     overridesLoading: false,
     overrides: a.overrides,
   })),
-  on(getChannelRolePermissionOverridesFailureAction, (s, a) => ({
+  on(getChannelRolePermissionOverridesFailureAction, (s) => ({
     ...s,
     overridesLoading: false,
   })),
@@ -511,7 +501,7 @@ const groupsReducer = createReducer(
     overrides: a.overrides,
   })),
 
-  on(getChannelMemberPermissionOverridesAction, (s, a) => ({
+  on(getChannelMemberPermissionOverridesAction, (s) => ({
     ...s,
     overridesLoading: true,
   })),
@@ -520,7 +510,7 @@ const groupsReducer = createReducer(
     overridesLoading: false,
     overrides: a.overrides,
   })),
-  on(getChannelMemberPermissionOverridesFailureAction, (s, a) => ({
+  on(getChannelMemberPermissionOverridesFailureAction, (s) => ({
     ...s,
     overridesLoading: false,
   })),
