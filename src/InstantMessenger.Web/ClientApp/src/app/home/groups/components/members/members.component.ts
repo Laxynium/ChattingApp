@@ -12,7 +12,7 @@ import {
   membersLoadingSelector,
   membersSelector,
 } from 'src/app/home/groups/store/members/selectors';
-import {currentGroupSelector} from 'src/app/home/groups/store/selectors';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 
 @Component({

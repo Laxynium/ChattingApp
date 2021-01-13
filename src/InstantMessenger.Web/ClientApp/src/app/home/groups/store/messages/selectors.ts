@@ -1,6 +1,6 @@
 import {createSelector} from '@ngrx/store';
 import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
-import {groupsFeatureSelector} from 'src/app/home/groups/store/selectors';
+import {groupsFeatureSelector} from 'src/app/home/groups/store/groups/selectors';
 import {MessageDto} from '../types/message';
 
 export const messagesSelector = createSelector(

@@ -10,7 +10,7 @@ import {getMembersAction} from 'src/app/home/groups/store/members/actions';
 import {membersSelector} from 'src/app/home/groups/store/members/selectors';
 import {getRolesAction} from 'src/app/home/groups/store/roles/actions';
 import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
-import {currentGroupSelector} from 'src/app/home/groups/store/selectors';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 

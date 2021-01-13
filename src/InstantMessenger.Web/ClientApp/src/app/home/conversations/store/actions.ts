@@ -1,9 +1,9 @@
 import {createAction, props} from '@ngrx/store';
-import {ConversationResponseInterface} from 'src/app/home/conversations/types/responseTypes/conversation.response';
+import {ConversationResponseInterface} from 'src/app/home/conversations/store/types/conversation.response';
 import {
   ConversationMessageInterface,
   LatestConversationInterface,
-} from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
+} from 'src/app/home/conversations/store/types/Conversation.interface';
 
 export enum ActionTypes {
   GET_LATEST_CONVERSATIONS = '[Conversations] Get latest conversations',

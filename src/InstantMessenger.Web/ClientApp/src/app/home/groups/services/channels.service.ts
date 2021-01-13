@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable, zip} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {concatMap, map} from 'rxjs/operators';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {
   PermissionOverrideDto,
@@ -16,6 +16,33 @@ export class ChannelsService {
     return `${this.groupApi}/${groupId}/channels`;
   }
   constructor(private http: HttpClient) {}
+
+  public createChannel(request: {
+    groupId: string;
+    channelId: string;
+    channelName: string;
+  }): Observable<ChannelDto> {
+    return this.http.post(this.channelsApi(request.groupId), request).pipe(
+      concatMap((_) => {
+        return this.http.get<ChannelDto>(
+          `${this.channelsApi(request.groupId)}/${request.channelId}`
+        );
+      })
+    );
+  }
+
+  public getChannels(groupId: String): Observable<ChannelDto[]> {
+    return this.http.get<ChannelDto[]>(this.channelsApi(groupId));
+  }
+
+  public removeChannel(request: {
+    groupId: string;
+    channelId: string;
+  }): Observable<Object> {
+    return this.http.delete(
+      `${this.channelsApi(request.groupId)}/${request.channelId}`
+    );
+  }
 
   public renameChannel(r: ChannelDto) {
     return this.http.put(`${this.channelsApi(r.groupId)}/${r.channelName}`, {

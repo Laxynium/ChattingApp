@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
-import {createGroupAction} from 'src/app/home/groups/store/actions';
+import {createGroupAction} from 'src/app/home/groups/store/groups/actions';
 
 @Component({
   selector: 'ngbd-modal-confirm',

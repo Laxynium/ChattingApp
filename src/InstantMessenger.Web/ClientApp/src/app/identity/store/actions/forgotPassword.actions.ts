@@ -1,8 +1,8 @@
 import {createAction, props} from '@ngrx/store';
 import {ActionTypes} from 'src/app/identity/store/actionTypes';
-import {ResetPasswordRequestInterface} from 'src/app/identity/types/resetPasswordRequest.interface';
+import {ResetPasswordRequestInterface} from 'src/app/identity/store/types/resetPasswordRequest.interface';
 import {ErrorResponseInterface} from 'src/app/shared/types/error.response';
-import {ForgotPasswordRequestInterface} from '../../types/forgotPasswordRequest.interface';
+import {ForgotPasswordRequestInterface} from '../types/forgotPasswordRequest.interface';
 
 export const forgotPasswordAction = createAction(
   ActionTypes.FORGOT_PASSWORD,

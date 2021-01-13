@@ -4,13 +4,13 @@ import {Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';
 import {environment} from 'src/environments/environment';
-import {SignInRequestInterface} from 'src/app/identity/types/signInRequest.interface';
-import {UploadAvatarRequest} from 'src/app/identity/types/uploadAvatar.request';
-import {SignUpRequestInterface} from 'src/app/identity/types/signUpRequest.interface';
-import {ActivateRequestInterface} from 'src/app/identity/types/activateRequest.interface';
+import {SignInRequestInterface} from 'src/app/identity/store/types/signInRequest.interface';
+import {UploadAvatarRequest} from 'src/app/identity/store/types/uploadAvatar.request';
+import {SignUpRequestInterface} from 'src/app/identity/store/types/signUpRequest.interface';
+import {ActivateRequestInterface} from 'src/app/identity/store/types/activateRequest.interface';
 import {SignInResponseInterface} from 'src/app/shared/types/signIn.response';
-import {ForgotPasswordRequestInterface} from 'src/app/identity/types/forgotPasswordRequest.interface';
-import {ResetPasswordRequestInterface} from 'src/app/identity/types/resetPasswordRequest.interface';
+import {ForgotPasswordRequestInterface} from 'src/app/identity/store/types/forgotPasswordRequest.interface';
+import {ResetPasswordRequestInterface} from 'src/app/identity/store/types/resetPasswordRequest.interface';
 
 @Injectable()
 export class IdentityService {

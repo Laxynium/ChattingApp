@@ -16,7 +16,7 @@ import {
 import {
   ConversationInterface,
   ConversationMessageInterface,
-} from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
+} from 'src/app/home/conversations/store/types/Conversation.interface';
 import {currentUserSelector} from 'src/app/identity/store/selectors';
 import {ScrollToBottomDirective} from 'src/app/shared/directives/scroll-to-bottom.directive';
 import {CurrentUserInterface} from 'src/app/shared/types/currentUser.interface';

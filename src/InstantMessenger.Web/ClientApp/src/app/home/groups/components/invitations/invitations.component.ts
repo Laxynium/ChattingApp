@@ -2,14 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
+import {} from 'src/app/home/groups/store/groups/actions';
 import {
   getInvitationsAction,
   revokeInvitationAction,
-} from 'src/app/home/groups/store/actions';
-import {
-  currentGroupSelector,
-  invitationsSelector,
-} from 'src/app/home/groups/store/selectors';
+} from 'src/app/home/groups/store/invitations/actions';
+import {invitationsSelector} from 'src/app/home/groups/store/invitations/selectors';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {
   ExpirationTimeType,
   InvitationDto,

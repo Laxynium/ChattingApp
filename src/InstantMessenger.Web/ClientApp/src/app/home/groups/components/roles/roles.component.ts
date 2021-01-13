@@ -12,7 +12,7 @@ import {
   removeRoleAction,
 } from 'src/app/home/groups/store/roles/actions';
 import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
-import {currentGroupSelector} from 'src/app/home/groups/store/selectors';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 
 @Component({

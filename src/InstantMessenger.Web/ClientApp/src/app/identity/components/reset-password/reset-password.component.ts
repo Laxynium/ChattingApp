@@ -4,7 +4,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {resetPasswordAction} from 'src/app/identity/store/actions/forgotPassword.actions';
 import {isSubmittingSelector} from 'src/app/identity/store/selectors';
-import {ResetPasswordRequestInterface} from '../../types/resetPasswordRequest.interface';
+import {ResetPasswordRequestInterface} from '../../store/types/resetPasswordRequest.interface';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {
   validPassword,

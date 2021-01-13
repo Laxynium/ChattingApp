@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import {ActionTypes} from 'src/app/identity/store/actionTypes';
-import {GetUserResponseInterface} from 'src/app/identity/types/getUser.response.interface';
+import {GetUserResponseInterface} from 'src/app/identity/store/types/getUser.response.interface';
 
 export const getCurrentUser = createAction(ActionTypes.GET_CURRENT_USER);
 export const getCurrentUserSuccess = createAction(

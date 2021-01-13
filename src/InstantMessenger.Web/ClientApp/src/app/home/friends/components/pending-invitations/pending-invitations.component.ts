@@ -12,8 +12,8 @@ import {
   arePendingInvitationsLoadingSelector,
   pendingInvitationsSelector,
 } from 'src/app/home/friends/store/selectors';
-import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
-import {PaginatorInterface} from 'src/app/home/friends/types/paginator.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/store/types/invitation.interface';
+import {PaginatorInterface} from 'src/app/home/friends/store/types/paginator.interface';
 
 @Component({
   selector: 'app-pending-invitations',

@@ -14,18 +14,16 @@ import {
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
-import {
-  changeCurrentChannelAction,
-  getChannelsAction,
-  loadCurrentGroupAction,
-  removeChannelAction,
-} from 'src/app/home/groups/store/actions';
-import {
-  channelsSelector,
-  currentGroupSelector,
-} from 'src/app/home/groups/store/selectors';
+import {loadCurrentGroupAction} from 'src/app/home/groups/store/groups/actions';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rename-group.modal';
 import {RenameChannelModal} from 'src/app/home/groups/components/rename-channel/rename-channel.modal';
+import {
+  getChannelsAction,
+  changeCurrentChannelAction,
+  removeChannelAction,
+} from 'src/app/home/groups/store/channels/actions';
+import {channelsSelector} from 'src/app/home/groups/store/channels/selectors';
 
 @Component({
   selector: 'app-group',

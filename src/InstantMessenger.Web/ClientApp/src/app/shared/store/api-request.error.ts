@@ -3,7 +3,11 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {createAction, props} from '@ngrx/store';
 import {tap} from 'rxjs/operators';
 import {ToastService} from 'src/app/shared/toasts/toast.service';
-import {ErrorResponseInterface} from 'src/app/shared/types/error.response';
+import {
+  ErrorResponseInterface,
+  ExpectedErrorInterface,
+} from 'src/app/shared/types/error.response';
+import {mapToMessage} from 'src/app/shared/types/errorCodesMapping';
 
 export enum RequestFailedActionNames {
   REQUEST_FAILED = '[Error Handling] Request failed',
@@ -20,7 +24,9 @@ export class RequestFailedEffect {
       this.actions$.pipe(
         ofType(requestFailedAction),
         tap((response) => {
-          this.toastService.showError(response.error.message); //TODO map codes to proper messages
+          if (response.error.kind == 'expected_error')
+            this.toastService.showError(mapToMessage(response.error));
+          else this.toastService.showError(response.error.message);
         })
       ),
     {dispatch: false}

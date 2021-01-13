@@ -17,7 +17,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
-import {loadCurrentChannelAction} from 'src/app/home/groups/store/actions';
+import {loadCurrentChannelAction} from 'src/app/home/groups/store/channels/actions';
 import {getMessagesAction} from 'src/app/home/groups/store/messages/actions';
 
 @Component({

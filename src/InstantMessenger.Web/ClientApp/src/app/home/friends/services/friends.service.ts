@@ -2,11 +2,11 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable, of, zip} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
+import {FriendshipInterface} from 'src/app/home/friends/store/types/friendship.interface';
 import {
   InvitationFullInterface,
   InvitationInterface,
-} from 'src/app/home/friends/types/invitation.interface';
+} from 'src/app/home/friends/store/types/invitation.interface';
 import {UserInterface} from 'src/app/shared/types/user.interface';
 import {environment} from 'src/environments/environment';
 

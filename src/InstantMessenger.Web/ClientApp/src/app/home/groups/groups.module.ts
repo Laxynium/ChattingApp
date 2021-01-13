@@ -10,7 +10,7 @@ import {JoinGroupModal} from 'src/app/home/groups/components/groups/join-group.m
 import {StoreModule} from '@ngrx/store';
 import {reducers} from 'src/app/home/groups/store/reducers';
 import {EffectsModule} from '@ngrx/effects';
-import {GroupsEffects} from 'src/app/home/groups/store/effects';
+import {GroupsEffects} from 'src/app/home/groups/store/groups/effects';
 import {GroupsService} from 'src/app/home/groups/services/groups.service';
 import {GroupComponent} from './components/group/group.component';
 import {CreateChannelModal} from 'src/app/home/groups/components/group/create-channel.modal';
@@ -54,6 +54,8 @@ import {RenameRoleModal} from 'src/app/home/groups/components/rename-role/rename
 import {RenameChannelModal} from 'src/app/home/groups/components/rename-channel/rename-channel.modal';
 import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rename-group.modal';
 import {HomeModule} from 'src/app/home/home.module';
+import {InvitationsEffects} from 'src/app/home/groups/store/invitations/effects';
+import {InvitationsService} from 'src/app/home/groups/services/invitations.service';
 
 @NgModule({
   declarations: [
@@ -106,6 +108,7 @@ import {HomeModule} from 'src/app/home/home.module';
       MessagesEffects,
       AccessControlEffects,
       ChannelsEffects,
+      InvitationsEffects,
     ]),
     SharedModule,
     RouterModule,
@@ -116,6 +119,7 @@ import {HomeModule} from 'src/app/home/home.module';
     MembersService,
     MesssagesService,
     ChannelsService,
+    InvitationsService,
   ],
 })
 export class GroupsModule {}

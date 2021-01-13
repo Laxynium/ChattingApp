@@ -11,7 +11,7 @@ import {
 import {
   ConversationInterface,
   LatestConversationInterface,
-} from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
+} from 'src/app/home/conversations/store/types/Conversation.interface';
 
 export interface ConversationsStateInterface {
   latestConversations: LatestConversationInterface[];

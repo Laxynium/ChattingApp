@@ -1,7 +1,7 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {FriendsStateInterface} from 'src/app/home/friends/store/reducers';
-import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
-import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
+import {FriendshipInterface} from 'src/app/home/friends/store/types/friendship.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/store/types/invitation.interface';
 import {withDefaultAvatar} from 'src/app/shared/types/user.interface';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
 

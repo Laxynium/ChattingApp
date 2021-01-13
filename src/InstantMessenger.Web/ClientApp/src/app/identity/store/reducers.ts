@@ -1,6 +1,6 @@
 import {Action, createReducer, on} from '@ngrx/store';
 
-import {IdentityStateInterface} from '../types/identityState.interface';
+import {IdentityStateInterface} from './types/identityState.interface';
 import {
   forgotPasswordAction,
   forgotPasswordFailureAction,

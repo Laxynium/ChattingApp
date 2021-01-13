@@ -3,7 +3,7 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {GroupDto} from 'src/app/home/groups/services/responses/group.dto';
-import {renameGroupAction} from 'src/app/home/groups/store/actions';
+import {renameGroupAction} from 'src/app/home/groups/store/groups/actions';
 
 @Component({
   selector: 'app-rename-group',

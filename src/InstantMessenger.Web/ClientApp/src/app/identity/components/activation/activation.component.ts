@@ -4,7 +4,7 @@ import {Store, select} from '@ngrx/store';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {isSubmittingSelector} from '../../store/selectors';
-import {ActivateRequestInterface} from 'src/app/identity/types/activateRequest.interface';
+import {ActivateRequestInterface} from 'src/app/identity/store/types/activateRequest.interface';
 import {activateAction} from 'src/app/identity/store/actions/activate.actions';
 
 @Component({

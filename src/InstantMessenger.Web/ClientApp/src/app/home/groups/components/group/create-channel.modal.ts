@@ -3,8 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {first} from 'rxjs/operators';
-import {createChannelAction} from 'src/app/home/groups/store/actions';
-import {currentGroupSelector} from 'src/app/home/groups/store/selectors';
+import {createChannelAction} from 'src/app/home/groups/store/channels/actions';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 
 @Component({
   selector: 'ngbd-modal-confirm',

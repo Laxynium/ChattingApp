@@ -5,42 +5,23 @@ import {
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {
-  createChannelAction,
-  createChannelFailureAction,
-  createChannelSuccessAction,
   createGroupAction,
   createGroupFailureAction,
   createGroupSuccessAction,
-  generateInvitationAction,
-  generateInvitationFailureAction,
-  generateInvitationSuccessAction,
-  getChannelsAction,
-  getChannelsFailureAction,
-  getChannelsSuccessAction,
   getGroupsAction,
   getGroupsFailureAction,
   getGroupsSuccessAction,
-  getInvitationsAction,
-  getInvitationsFailureAction,
-  getInvitationsSuccessAction,
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
-  loadCurrentChannelSuccessAction,
   loadCurrentGroupAction,
   loadCurrentGroupFailureAction,
   loadCurrentGroupSuccessAction,
-  removeChannelAction,
-  removeChannelFailureAction,
-  removeChannelSuccessAction,
   removeGroupAction,
   removeGroupFailureAction,
   removeGroupSuccessAction,
   renameGroupSuccessAction,
-  revokeInvitationAction,
-  revokeInvitationFailureAction,
-  revokeInvitationSuccessAction,
-} from 'src/app/home/groups/store/actions';
+} from 'src/app/home/groups/store/groups/actions';
 import {
   addRoleToMemberSuccessAction,
   getMemberRolesAction,
@@ -86,16 +67,37 @@ import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
 import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-control/actions';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 import {
+  createChannelAction,
+  createChannelFailureAction,
+  createChannelSuccessAction,
   getChannelMemberPermissionOverridesAction,
   getChannelMemberPermissionOverridesFailureAction,
   getChannelMemberPermissionOverridesSuccessAction,
   getChannelRolePermissionOverridesAction,
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
+  getChannelsAction,
+  getChannelsFailureAction,
+  getChannelsSuccessAction,
+  loadCurrentChannelSuccessAction,
+  removeChannelAction,
+  removeChannelFailureAction,
+  removeChannelSuccessAction,
   renameChannelSuccessAction,
   updateChannelMemberPermissionOverridesSuccessAction,
   updateChannelRolePermissionOverridesSuccessAction,
 } from 'src/app/home/groups/store/channels/actions';
+import {
+  revokeInvitationAction,
+  revokeInvitationSuccessAction,
+  revokeInvitationFailureAction,
+  generateInvitationAction,
+  generateInvitationFailureAction,
+  generateInvitationSuccessAction,
+  getInvitationsAction,
+  getInvitationsFailureAction,
+  getInvitationsSuccessAction,
+} from 'src/app/home/groups/store/invitations/actions';
 
 export interface GroupsStateInterface {
   groups: GroupDto[];
@@ -113,18 +115,12 @@ export interface GroupsStateInterface {
   creatingRole: boolean;
   rolePermissions: PermissionDto[];
   rolePermissionsLoading: boolean;
-
   members: MemberDto[];
   membersLoading: boolean;
-
   memberRoles: RoleDto[];
-
   currentChannelMessages: Map<string, MessageDto>;
-
   allowedActions: Map<string, AllowedAction>;
-
   currentChannel: ChannelDto | null;
-
   overrides: PermissionOverrideDto[];
   overridesLoading: boolean;
 }
@@ -145,16 +141,12 @@ const initialState: GroupsStateInterface = {
   creatingRole: false,
   rolePermissions: [],
   rolePermissionsLoading: false,
-
   members: [],
   membersLoading: false,
-
   memberRoles: [],
   currentChannelMessages: Map(),
-
   allowedActions: Map(),
   currentChannel: null,
-
   overrides: [],
   overridesLoading: false,
 };

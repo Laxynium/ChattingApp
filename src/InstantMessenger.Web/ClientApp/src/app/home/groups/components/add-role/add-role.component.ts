@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {filter, first} from 'rxjs/operators';
 import {createRoleAction} from 'src/app/home/groups/store/roles/actions';
 import {creatingRoleSelector} from 'src/app/home/groups/store/roles/selectors';
-import {currentGroupSelector} from 'src/app/home/groups/store/selectors';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 
 @Component({
   selector: 'app-add-role',

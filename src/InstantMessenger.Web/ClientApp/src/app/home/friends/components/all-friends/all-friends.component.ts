@@ -12,8 +12,8 @@ import {
   areFriendsLoadingSelector as areFriendshipsLoadingSelector,
   friendSelector as friendshipsSelector,
 } from 'src/app/home/friends/store/selectors';
-import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
-import {PaginatorInterface} from 'src/app/home/friends/types/paginator.interface';
+import {FriendshipInterface} from 'src/app/home/friends/store/types/friendship.interface';
+import {PaginatorInterface} from 'src/app/home/friends/store/types/paginator.interface';
 
 @Component({
   selector: 'ngbd-modal-confirm',

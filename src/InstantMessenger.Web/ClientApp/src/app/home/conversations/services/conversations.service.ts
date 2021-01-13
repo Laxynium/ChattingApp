@@ -5,7 +5,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {
   ConversationResponseInterface,
   MessageResponseInterface,
-} from 'src/app/home/conversations/types/responseTypes/conversation.response';
+} from 'src/app/home/conversations/store/types/conversation.response';
 import {UserInterface} from 'src/app/shared/types/user.interface';
 import {environment} from 'src/environments/environment';
 

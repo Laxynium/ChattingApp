@@ -10,11 +10,11 @@ import {
   changeCurrentGroupAction,
   getGroupsAction,
   removeGroupAction,
-} from 'src/app/home/groups/store/actions';
+} from 'src/app/home/groups/store/groups/actions';
 import {
   groupsLoadingSelector,
   groupsSelector,
-} from 'src/app/home/groups/store/selectors';
+} from 'src/app/home/groups/store/groups/selectors';
 
 @Component({
   selector: 'app-groups',

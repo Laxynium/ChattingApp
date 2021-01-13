@@ -1,23 +1,17 @@
 import {MessageDto} from '../store/types/message';
-import {
-  getChannelsAction,
-  getInvitationsAction,
-  removeGroupSuccessAction,
-} from 'src/app/home/groups/store/actions';
+import {removeGroupSuccessAction} from 'src/app/home/groups/store/groups/actions';
 import {
   Hub,
   HubHandlersProvider,
   HubMethod,
 } from 'src/app/shared/hubs/hubHandlersProvider';
 import {sendMessageSuccessAction} from 'src/app/home/groups/store/messages/actions';
-import {
-  addRoleToMemberSuccessAction,
-  getMemberRolesAction,
-  removeRoleFromMemberSuccessAction,
-} from 'src/app/home/groups/store/members/actions';
+import {getMemberRolesAction} from 'src/app/home/groups/store/members/actions';
 import {getRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
 import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
+import {getInvitationsAction} from 'src/app/home/groups/store/invitations/actions';
+import {getChannelsAction} from 'src/app/home/groups/store/channels/actions';
 
 interface GroupDto {
   groupId: string;
@@ -111,14 +105,8 @@ const onPermissionRemovedFromRole: HubMethod<RolePermissionDto> = (
   );
 };
 
-const onRolePermissionOverridesChanged: HubMethod<RolePermissionOverridesDto> = (
-  store,
-  data
-) => {};
-const onMemberPermissionOverridesChanged: HubMethod<MemberPermissionOverridesDto> = (
-  store,
-  data
-) => {};
+const onRolePermissionOverridesChanged: HubMethod<RolePermissionOverridesDto> = () => {};
+const onMemberPermissionOverridesChanged: HubMethod<MemberPermissionOverridesDto> = () => {};
 
 const onAllowedActionsChanged: HubMethod<AllowedActionDto> = (store, data) => {
   store.dispatch(getAllowedActionsAction({groupId: data.groupId}));

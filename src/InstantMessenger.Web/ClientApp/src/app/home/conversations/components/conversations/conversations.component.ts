@@ -7,7 +7,7 @@ import {
   getLatestConversationsAction,
 } from 'src/app/home/conversations/store/actions';
 import {latestConversationsSelector} from 'src/app/home/conversations/store/selectors';
-import {LatestConversationInterface} from 'src/app/home/conversations/types/stateTypes/Conversation.interface';
+import {LatestConversationInterface} from 'src/app/home/conversations/store/types/Conversation.interface';
 import {currentUserSelector} from 'src/app/identity/store/selectors';
 
 @Component({

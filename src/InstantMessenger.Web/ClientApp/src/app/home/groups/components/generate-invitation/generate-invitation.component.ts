@@ -4,11 +4,9 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Store, select} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
-import {generateInvitationAction} from 'src/app/home/groups/store/actions';
-import {
-  currentInvitationSelector,
-  currentGroupSelector,
-} from 'src/app/home/groups/store/selectors';
+import {generateInvitationAction} from 'src/app/home/groups/store/invitations/actions';
+import {currentInvitationSelector} from 'src/app/home/groups/store/invitations/selectors';
+import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {
   ExpirationTimeType,
   UsageCounterType,

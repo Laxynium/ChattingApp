@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
-import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
-import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
+import {FriendshipInterface} from 'src/app/home/friends/store/types/friendship.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/store/types/invitation.interface';
 
 export enum ActionTypes {
   GET_PENDING_INVITATION = '[Friends] Get pending invitation',

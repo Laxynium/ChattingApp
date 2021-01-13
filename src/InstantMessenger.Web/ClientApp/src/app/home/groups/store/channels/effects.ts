@@ -1,16 +1,29 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {ChannelsService} from 'src/app/home/groups/services/channels.service';
 import {
+  changeCurrentChannelAction,
+  createChannelAction,
+  createChannelFailureAction,
+  createChannelSuccessAction,
   getChannelMemberPermissionOverridesAction,
   getChannelMemberPermissionOverridesFailureAction,
   getChannelMemberPermissionOverridesSuccessAction,
   getChannelRolePermissionOverridesAction,
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
+  getChannelsAction,
+  getChannelsFailureAction,
+  getChannelsSuccessAction,
+  loadCurrentChannelAction,
+  loadCurrentChannelSuccessAction,
+  removeChannelAction,
+  removeChannelFailureAction,
+  removeChannelSuccessAction,
   renameChannelAction,
   renameChannelFailureAction,
   renameChannelSuccessAction,
@@ -24,9 +37,89 @@ import {
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
 import {ToastService} from 'src/app/shared/toasts/toast.service';
 import {mapToError} from 'src/app/shared/types/error.response';
+import {v4 as guid} from 'uuid';
 
 @Injectable()
 export class ChannelsEffects {
+  $createChannel = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createChannelAction),
+      switchMap(({groupId, channelName}) => {
+        const request = {
+          groupId: groupId,
+          channelId: guid(),
+          channelName: channelName,
+        };
+        return this.channelsService.createChannel(request).pipe(
+          map((r) => createChannelSuccessAction({channel: r})),
+          catchError((response) =>
+            of(
+              createChannelFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $removeChannel = createEffect(() =>
+    this.actions$.pipe(
+      ofType(removeChannelAction),
+      switchMap((request) => {
+        return this.channelsService.removeChannel(request).pipe(
+          map((_) =>
+            removeChannelSuccessAction({channelId: request.channelId})
+          ),
+          catchError((response) =>
+            of(
+              removeChannelFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $changeCurrentChannel = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(changeCurrentChannelAction),
+        tap(({groupId, channelId}) =>
+          this.router.navigateByUrl(
+            `/groups/${groupId}/channels/${channelId}`,
+            {replaceUrl: true}
+          )
+        )
+      ),
+    {dispatch: false}
+  );
+
+  $loadCurrentChannel = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadCurrentChannelAction),
+      map(({channelId}) => loadCurrentChannelSuccessAction({channelId}))
+    )
+  );
+
+  $getChannels = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getChannelsAction),
+      switchMap(({groupId}) => {
+        return this.channelsService.getChannels(groupId).pipe(
+          map((r) => getChannelsSuccessAction({channels: r})),
+          catchError((response) =>
+            of(
+              getChannelsFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
   $updateChannelRolePermissionOverrides = createEffect(() =>
     this.actions$.pipe(
       ofType(updateChannelRolePermissionOverridesAction),
@@ -178,6 +271,7 @@ export class ChannelsEffects {
   constructor(
     private actions$: Actions,
     private channelsService: ChannelsService,
+    private router: Router,
     private toasts: ToastService
   ) {}
 }

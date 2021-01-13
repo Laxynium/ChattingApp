@@ -2,7 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {AuthGuard} from '../identity/guards/auth.guard';
+import {AuthGuard} from './home/guards/auth.guard';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProfileComponent} from './profile/components/profile/profile.component';
 import {HomeComponent} from 'src/app/home/home/components/home/home.component';

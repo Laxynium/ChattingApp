@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Store, select} from '@ngrx/store';
-import {CurrentUserInterface} from '../../shared/types/currentUser.interface';
+import {CurrentUserInterface} from '../../../shared/types/currentUser.interface';
 import {Observable} from 'rxjs';
 import {
   Router,

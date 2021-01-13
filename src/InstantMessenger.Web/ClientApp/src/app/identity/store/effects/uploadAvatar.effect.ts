@@ -10,6 +10,7 @@ import {
 } from 'src/app/identity/store/actions/uploadAvatar.actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
 import {ToastService} from 'src/app/shared/toasts/toast.service';
+import {mapToError} from 'src/app/shared/types/error.response';
 
 @Injectable()
 export class UploadAvatarEffect {
@@ -20,15 +21,7 @@ export class UploadAvatarEffect {
         this.identityService.uploadAvatar(action.request).pipe(
           map((r) => uploadAvatarSuccess({user: r})),
           catchError((response) =>
-            of(
-              requestFailedAction({
-                error: {
-                  code: response.error.code,
-                  message: response.error.message,
-                  statusCode: response.status,
-                },
-              })
-            )
+            of(requestFailedAction({error: mapToError(response)}))
           )
         )
       )

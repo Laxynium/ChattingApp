@@ -20,8 +20,8 @@ import {
   getFriendsFailureAction,
   removeFriendSuccessAction,
 } from 'src/app/home/friends/store/actions';
-import {FriendshipInterface} from 'src/app/home/friends/types/friendship.interface';
-import {InvitationFullInterface} from 'src/app/home/friends/types/invitation.interface';
+import {FriendshipInterface} from 'src/app/home/friends/store/types/friendship.interface';
+import {InvitationFullInterface} from 'src/app/home/friends/store/types/invitation.interface';
 
 export interface FriendsStateInterface {
   isSubmitting: boolean;

@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 
-import {SignUpRequestInterface} from 'src/app/identity/types/signUpRequest.interface';
+import {SignUpRequestInterface} from 'src/app/identity/store/types/signUpRequest.interface';
 import {ActionTypes} from 'src/app/identity/store/actionTypes';
 
 export const signUpAction = createAction(

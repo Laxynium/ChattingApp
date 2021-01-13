@@ -1,4 +1,4 @@
-import {Avatar} from 'src/app/identity/types/avatar';
+import {Avatar} from 'src/app/identity/store/types/avatar';
 
 export interface CurrentUserInterface {
   id: string;

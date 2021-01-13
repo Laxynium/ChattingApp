@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private store: Store,
-    private hubService: HubService // there injection is required in order to start all connections to hub
+    private hubService: HubService // this injection is required in order to start all connections to hub
   ) {
     this.$currentPath = this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
