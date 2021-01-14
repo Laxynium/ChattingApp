@@ -17,7 +17,15 @@ namespace InstantMessenger.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry();
+            services.AddApplicationInsightsTelemetry(
+                o =>
+                {
+                    o.EnableAdaptiveSampling = false;
+                    o.EnableAzureInstanceMetadataTelemetryModule = false;
+                    o.EnableHeartbeat = false;
+                    o.EnableQuickPulseMetricStream = false;
+                    //o.EnableDependencyTrackingTelemetryModule = false;
+                });
             services.AddControllers()
                 .AddControllersAsServices()
                 .AddNewtonsoftJson(options =>
