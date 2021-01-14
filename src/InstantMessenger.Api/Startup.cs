@@ -21,16 +21,12 @@ namespace InstantMessenger.Api
                 o =>
                 {
                     o.EnableAdaptiveSampling = false;
-                    o.EnableAzureInstanceMetadataTelemetryModule = false;
-                    o.EnableHeartbeat = false;
-                    o.EnableQuickPulseMetricStream = false;
-                    //o.EnableDependencyTrackingTelemetryModule = false;
+                    o.EnableDependencyTrackingTelemetryModule = false;
                 });
             services.AddControllers()
                 .AddControllersAsServices()
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
-
             services.AddSignalR(
                 x => { x.EnableDetailedErrors = true; }
             ).AddNewtonsoftJsonProtocol();
