@@ -1,3 +1,4 @@
+using InstantMessenger.Api.AppInsights;
 using InstantMessenger.Friendships;
 using InstantMessenger.Groups;
 using InstantMessenger.Identity;
@@ -21,8 +22,8 @@ namespace InstantMessenger.Api
                 o =>
                 {
                     o.EnableAdaptiveSampling = false;
-                    o.EnableDependencyTrackingTelemetryModule = false;
                 });
+            services.AddApplicationInsightsTelemetryProcessor<SuccessfulDependencyFilter>();
             services.AddControllers()
                 .AddControllersAsServices()
                 .AddNewtonsoftJson(options =>
