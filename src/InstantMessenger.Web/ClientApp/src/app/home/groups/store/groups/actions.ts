@@ -14,6 +14,10 @@ export enum ActionTypes {
   REMOVE_GROUP_SUCCESS = '[Groups] Remove group success',
   REMOVE_GROUP_FAILURE = '[Groups] Remove group failure',
 
+  LEAVE_GROUP = '[Groups] Leave group',
+  LEAVE_GROUP_SUCCESS = '[Groups] Leave group success',
+  LEAVE_GROUP_FAILURE = '[Groups] Leave group failure',
+
   RENAME_GROUP = '[Groups] Rename group',
   RENAME_GROUP_SUCCESS = '[Groups] Rename group success',
   RENAME_GROUP_FAILURE = '[Groups] Rename group failure',
@@ -62,6 +66,18 @@ export const removeGroupSuccessAction = createAction(
 );
 export const removeGroupFailureAction = createAction(
   ActionTypes.REMOVE_GROUP_FAILURE
+);
+
+export const leaveGroupAction = createAction(
+  ActionTypes.LEAVE_GROUP,
+  props<{groupId: string}>()
+);
+export const leaveGroupSuccessAction = createAction(
+  ActionTypes.LEAVE_GROUP_SUCCESS,
+  props<{groupId: string}>()
+);
+export const leaveGroupFailureAction = createAction(
+  ActionTypes.LEAVE_GROUP_FAILURE
 );
 
 export const renameGroupAction = createAction(

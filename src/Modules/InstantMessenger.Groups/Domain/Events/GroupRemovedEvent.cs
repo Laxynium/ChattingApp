@@ -12,12 +12,14 @@ namespace InstantMessenger.Groups.Domain.Events
         public GroupName GroupName { get; }
         public DateTimeOffset CreatedAt { get; }
         public IEnumerable<Member> AllowedMembers { get; }
-        public GroupRemovedEvent(GroupId groupId, GroupName groupName, DateTimeOffset createdAt, IEnumerable<Member> allowedMembers)
+        public UserId OwnerId { get; }
+        public GroupRemovedEvent(GroupId groupId, GroupName groupName, DateTimeOffset createdAt, IEnumerable<Member> allowedMembers, UserId ownerId)
         {
             GroupId = groupId;
             GroupName = groupName;
             CreatedAt = createdAt;
             AllowedMembers = allowedMembers;
+            OwnerId = ownerId;
         }
     }
 }

@@ -14,6 +14,9 @@ import {
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
+  leaveGroupAction,
+  leaveGroupFailureAction,
+  leaveGroupSuccessAction,
   loadCurrentGroupAction,
   loadCurrentGroupFailureAction,
   loadCurrentGroupSuccessAction,
@@ -203,6 +206,17 @@ const groupsReducer = createReducer(
     groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
   })),
   on(removeGroupFailureAction, (s) => ({
+    ...s,
+  })),
+
+  on(leaveGroupAction, (s) => ({
+    ...s,
+  })),
+  on(leaveGroupSuccessAction, (s, a) => ({
+    ...s,
+    groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
+  })),
+  on(leaveGroupFailureAction, (s) => ({
     ...s,
   })),
 

@@ -12,11 +12,13 @@ namespace InstantMessenger.Groups.Application.IntegrationEvents
         public string GroupName { get; }
         public DateTimeOffset CreatedAt { get; }
         public IReadOnlyList<Guid> AllowedUsers { get; }
-        public GroupRemovedEvent(Guid groupId, string groupName, DateTimeOffset createdAt, IEnumerable<Guid> allowedUsers)
+        public Guid OwnerId { get; }
+        public GroupRemovedEvent(Guid groupId, string groupName, DateTimeOffset createdAt, IEnumerable<Guid> allowedUsers, Guid ownerId)
         {
             GroupId = groupId;
             GroupName = groupName;
             CreatedAt = createdAt;
+            OwnerId = ownerId;
             AllowedUsers = allowedUsers.ToList();
         }
     }

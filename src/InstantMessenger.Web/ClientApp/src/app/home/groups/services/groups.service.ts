@@ -39,6 +39,12 @@ export class GroupsService {
     return this.http.delete(`${this.groupApi}/${request.groupId}`);
   }
 
+  public leaveGroup(request: {groupId: string}): Observable<Object> {
+    return this.http.post(`${this.groupApi}/${request.groupId}/leave`, {
+      groupId: request.groupId,
+    });
+  }
+
   public renameGroup(request: GroupDto): Observable<Object> {
     return this.http.put(`${this.groupApi}/${request.groupId}`, request);
   }

@@ -25,6 +25,9 @@ import {
   loadCurrentGroupAction,
   loadCurrentGroupSuccessAction,
   loadCurrentGroupFailureAction,
+  leaveGroupAction,
+  leaveGroupSuccessAction,
+  leaveGroupFailureAction,
 } from 'src/app/home/groups/store/groups/actions';
 import {requestFailedAction} from 'src/app/shared/store/api-request.error';
 import {ToastService} from 'src/app/shared/toasts/toast.service';
@@ -89,6 +92,23 @@ export class GroupsEffects {
           catchError((response) =>
             of(
               removeGroupFailureAction(),
+              requestFailedAction({error: mapToError(response)})
+            )
+          )
+        );
+      })
+    )
+  );
+
+  $leaveGroup = createEffect(() =>
+    this.actions$.pipe(
+      ofType(leaveGroupAction),
+      switchMap((request) => {
+        return this.groupsService.leaveGroup(request).pipe(
+          map((r) => leaveGroupSuccessAction({groupId: request.groupId})),
+          catchError((response) =>
+            of(
+              leaveGroupFailureAction(),
               requestFailedAction({error: mapToError(response)})
             )
           )

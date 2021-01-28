@@ -67,7 +67,6 @@ export class AccessControlDirective implements OnChanges {
       }
     );
   }
-
   isVisible(action: AllowedAction, channelId: string) {
     if (!action) {
       return false;

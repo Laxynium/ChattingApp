@@ -45,7 +45,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         public void Remove(UserId userId) => new Action.DeleteGroup(GetMember(userId))
         .Execute(() =>
         {
-            Apply(new GroupRemovedEvent(Id, Name, CreatedAt, Members));
+            Apply(new GroupRemovedEvent(Id, Name, CreatedAt, Members,Members.First(m=>m.IsOwner).UserId));
         });
 
         public void Rename(UserId userId, GroupName name) => new Action.RenameGroup(GetMember(userId),GetMemberPermissions(userId))

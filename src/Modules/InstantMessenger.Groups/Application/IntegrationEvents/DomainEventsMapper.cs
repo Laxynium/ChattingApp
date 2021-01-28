@@ -13,7 +13,7 @@ namespace InstantMessenger.Groups.Application.IntegrationEvents
         {
             return @event switch
             {
-                Domain.Events.GroupRemovedEvent e =>new GroupRemovedEvent(e.GroupId, e.GroupName, e.CreatedAt,e.AllowedMembers.Select(m => m.UserId.Value)),
+                Domain.Events.GroupRemovedEvent e =>new GroupRemovedEvent(e.GroupId, e.GroupName, e.CreatedAt,e.AllowedMembers.Select(m => m.UserId.Value), e.OwnerId),
                 Domain.Events.InvitationCreatedEvent e =>new InvitationCreatedEvent(e.GroupId, e.InvitationId, e.InvitationCode,
                     e.ExpirationTime.ToDto(),e.UsageCounter.ToDto()),
                 Domain.Events.InvitationRevokedEvent e =>new InvitationRevokedEvent(e.GroupId, e.InvitationId, e.InvitationCode, 

@@ -33,8 +33,8 @@ namespace InstantMessenger.Groups.Application.Queries
         public async Task<IEnumerable<GroupDto>> HandleAsync(GetGroupsQuery query)
         {
             var groups = _context.Groups.AsNoTracking()
-                .Include(x=>x.Members)
-                .Where(x=>x.Members.Select(m=>m.UserId).Any(x=>x == UserId.From(query.UserId)));
+                .Include(x => x.Members)
+                .Where(x => x.Members.Select(m => m.UserId).Any(x => x == UserId.From(query.UserId)));
             if (query.GroupId.HasValue)
             {
                 groups = groups.Where(x => x.Id == GroupId.From(query.GroupId.Value));
@@ -46,6 +46,7 @@ namespace InstantMessenger.Groups.Application.Queries
                     GroupId = x.Id.Value,
                     Name = x.Name.Value,
                     CreatedAt = x.CreatedAt,
+                    OwnerId =  x.Members.First(m=>m.IsOwner).UserId.Value
                 }
             ).ToListAsync();
         }

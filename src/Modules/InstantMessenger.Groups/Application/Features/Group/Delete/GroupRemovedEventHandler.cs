@@ -18,7 +18,7 @@ namespace InstantMessenger.Groups.Application.Features.Group.Delete
         public async Task HandleAsync(IntegrationEvents.GroupRemovedEvent @event)
         {
             await _hubContext.Clients.Users(@event.AllowedUsers.Select(id => id.ToString("N")).ToList())
-                .OnGroupRemoved(new GroupDto(@event.GroupId, @event.GroupName,@event.CreatedAt));
+                .OnGroupRemoved(new GroupDto(@event.GroupId, @event.GroupName,@event.CreatedAt, @event.OwnerId));
         }
     }
 }

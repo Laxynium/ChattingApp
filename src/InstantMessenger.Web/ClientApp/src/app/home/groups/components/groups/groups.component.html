@@ -41,8 +41,10 @@
                     <fa-icon [icon]="['fas', 'ellipsis-h']" size="1x"></fa-icon>
                   </button>
                   <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="dropdown-menu">
-                    <button ngbDropdownItem>Leave group</button>
-                    <button ngbDropdownItem (click)="removeGroup(group.groupId)">Remove group</button>
+                    <button *ngIf="group.ownerId != (currentUser$ | async).id" ngbDropdownItem
+                      (click)="leaveGroup(group.groupId)">Leave group</button>
+                    <button *ngIf="group.ownerId == (currentUser$ | async).id" ngbDropdownItem
+                      (click)="removeGroup(group.groupId)">Remove group</button>
                   </div>
                 </div>
               </div>
