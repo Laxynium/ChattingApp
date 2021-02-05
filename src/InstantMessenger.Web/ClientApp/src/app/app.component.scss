@@ -1,18 +1,17 @@
-.app{
-  display:flex;
+.app {
+  display: flex;
   flex-direction: column;
   height: 100vh;
+  height: -webkit-fill-available;
   grid-template-rows: auto;
   grid-template-columns: 100%;
   overflow: hidden;
   position: absolute;
   width: 100vw;
 }
-  
-  
-.app-container{
+
+.app-container {
   flex: 1 1 auto;
   position: relative;
   height: 100%;
 }
-    
