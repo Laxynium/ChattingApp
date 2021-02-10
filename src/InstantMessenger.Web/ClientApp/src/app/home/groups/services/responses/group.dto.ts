@@ -1,5 +1,6 @@
+export type GroupId = string;
 export interface GroupDto {
-  groupId: string;
+  groupId: GroupId;
   name: string;
   createdAt: string;
   ownerId: string;

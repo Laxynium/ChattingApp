@@ -49,6 +49,9 @@ import {
   faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [AppComponent, ToastsContainer],
@@ -73,6 +76,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
       : [],
     EffectsModule.forRoot([RequestFailedEffect]),
     FontAwesomeModule,
+    StoreRouterConnectingModule.forRoot(),
+    MatSidenavModule,
+    MatListModule,
   ],
   providers: [
     ToastService,

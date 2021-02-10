@@ -56,6 +56,8 @@ import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rena
 import {HomeModule} from 'src/app/home/home.module';
 import {InvitationsEffects} from 'src/app/home/groups/store/invitations/effects';
 import {InvitationsService} from 'src/app/home/groups/services/invitations.service';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -112,6 +114,8 @@ import {InvitationsService} from 'src/app/home/groups/services/invitations.servi
     ]),
     SharedModule,
     RouterModule,
+    MatSidenavModule,
+    MatListModule,
   ],
   providers: [
     GroupsService,
