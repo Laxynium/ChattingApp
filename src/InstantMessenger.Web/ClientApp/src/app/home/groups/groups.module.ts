@@ -58,6 +58,7 @@ import {InvitationsEffects} from 'src/app/home/groups/store/invitations/effects'
 import {InvitationsService} from 'src/app/home/groups/services/invitations.service';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
+import {reducer} from 'src/app/home/groups/model';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,7 @@ import {MatListModule} from '@angular/material/list';
     ReactiveFormsModule,
     FontAwesomeModule,
     UiSwitchModule,
-    StoreModule.forFeature('groups', reducers),
+    StoreModule.forFeature('groups', {groups: reducers, new: reducer}),
     EffectsModule.forFeature([
       GroupsEffects,
       RolesEffects,
