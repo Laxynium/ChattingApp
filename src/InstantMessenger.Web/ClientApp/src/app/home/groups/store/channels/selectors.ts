@@ -1,8 +1,16 @@
 import {createSelector} from '@ngrx/store';
 import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
-import {groupsFeatureSelector} from 'src/app/home/groups/store/groups/selectors';
+import {
+  groupsFeatureSelector,
+  groupsSelectorNew,
+} from 'src/app/home/groups/store/groups/selectors';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
+import {
+  ChannelModel,
+  GroupsModel,
+  selectAllChannels,
+} from 'src/app/home/groups/model';
 
 export const overridesSelector = createSelector(
   groupsFeatureSelector,
@@ -15,15 +23,32 @@ export const overridesLoadingSelector = createSelector(
 );
 
 export const channelsSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): ChannelDto[] =>
-    s.channels
-      .toList()
-      .sortBy((x) => x.channelName)
-      .toArray()
+  groupsSelectorNew,
+  (s: GroupsModel): ChannelDto[] => {
+    const currentGroup = s.entities[s.current];
+    if (currentGroup) {
+      return selectAllChannels(currentGroup.channels).map((x) =>
+        toDto(s.current, x)
+      );
+    } else {
+      return [];
+    }
+  }
 );
 
 export const currentChannelSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): Object => s.currentChannel
+  groupsSelectorNew,
+  (s: GroupsModel): ChannelDto => {
+    const currentGroup = s.entities[s.current];
+    const currentChannel = currentGroup.channels[currentGroup.channels.current];
+    return toDto(s.current, currentChannel);
+  }
 );
+
+function toDto(groupId: string, model: ChannelModel): ChannelDto {
+  return {
+    groupId: groupId,
+    channelId: model.id,
+    channelName: model.name,
+  };
+}

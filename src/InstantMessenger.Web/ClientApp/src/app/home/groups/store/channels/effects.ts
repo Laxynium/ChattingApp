@@ -108,7 +108,7 @@ export class ChannelsEffects {
       ofType(getChannelsAction),
       switchMap(({groupId}) => {
         return this.channelsService.getChannels(groupId).pipe(
-          map((r) => getChannelsSuccessAction({channels: r})),
+          map((r) => getChannelsSuccessAction({groupId, channels: r})),
           catchError((response) =>
             of(
               getChannelsFailureAction(),

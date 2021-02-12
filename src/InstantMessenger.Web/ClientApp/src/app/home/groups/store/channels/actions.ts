@@ -50,7 +50,7 @@ export const getChannelsAction = createAction(
 );
 export const getChannelsSuccessAction = createAction(
   ActionTypes.GET_CHANNELS_SUCCESS,
-  props<{channels: ChannelDto[]}>()
+  props<{groupId: string; channels: ChannelDto[]}>()
 );
 export const getChannelsFailureAction = createAction(
   ActionTypes.GET_CHANNELS_FAILURE

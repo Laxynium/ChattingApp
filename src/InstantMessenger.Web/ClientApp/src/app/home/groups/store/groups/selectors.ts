@@ -25,20 +25,20 @@ export const groupsFeatureSelector = createSelector(
   (s) => s.groups
 );
 
-const groupsSelector_ = createSelector(featureSelector, (s) => s.new);
+export const groupsSelectorNew = createSelector(featureSelector, (s) => s.new);
 
 export const groupsSelector = createSelector(
-  groupsSelector_,
+  groupsSelectorNew,
   (s: GroupsModel) => selectAllGroups(s).map(toDto)
 );
 
 export const groupsLoadingSelector = createSelector(
-  groupsSelector_,
+  groupsSelectorNew,
   (s: GroupsModel): boolean => s.isLoading
 );
 
 export const currentGroupSelector = createSelector(
-  groupsSelector_,
+  groupsSelectorNew,
   (s: GroupsModel): GroupDto => toDto(s.entities[s.current])
 );
 
