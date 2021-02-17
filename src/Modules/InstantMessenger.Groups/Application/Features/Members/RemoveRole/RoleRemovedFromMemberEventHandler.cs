@@ -16,11 +16,13 @@ namespace InstantMessenger.Groups.Application.Features.Members.RemoveRole
         private readonly IHubContext<GroupsHub, IGroupsHubContract> _contract;
         private readonly GroupsContext _groupsContext;
 
-        public RoleRemovedFromMemberEventHandler(IHubContext<GroupsHub, IGroupsHubContract> contract, GroupsContext groupsContext)
+        public RoleRemovedFromMemberEventHandler(IHubContext<GroupsHub, IGroupsHubContract> contract,
+            GroupsContext groupsContext)
         {
             _contract = contract;
             _groupsContext = groupsContext;
         }
+
         public async Task HandleAsync(RoleRemovedFromMemberEvent @event)
         {
             var members = (await _groupsContext.Groups
@@ -31,7 +33,8 @@ namespace InstantMessenger.Groups.Application.Features.Members.RemoveRole
                     .ToListAsync())
                 .Select(id => id.Value.ToString("N"))
                 .ToList();
-            await _contract.Clients.Users(members).OnRoleRemovedFromMember(new MemberRoleDto(@event.UserId, new RoleDto(@event.GroupId, @event.RoleId, @event.RoleName, @event.RolePriority)));
+            await _contract.Clients.Users(members).OnRoleRemovedFromMember(new MemberRoleDto(@event.UserId,
+                @event.MemberId, new RoleDto(@event.GroupId, @event.RoleId, @event.RoleName, @event.RolePriority)));
 
             await _contract.Clients.Users(members).OnAllowedActionsChanged(new AllowedActionDto(@event.GroupId));
         }

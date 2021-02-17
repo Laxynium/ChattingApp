@@ -1,25 +1,32 @@
 import {createSelector} from '@ngrx/store';
-import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
-import {groupsFeatureSelector} from 'src/app/home/groups/store/groups/selectors';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {memberRolesStateSelector, membersStateSelector} from '../selectors';
+import {memberAdapter, MembersState} from '../member.reducer';
+import {memberRoleAdapter, MemberRolesState} from '../member.role.reducer';
 
+const membersSelectors = memberAdapter.getSelectors();
 export const membersSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): MemberDto[] =>
-    s.members.slice().map((m) => ({
-      ...m,
-      avatar: m.avatar ? m.avatar : 'assets/profile-placeholder.png',
+  membersStateSelector,
+  (s: MembersState): MemberDto[] =>
+    membersSelectors.selectAll(s).map((x) => ({
+      memberId: x.id,
+      userId: x.userId,
+      isOwner: x.isOwner,
+      groupId: x.groupId,
+      name: x.name,
+      createdAt: x.createdAt.toString(),
+      avatar: x.avatar ? x.avatar : 'assets/profile-placeholder.png',
     }))
 );
-
 export const membersLoadingSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): boolean => s.membersLoading
+  membersStateSelector,
+  (s: MembersState): boolean => s.isLoading
 );
 
+const memberRolesSelectors = memberRoleAdapter.getSelectors();
 export const memberRolesSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): RoleDto[] =>
-    s.memberRoles.filter((r) => r.priority != -1)
+  memberRolesStateSelector,
+  (s: MemberRolesState): RoleDto[] =>
+    memberRolesSelectors.selectAll(s).filter((r) => r.priority != -1)
 );

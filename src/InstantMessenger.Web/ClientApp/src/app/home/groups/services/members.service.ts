@@ -31,6 +31,7 @@ export class MembersService {
                   of<MemberDto>({
                     groupId: m.groupId,
                     userId: m.userId,
+                    memberId: m.memberId,
                     name: m.name,
                     avatar: u.avatar,
                     isOwner: m.isOwner,

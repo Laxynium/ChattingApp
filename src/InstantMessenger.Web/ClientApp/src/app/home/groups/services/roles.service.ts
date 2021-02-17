@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable, zip} from 'rxjs';
+import {Observable, zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
@@ -35,6 +35,8 @@ export class RolesService {
           (agg: PermissionDto[], cur: PermissionResponseDto) => [
             ...agg,
             <PermissionDto>{
+              groupId: r.groupId,
+              roleId: r.roleId,
               name: cur.name,
               code: cur.code,
               isOn: rolePermissions.some((x) => x.name == cur.name),

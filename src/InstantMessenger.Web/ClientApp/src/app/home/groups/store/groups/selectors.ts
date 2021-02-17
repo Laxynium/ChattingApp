@@ -1,48 +1,42 @@
-import {faSdCard} from '@fortawesome/free-solid-svg-icons';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
+
 import {
-  GroupModel,
-  GroupsModel,
-  selectAllGroups,
-} from 'src/app/home/groups/model';
-import {
-  ChannelDto,
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
 import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {GroupsModuleState} from "../reducers2";
+import {Group, groupAdapter, GroupsState} from "../group.reducer";
+import {groupsStateSelector} from "../selectors";
+
+const {selectAll} = groupAdapter.getSelectors()
 
 const featureSelector = createFeatureSelector<
   AppStateInterface,
-  {
-    groups: GroupsStateInterface;
-    new: GroupsModel;
-  }
+  GroupsModuleState & {groupsOld:GroupsStateInterface}
 >('groups');
 
 export const groupsFeatureSelector = createSelector(
   featureSelector,
-  (s) => s.groups
+  (s) => s.groupsOld
 );
 
-export const groupsSelectorNew = createSelector(featureSelector, (s) => s.new);
-
 export const groupsSelector = createSelector(
-  groupsSelectorNew,
-  (s: GroupsModel) => selectAllGroups(s).map(toDto)
+  groupsStateSelector,
+  (s: GroupsState) => selectAll(s).map(toDto)
 );
 
 export const groupsLoadingSelector = createSelector(
-  groupsSelectorNew,
-  (s: GroupsModel): boolean => s.isLoading
+  groupsStateSelector,
+  (s: GroupsState): boolean => s.isLoading
 );
 
 export const currentGroupSelector = createSelector(
-  groupsSelectorNew,
-  (s: GroupsModel): GroupDto => toDto(s.entities[s.current])
+  groupsStateSelector,
+  (s: GroupsState): GroupDto => toDto(s.entities[s.currentGroup])
 );
 
-function toDto(model: GroupModel): GroupDto {
+function toDto(model: Group): GroupDto {
   if (model)
     return {
       groupId: model.id,

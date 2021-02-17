@@ -41,7 +41,7 @@ export class MembersComponent implements OnInit {
   }
   kickMember(member: MemberDto) {
     this.store.dispatch(
-      kickMemberAction({groupId: member.groupId, userId: member.userId})
+      kickMemberAction({groupId: member.groupId, userId: member.userId, memberId: member.memberId})
     );
   }
   openManageMemberRoles(member: MemberDto) {

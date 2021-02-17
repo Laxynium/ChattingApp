@@ -90,17 +90,19 @@ namespace InstantMessenger.Groups.Application.IntegrationEvents
     {
         public Guid GroupId{ get; }
         public Guid UserId { get; }
+        public Guid MemberId { get; }
         public Guid RoleId { get; }
         public string RoleName { get; }
         public int RolePriority { get; }
 
-        public RoleAddedToMemberEvent(Guid groupId, Guid userId, Guid roleId, string roleName, int rolePriority)
+        public RoleAddedToMemberEvent(Guid groupId, Guid userId, Guid memberId, Guid roleId, string roleName, int rolePriority)
         {
             GroupId = groupId;
             UserId = userId;
             RoleId = roleId;
             RoleName = roleName;
             RolePriority = rolePriority;
+            MemberId = memberId;
         }
     }
 
@@ -108,14 +110,16 @@ namespace InstantMessenger.Groups.Application.IntegrationEvents
     {
         public Guid GroupId { get; }
         public Guid UserId { get; }
+        public Guid MemberId { get; }
         public Guid RoleId { get; }
         public string RoleName { get; }
         public int RolePriority { get; }
 
-        public RoleRemovedFromMemberEvent(Guid groupId, Guid userId, Guid roleId, string roleName, int rolePriority)
+        public RoleRemovedFromMemberEvent(Guid groupId, Guid userId, Guid memberId, Guid roleId, string roleName, int rolePriority)
         {
             GroupId = groupId;
             UserId = userId;
+            MemberId = memberId;
             RoleId = roleId;
             RoleName = roleName;
             RolePriority = rolePriority;

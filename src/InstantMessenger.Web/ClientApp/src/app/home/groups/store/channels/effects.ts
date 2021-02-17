@@ -69,7 +69,7 @@ export class ChannelsEffects {
       switchMap((request) => {
         return this.channelsService.removeChannel(request).pipe(
           map((_) =>
-            removeChannelSuccessAction({channelId: request.channelId})
+            removeChannelSuccessAction({groupId: request.groupId, channelId: request.channelId})
           ),
           catchError((response) =>
             of(

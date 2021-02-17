@@ -1,10 +1,16 @@
 import {createSelector} from '@ngrx/store';
 import {Map} from 'immutable';
-import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
-import {groupsFeatureSelector} from 'src/app/home/groups/store/groups/selectors';
 import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
+import {allowedActionsStateSelector} from '../selectors';
+import {
+  allowedActionAdapter,
+  AllowedActionsState,
+} from './reducer';
+
+const selectors = allowedActionAdapter.getSelectors();
 
 export const allowedActionsSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): Map<string, AllowedAction> => s.allowedActions
+  allowedActionsStateSelector,
+  (s: AllowedActionsState): Map<string, AllowedAction> =>
+    Map(selectors.selectEntities(s))
 );

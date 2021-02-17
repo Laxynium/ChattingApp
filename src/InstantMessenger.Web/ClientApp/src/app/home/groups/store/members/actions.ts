@@ -2,6 +2,7 @@ import {createAction, props} from '@ngrx/store';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
+
 export enum ActionTypes {
   GET_MEMBERS = '[Groups] Get members',
   GET_MEMBERS_SUCCESS = '[Groups] Get members success',
@@ -38,11 +39,11 @@ export const getMembersFailureAction = createAction(
 
 export const kickMemberAction = createAction(
   ActionTypes.KICK_MEMBER,
-  props<{groupId: string; userId: string}>()
+  props<{groupId: string; userId: string; memberId: string}>()
 );
 export const kickMemberSuccessAction = createAction(
   ActionTypes.KICK_MEMBER_SUCCESS,
-  props<{groupId: string; userId: string}>()
+  props<{groupId: string; userId: string; memberId: string}>()
 );
 export const kickMemberFailureAction = createAction(
   ActionTypes.KICK_MEMBER_FAILURE
@@ -50,11 +51,11 @@ export const kickMemberFailureAction = createAction(
 
 export const getMemberRolesAction = createAction(
   ActionTypes.GET_MEMBER_ROLES,
-  props<{groupId: string; userId: string}>()
+  props<{groupId: string; userId: string, memberId: string}>()
 );
 export const getMemberRolesSuccessAction = createAction(
   ActionTypes.GET_MEMBER_ROLES_SUCCESS,
-  props<{roles: RoleDto[]}>()
+  props<{userId: string, memberId:string,roles: RoleDto[]}>()
 );
 export const getMemberRolesFailureAction = createAction(
   ActionTypes.GET_MEMBER_ROLES_FAILURE

@@ -77,15 +77,23 @@ export class MembersEffects {
     this.actions$.pipe(
       ofType(getMemberRolesAction),
       switchMap((request) => {
-        return this.membersService.getMemberRoles(request).pipe(
-          map((r) => getMemberRolesSuccessAction({roles: r})),
-          catchError((response: HttpErrorResponse) =>
-            of(
-              getMemberRolesFailureAction(),
-              requestFailedAction({error: mapToError(response)})
+        return this.membersService
+          .getMemberRoles({userId: request.userId, groupId: request.groupId})
+          .pipe(
+            map((r) =>
+              getMemberRolesSuccessAction({
+                userId: request.userId,
+                memberId: request.memberId,
+                roles: r,
+              })
+            ),
+            catchError((response: HttpErrorResponse) =>
+              of(
+                getMemberRolesFailureAction(),
+                requestFailedAction({error: mapToError(response)})
+              )
             )
-          )
-        );
+          );
       })
     )
   );

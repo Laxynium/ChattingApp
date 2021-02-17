@@ -17,50 +17,61 @@ interface GroupDto {
   groupId: string;
   groupName: string;
 }
+
 interface InvitationDto {
   groupId: string;
   invitationId: string;
   code: string;
 }
+
 interface ChannelDto {
   groupId: string;
   channelId: string;
   channelName: string;
 }
+
 interface PermissionDto {
   name: string;
   code: string;
 }
+
 interface RolePermissionDto {
   groupId: string;
   roleId: string;
   permission: PermissionDto;
 }
+
 interface RoleDto {
   groupId: string;
   roleId: string;
   name: string;
   priority: number;
 }
+
 interface MemberRoleDto {
   userId: string;
+  memberId: string;
   role: RoleDto;
 }
+
 interface RolePermissionOverridesDto {
   groupId: string;
   channelId: string;
   roleId: string;
   overrides: PermissionOverrideDto;
 }
+
 interface MemberPermissionOverridesDto {
   groupId: string;
   channelId: string;
   userId: string;
   overrides: PermissionOverrideDto;
 }
+
 interface AllowedActionDto {
   groupId: string;
 }
+
 const onGroupRemoved: HubMethod<GroupDto> = (store, data) => {
   store.dispatch(removeGroupSuccessAction({groupId: data.groupId}));
 };
@@ -82,12 +93,20 @@ const onMessageCreated: HubMethod<MessageDto> = (store, data) => {
 
 const onRoleAddedToMember: HubMethod<MemberRoleDto> = (store, data) => {
   store.dispatch(
-    getMemberRolesAction({groupId: data.role.groupId, userId: data.userId})
+    getMemberRolesAction({
+      groupId: data.role.groupId,
+      userId: data.userId,
+      memberId: data.memberId,
+    })
   );
 };
 const onRoleRemovedFromMember: HubMethod<MemberRoleDto> = (store, data) => {
   store.dispatch(
-    getMemberRolesAction({groupId: data.role.groupId, userId: data.userId})
+    getMemberRolesAction({
+      groupId: data.role.groupId,
+      userId: data.userId,
+      memberId: data.memberId,
+    })
   );
 };
 const onPermissionAddedToRole: HubMethod<RolePermissionDto> = (store, data) => {

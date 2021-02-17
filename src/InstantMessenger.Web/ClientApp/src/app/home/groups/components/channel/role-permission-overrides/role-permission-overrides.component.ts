@@ -1,13 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {getChannelRolePermissionOverridesAction} from 'src/app/home/groups/store/channels/actions';
 import {
-  overridesLoadingSelector,
-  overridesSelector,
+  roleOverridesLoadingSelector,
+  roleOverridesSelector,
 } from 'src/app/home/groups/store/channels/selectors';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {
@@ -30,9 +29,12 @@ export class RolePermissionOverridesComponent implements OnInit {
   OverrideType = PermissionOverrideTypeDto;
 
   updateOverrides: PermissionOverrideDto[] = [];
+
   constructor(private store: Store) {
-    this.$overrides = this.store.pipe(select(overridesSelector));
-    this.$overridesLoading = this.store.pipe(select(overridesLoadingSelector));
+    this.$overrides = this.store.pipe(select(roleOverridesSelector));
+    this.$overridesLoading = this.store.pipe(
+      select(roleOverridesLoadingSelector)
+    );
   }
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class RolePermissionOverridesComponent implements OnInit {
       })
     );
   }
+
   onOverrideChange(event) {
     const name = event.target.name;
     const value: PermissionOverrideTypeDto = event.target.value;
@@ -67,10 +70,12 @@ export class RolePermissionOverridesComponent implements OnInit {
     });
   }
 }
+
 interface OverrideDto {
   permissionName: string;
   state: OverrideState;
 }
+
 enum OverrideState {
   Deny,
   Neutral,

@@ -1,8 +1,3 @@
-export interface ChannelMessageDto {
-  channelId: string;
-  groupId: string;
-  message: MessageDto[];
-}
 export interface MessageDto {
   messageId: string;
   groupId: string;

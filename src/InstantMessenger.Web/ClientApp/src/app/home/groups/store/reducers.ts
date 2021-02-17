@@ -5,8 +5,6 @@ import {
   GroupDto,
 } from 'src/app/home/groups/services/responses/group.dto';
 import {
-  createGroupAction,
-  createGroupFailureAction,
   createGroupSuccessAction,
   getGroupsAction,
   getGroupsFailureAction,
@@ -14,14 +12,8 @@ import {
   joinGroupAction,
   joinGroupFailureAction,
   joinGroupSuccessAction,
-  leaveGroupAction,
-  leaveGroupFailureAction,
   leaveGroupSuccessAction,
-  loadCurrentGroupAction,
-  loadCurrentGroupFailureAction,
   loadCurrentGroupSuccessAction,
-  removeGroupAction,
-  removeGroupFailureAction,
   removeGroupSuccessAction,
   renameGroupSuccessAction,
 } from 'src/app/home/groups/store/groups/actions';
@@ -45,13 +37,9 @@ import {
   getRolePermissionsAction,
   getRolePermissionsFailureAction,
   getRolePermissionsSuccessAction,
-  getRolesAction,
-  getRolesFailureAction,
   getRolesSuccessAction,
   moveDownRoleSuccessAction,
   moveUpRoleSuccessAction,
-  removeRoleAction,
-  removeRoleFailureAction,
   removeRoleSuccessAction,
   renameRoleSuccessAction,
 } from 'src/app/home/groups/store/roles/actions';
@@ -70,8 +58,6 @@ import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
 import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-control/actions';
 import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 import {
-  createChannelAction,
-  createChannelFailureAction,
   createChannelSuccessAction,
   getChannelMemberPermissionOverridesAction,
   getChannelMemberPermissionOverridesFailureAction,
@@ -80,25 +66,18 @@ import {
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
   getChannelsAction,
-  getChannelsFailureAction,
   getChannelsSuccessAction,
   loadCurrentChannelSuccessAction,
-  removeChannelAction,
-  removeChannelFailureAction,
   removeChannelSuccessAction,
   renameChannelSuccessAction,
   updateChannelMemberPermissionOverridesSuccessAction,
   updateChannelRolePermissionOverridesSuccessAction,
 } from 'src/app/home/groups/store/channels/actions';
 import {
-  revokeInvitationAction,
   revokeInvitationSuccessAction,
-  revokeInvitationFailureAction,
   generateInvitationAction,
   generateInvitationFailureAction,
   generateInvitationSuccessAction,
-  getInvitationsAction,
-  getInvitationsFailureAction,
   getInvitationsSuccessAction,
 } from 'src/app/home/groups/store/invitations/actions';
 
@@ -183,43 +162,18 @@ const groupsReducer = createReducer(
         ? Map<string, MessageDto>()
         : s.currentChannelMessages,
   })),
-  on(getChannelsFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(createGroupAction, (s) => ({
-    ...s,
-  })),
   on(createGroupSuccessAction, (s, a) => ({
     ...s,
     groups: [...s.groups, a.group],
-  })),
-  on(createGroupFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(removeGroupAction, (s) => ({
-    ...s,
   })),
   on(removeGroupSuccessAction, (s, a) => ({
     ...s,
     groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
   })),
-  on(removeGroupFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(leaveGroupAction, (s) => ({
-    ...s,
-  })),
   on(leaveGroupSuccessAction, (s, a) => ({
     ...s,
     groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
   })),
-  on(leaveGroupFailureAction, (s) => ({
-    ...s,
-  })),
-
   on(renameGroupSuccessAction, (s, a) => ({
     ...s,
     currentGroup: {...s.currentGroup, name: a.group.name},
@@ -252,31 +206,16 @@ const groupsReducer = createReducer(
       invitationId: null,
     },
   })),
-
-  on(revokeInvitationAction, (s) => ({
-    ...s,
-  })),
   on(revokeInvitationSuccessAction, (s, a) => ({
     ...s,
     invitations: [
       ...s.invitations.filter((i) => i.invitationId != a.invitationId),
     ],
   })),
-  on(revokeInvitationFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(getInvitationsAction, (s) => ({
-    ...s,
-  })),
   on(getInvitationsSuccessAction, (s, a) => ({
     ...s,
     invitations: [...a.invitations],
   })),
-  on(getInvitationsFailureAction, (s) => ({
-    ...s,
-  })),
-
   on(joinGroupAction, (s) => ({
     ...s,
   })),
@@ -287,20 +226,11 @@ const groupsReducer = createReducer(
     ...s,
   })),
 
-  on(loadCurrentGroupAction, (s) => ({
-    ...s,
-  })),
   on(loadCurrentGroupSuccessAction, (s, a) => ({
     ...s,
     currentGroup: a.group,
   })),
-  on(loadCurrentGroupFailureAction, (s) => ({
-    ...s,
-  })),
 
-  on(createChannelAction, (s) => ({
-    ...s,
-  })),
   on(createChannelSuccessAction, (s, a) => ({
     ...s,
     channels: s.channels.set(a.channel.channelId, a.channel),
@@ -315,19 +245,9 @@ const groupsReducer = createReducer(
         })
       : s.allowedActions,
   })),
-  on(createChannelFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(removeChannelAction, (s) => ({
-    ...s,
-  })),
   on(removeChannelSuccessAction, (s, a) => ({
     ...s,
     channels: s.channels.remove(a.channelId),
-  })),
-  on(removeChannelFailureAction, (s) => ({
-    ...s,
   })),
 
   on(renameChannelSuccessAction, (s, a) => ({
@@ -343,17 +263,10 @@ const groupsReducer = createReducer(
     currentChannel: s.channels.get(a.channelId),
   })),
 
-  on(getRolesAction, (s) => ({
-    ...s,
-  })),
   on(getRolesSuccessAction, (s, a) => ({
     ...s,
     roles: Map(a.roles.map((r) => [r.roleId, r])),
   })),
-  on(getRolesFailureAction, (s) => ({
-    ...s,
-  })),
-
   on(createRoleAction, (s) => ({
     ...s,
     creatingRole: true,
@@ -367,18 +280,10 @@ const groupsReducer = createReducer(
     ...s,
     creatingRole: false,
   })),
-
-  on(removeRoleAction, (s) => ({
-    ...s,
-  })),
   on(removeRoleSuccessAction, (s, a) => ({
     ...s,
     roles: s.roles.remove(a.roleId),
   })),
-  on(removeRoleFailureAction, (s) => ({
-    ...s,
-  })),
-
   on(renameRoleSuccessAction, (s, a) => ({
     ...s,
     roles: s.roles.set(a.role.roleId, {
@@ -386,7 +291,6 @@ const groupsReducer = createReducer(
       name: a.role.name,
     }),
   })),
-
   on(moveUpRoleSuccessAction, (s, a) => ({
     ...s,
     roles: Map(a.roles.map((r) => [r.roleId, r])),

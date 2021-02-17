@@ -1,0 +1,51 @@
+import {GroupId, MemberId, UserId} from './types';
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {createReducer, on} from '@ngrx/store';
+import {
+  getMembersAction,
+  getMembersFailureAction,
+  getMembersSuccessAction,
+  kickMemberSuccessAction,
+} from './members/actions';
+
+export interface Member {
+  id: MemberId;
+  groupId: GroupId;
+  userId: UserId;
+  name: string;
+  avatar: string;
+  isOwner: boolean;
+  createdAt: Date;
+}
+
+export const memberAdapter = createEntityAdapter<Member>({
+  selectId: (x) => x.id,
+});
+
+export interface MembersState extends EntityState<Member> {
+  isLoading: boolean;
+}
+
+export const membersReducer = createReducer(
+  memberAdapter.getInitialState({isLoading: false}),
+  on(getMembersAction, (s) => ({...s, isLoading: true})),
+  on(getMembersSuccessAction, (s, {members}) => ({
+    ...memberAdapter.setAll(
+      members.map((m) => ({
+        id: `${m.groupId}_${m.userId}`,
+        groupId: m.groupId,
+        userId: m.userId,
+        avatar: m.avatar,
+        name: m.name,
+        createdAt: new Date(m.createdAt),
+        isOwner: m.isOwner,
+      })),
+      s
+    ),
+    isLoading: false,
+  })),
+  on(getMembersFailureAction, (s) => ({...s, isLoading: false})),
+  on(kickMemberSuccessAction, (s, a) => ({
+    ...memberAdapter.removeOne(a.userId, s),
+  }))
+);

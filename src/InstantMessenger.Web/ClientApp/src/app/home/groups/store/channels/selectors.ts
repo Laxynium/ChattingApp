@@ -1,53 +1,91 @@
 import {createSelector} from '@ngrx/store';
-import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
 import {
-  groupsFeatureSelector,
-  groupsSelectorNew,
-} from 'src/app/home/groups/store/groups/selectors';
-import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
+  PermissionOverrideDto,
+  PermissionOverrideTypeDto,
+} from 'src/app/home/groups/store/types/role-permission-override';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
+import {Channel, channelAdapter, ChannelsState} from '../channel.reducer';
 import {
-  ChannelModel,
-  GroupsModel,
-  selectAllChannels,
-} from 'src/app/home/groups/model';
+  channelsStateSelector,
+  currentGroupSelector,
+  memberOverridesStateSelector,
+  roleOverridesStateSelector,
+} from '../selectors';
+import {Group} from '../group.reducer';
+import {
+  adapter as roleOverridesAdapter,
+  RolePermissionOverridesState,
+} from '../channel.override.role.reducer';
+import {
+  adapter as memberOverridesAdapter,
+  MemberPermissionOverridesState,
+} from '../channel.override.member.reducer';
 
-export const overridesSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): PermissionOverrideDto[] => s.overrides
+const roleOverridesSelectors = roleOverridesAdapter.getSelectors();
+
+export const roleOverridesSelector = createSelector(
+  roleOverridesStateSelector,
+  (s: RolePermissionOverridesState): PermissionOverrideDto[] =>
+    roleOverridesSelectors.selectAll(s).map(
+      (x) =>
+        <PermissionOverrideDto>{
+          permission: x.permission,
+          type: <PermissionOverrideTypeDto>(<unknown>x.type),
+        }
+    )
+);
+export const roleOverridesLoadingSelector = createSelector(
+  roleOverridesStateSelector,
+  (s: RolePermissionOverridesState): boolean => s.isLoading
 );
 
-export const overridesLoadingSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): boolean => s.overridesLoading
+const memberOverridesSelectors = memberOverridesAdapter.getSelectors();
+
+export const memberOverridesSelector = createSelector(
+  memberOverridesStateSelector,
+  (s: MemberPermissionOverridesState): PermissionOverrideDto[] =>
+    memberOverridesSelectors.selectAll(s).map(
+      (x) =>
+        <PermissionOverrideDto>{
+          permission: x.permission,
+          type: <PermissionOverrideTypeDto>(<unknown>x.type),
+        }
+    )
 );
+
+export const memberOverridesLoadingSelector = createSelector(
+  memberOverridesStateSelector,
+  (s: MemberPermissionOverridesState): boolean => s.isLoading
+);
+
+const channelSelectors = channelAdapter.getSelectors();
 
 export const channelsSelector = createSelector(
-  groupsSelectorNew,
-  (s: GroupsModel): ChannelDto[] => {
-    const currentGroup = s.entities[s.current];
-    if (currentGroup) {
-      return selectAllChannels(currentGroup.channels).map((x) =>
-        toDto(s.current, x)
-      );
-    } else {
+  currentGroupSelector,
+  channelsStateSelector,
+  (group: Group, channels: ChannelsState): ChannelDto[] => {
+    if (!group) {
       return [];
     }
+    return channelSelectors
+      .selectAll(channels)
+      .filter((c) => c.groupId == group.id)
+      .map((x) => toDto(x));
   }
 );
 
 export const currentChannelSelector = createSelector(
-  groupsSelectorNew,
-  (s: GroupsModel): ChannelDto => {
-    const currentGroup = s.entities[s.current];
-    const currentChannel = currentGroup.channels[currentGroup.channels.current];
-    return toDto(s.current, currentChannel);
+  channelsStateSelector,
+  (s: ChannelsState): ChannelDto => {
+    const currentChannel = s.entities[s.currentChannel];
+    if (!currentChannel) return null;
+    return toDto(currentChannel);
   }
 );
 
-function toDto(groupId: string, model: ChannelModel): ChannelDto {
+function toDto(model: Channel): ChannelDto {
   return {
-    groupId: groupId,
+    groupId: model.groupId,
     channelId: model.id,
     channelName: model.name,
   };

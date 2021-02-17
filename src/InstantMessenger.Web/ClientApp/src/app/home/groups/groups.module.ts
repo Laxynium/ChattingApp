@@ -53,12 +53,11 @@ import {RenameGroupComponent} from './components/rename-group/rename-group.compo
 import {RenameRoleModal} from 'src/app/home/groups/components/rename-role/rename-role.modal';
 import {RenameChannelModal} from 'src/app/home/groups/components/rename-channel/rename-channel.modal';
 import {RenameGroupModal} from 'src/app/home/groups/components/rename-group/rename-group.modal';
-import {HomeModule} from 'src/app/home/home.module';
 import {InvitationsEffects} from 'src/app/home/groups/store/invitations/effects';
 import {InvitationsService} from 'src/app/home/groups/services/invitations.service';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
-import {reducer} from 'src/app/home/groups/model';
+import {reducers as reducers2} from './store/reducers2'
 
 @NgModule({
   declarations: [
@@ -103,7 +102,7 @@ import {reducer} from 'src/app/home/groups/model';
     ReactiveFormsModule,
     FontAwesomeModule,
     UiSwitchModule,
-    StoreModule.forFeature('groups', {groups: reducers, new: reducer}),
+    StoreModule.forFeature('groups', {...reducers2,groupsOld: reducers}),
     EffectsModule.forFeature([
       GroupsEffects,
       RolesEffects,

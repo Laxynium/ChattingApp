@@ -144,7 +144,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             var member = GetMember(userIdOfMember);
             var role = GetRole(roleId);
             member.AddRole(role);
-            Apply(new RoleAddedToMemberEvent(Id,member.UserId, role.Id, role.Name, role.Priority));
+            Apply(new RoleAddedToMemberEvent(Id,member.UserId, member.Id, role.Id, role.Name, role.Priority));
         });
 
         public void RemoveRoleFromMember(UserId userId, UserId userIdOfMember, RoleId roleId) => new Action.RemoveRoleFromMember(GetMember(userId), GetMemberPermissions(userId), GetRoles(userId), UserDefinedRoles, GetRole(roleId))
@@ -153,7 +153,7 @@ namespace InstantMessenger.Groups.Domain.Entities
             var member = GetMember(userIdOfMember);
             var role = GetRole(roleId);
             member.RemoveRole(role);
-            Apply(new RoleRemovedFromMemberEvent(Id,member.UserId, role.Id, role.Name, role.Priority));
+            Apply(new RoleRemovedFromMemberEvent(Id,member.UserId, member.Id, role.Id ,role.Name, role.Priority));
         });
 
 

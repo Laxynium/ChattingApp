@@ -5,8 +5,8 @@ import {first} from 'rxjs/operators';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {getChannelMemberPermissionOverridesAction} from 'src/app/home/groups/store/channels/actions';
 import {
-  overridesLoadingSelector,
-  overridesSelector,
+  memberOverridesLoadingSelector,
+  memberOverridesSelector,
 } from 'src/app/home/groups/store/channels/selectors';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {
@@ -29,9 +29,12 @@ export class MemberPermissionOverridesComponent implements OnInit {
   OverrideType = PermissionOverrideTypeDto;
 
   updateOverrides: PermissionOverrideDto[] = [];
+
   constructor(private store: Store) {
-    this.$overrides = this.store.pipe(select(overridesSelector));
-    this.$overridesLoading = this.store.pipe(select(overridesLoadingSelector));
+    this.$overrides = this.store.pipe(select(memberOverridesSelector));
+    this.$overridesLoading = this.store.pipe(
+      select(memberOverridesLoadingSelector)
+    );
   }
 
   ngOnInit(): void {
@@ -43,6 +46,7 @@ export class MemberPermissionOverridesComponent implements OnInit {
       })
     );
   }
+
   onOverrideChange(event) {
     const name = event.target.name;
     const value: PermissionOverrideTypeDto = event.target.value;

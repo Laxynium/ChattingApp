@@ -74,7 +74,7 @@ export const removeChannelAction = createAction(
 );
 export const removeChannelSuccessAction = createAction(
   ActionTypes.REMOVE_CHANNEL_SUCCESS,
-  props<{channelId: string}>()
+  props<{groupId: string; channelId: string}>()
 );
 export const removeChannelFailureAction = createAction(
   ActionTypes.REMOVE_CHANNEL_FAILURE

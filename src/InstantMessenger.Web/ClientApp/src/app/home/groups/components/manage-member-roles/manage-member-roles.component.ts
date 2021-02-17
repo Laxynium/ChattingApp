@@ -23,6 +23,7 @@ export class ManageMemberRolesComponent implements OnInit {
   @Input() member: MemberDto;
   $memberRoles: Observable<RoleDto[]>;
   $rolesToPick: Observable<RoleDto[]>;
+
   constructor(private store: Store) {
     this.$memberRoles = this.store.pipe(select(memberRolesSelector));
     this.$rolesToPick = zip(
@@ -46,28 +47,33 @@ export class ManageMemberRolesComponent implements OnInit {
       getMemberRolesAction({
         groupId: this.member.groupId,
         userId: this.member.userId,
+        memberId: this.member.memberId,
       })
     );
   }
+
   addRoleToMember() {
     if (!this.selectedRole) return;
     this.store.dispatch(
       addRoleToMemberAction({
         memberRole: {
-          groupId: this.member.groupId,
+          memberId: this.member.memberId,
           userId: this.member.userId,
+          groupId: this.member.groupId,
           role: this.selectedRole,
         },
       })
     );
     this.selectedRole = null;
   }
+
   removeRoleFromMember(role: RoleDto) {
     this.store.dispatch(
       removeRoleFromMemberAction({
         memberRole: {
-          groupId: this.member.groupId,
+          memberId: this.member.memberId,
           userId: this.member.userId,
+          groupId: this.member.groupId,
           role: role,
         },
       })

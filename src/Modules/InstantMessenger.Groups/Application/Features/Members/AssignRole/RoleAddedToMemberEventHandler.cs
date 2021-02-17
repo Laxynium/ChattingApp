@@ -31,7 +31,7 @@ namespace InstantMessenger.Groups.Application.Features.Members.AssignRole
                     .ToListAsync())
                 .Select(id => id.Value.ToString("N"))
                 .ToList();
-            await _contract.Clients.Users(members).OnRoleAddedToMember(new MemberRoleDto(@event.UserId, new RoleDto(@event.GroupId, @event.RoleId, @event.RoleName, @event.RolePriority)));
+            await _contract.Clients.Users(members).OnRoleAddedToMember(new MemberRoleDto(@event.UserId, @event.MemberId,new RoleDto(@event.GroupId, @event.RoleId, @event.RoleName, @event.RolePriority)));
 
             await _contract.Clients.Users(members).OnAllowedActionsChanged(new AllowedActionDto(@event.GroupId));
         }

@@ -1,22 +1,26 @@
 import {createSelector} from '@ngrx/store';
-import {GroupsStateInterface} from 'src/app/home/groups/store/reducers';
-import {groupsFeatureSelector} from 'src/app/home/groups/store/groups/selectors';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
+import {currentGroupSelector, invitationsStateSelector} from "../selectors";
+import {invitationAdapter, InvitationsState} from "../invitation.reducer";
+import {Group} from "../group.reducer";
+
+const {selectAll} = invitationAdapter.getSelectors();
 
 export const currentInvitationSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): {code: string; isBeingGenerated: boolean} => ({
-    code: s.generatedInvitation.code,
-    isBeingGenerated: s.generatedInvitation.isBeingGenerated,
+  invitationsStateSelector,
+  (s: InvitationsState): {code: string; isBeingGenerated: boolean} => ({
+    code: s?.generated?.code ?? '',
+    isBeingGenerated: s?.generated?.isBeingGenerated ?? false,
   })
 );
 
 export const invitationsSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): InvitationDto[] => s.invitations
+  invitationsStateSelector,
+  currentGroupSelector,
+  (s: InvitationsState,g: Group): InvitationDto[] => selectAll(s).filter(x=>x.groupId == g.id)
 );
 
 export const isInvitationBeingGeneratedSelector = createSelector(
-  groupsFeatureSelector,
-  (s: GroupsStateInterface): boolean => s.generatedInvitation.isBeingGenerated
+  invitationsStateSelector,
+  (s: InvitationsState): boolean => s.generated.isBeingGenerated
 );

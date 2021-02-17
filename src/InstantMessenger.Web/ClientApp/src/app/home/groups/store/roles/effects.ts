@@ -60,8 +60,8 @@ export class RolesEffects {
   $getRolePermissions = createEffect(() =>
     this.actions$.pipe(
       ofType(getRolePermissionsAction),
-      switchMap((r) => {
-        return this.rolesService.getRolePermissions(r).pipe(
+      switchMap((req) => {
+        return this.rolesService.getRolePermissions(req).pipe(
           map((r) => getRolePermissionsSuccessAction({roles: r})),
           catchError((response: HttpErrorResponse) =>
             of(
