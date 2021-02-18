@@ -1,11 +1,10 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {AppStateInterface} from '../../../shared/types/appState.interface';
-import {GroupsStateInterface} from './reducers';
-import {GroupsModuleState} from './reducers2';
+import {AppStateInterface} from 'src/app/shared/types/appState.interface';
+import {GroupsModuleState} from 'src/app/home/groups/store/reducers';
 
 export const groupsFeatureSelector = createFeatureSelector<
   AppStateInterface,
-  GroupsModuleState & {groupsOld: GroupsStateInterface}
+  GroupsModuleState
 >('groups');
 
 export const groupModuleSelector = createSelector(
@@ -66,5 +65,10 @@ export const memberRolesStateSelector = createSelector(
 
 export const allowedActionsStateSelector = createSelector(
   groupModuleSelector,
-  s=>s.allowedActions
-)
+  (s) => s.allowedActions
+);
+
+export const messagesStateSelector = createSelector(
+  groupModuleSelector,
+  (s) => s.messages
+);

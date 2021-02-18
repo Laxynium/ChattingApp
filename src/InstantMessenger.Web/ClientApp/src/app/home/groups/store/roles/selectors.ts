@@ -1,12 +1,12 @@
 import {createSelector} from '@ngrx/store';
 import {PermissionDto} from 'src/app/home/groups/store/types/permission';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {rolePermissionsStateSelector, rolesStateSelector} from '../selectors';
-import {roleAdapter, RolesState} from '../role.redcuer';
+import {rolePermissionsStateSelector, rolesStateSelector} from 'src/app/home/groups/store/selectors';
+import {roleAdapter, RolesState} from 'src/app/home/groups/store/roles/role.redcuer';
 import {
   rolePermissionAdapter,
   RolePermissionsState,
-} from '../role.permission.reducer';
+} from '../roles/role.permission.reducer';
 
 const {selectAll} = roleAdapter.getSelectors();
 const rolePermissionSelectors = rolePermissionAdapter.getSelectors();

@@ -4,22 +4,22 @@ import {
   PermissionOverrideTypeDto,
 } from 'src/app/home/groups/store/types/role-permission-override';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
-import {Channel, channelAdapter, ChannelsState} from '../channel.reducer';
+import {Channel, channelAdapter, ChannelsState} from 'src/app/home/groups/store/channels/channel.reducer';
 import {
   channelsStateSelector,
   currentGroupSelector,
   memberOverridesStateSelector,
   roleOverridesStateSelector,
 } from '../selectors';
-import {Group} from '../group.reducer';
+import {Group} from 'src/app/home/groups/store/groups/group.reducer';
 import {
   adapter as roleOverridesAdapter,
   RolePermissionOverridesState,
-} from '../channel.override.role.reducer';
+} from 'src/app/home/groups/store/channels/channel.override.role.reducer';
 import {
   adapter as memberOverridesAdapter,
   MemberPermissionOverridesState,
-} from '../channel.override.member.reducer';
+} from 'src/app/home/groups/store/channels/channel.override.member.reducer';
 
 const roleOverridesSelectors = roleOverridesAdapter.getSelectors();
 

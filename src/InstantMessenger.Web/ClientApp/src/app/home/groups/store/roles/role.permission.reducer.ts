@@ -1,4 +1,4 @@
-import {GroupId, RoleId} from './types';
+import {GroupId, RoleId} from 'src/app/home/groups/store/types';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createReducer, on} from '@ngrx/store';
 import {
@@ -6,7 +6,7 @@ import {
   getRolePermissionsFailureAction,
   getRolePermissionsSuccessAction,
   updateRolePermissionsSuccessAction,
-} from './roles/actions';
+} from 'src/app/home/groups/store/roles/actions';
 
 export interface RolePermission {
   id: string;

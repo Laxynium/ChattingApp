@@ -1,8 +1,8 @@
 import {createSelector} from '@ngrx/store';
 import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {currentGroupSelector, invitationsStateSelector} from "../selectors";
-import {invitationAdapter, InvitationsState} from "../invitation.reducer";
-import {Group} from "../group.reducer";
+import {invitationAdapter, InvitationsState} from 'src/app/home/groups/store/invitations/invitation.reducer';
+import {Group} from "src/app/home/groups/store/groups/group.reducer";
 
 const {selectAll} = invitationAdapter.getSelectors();
 

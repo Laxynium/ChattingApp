@@ -1,4 +1,4 @@
-import {ChannelId, PermissionOverrideType, RoleId} from './types';
+import {ChannelId, PermissionOverrideType, RoleId} from 'src/app/home/groups/store/types';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createReducer, on} from '@ngrx/store';
 import {
@@ -6,7 +6,7 @@ import {
   getChannelRolePermissionOverridesFailureAction,
   getChannelRolePermissionOverridesSuccessAction,
   updateChannelRolePermissionOverridesAction,
-} from './channels/actions';
+} from 'src/app/home/groups/store/channels/actions';
 
 export interface RolePermissionOverride {
   id: string;

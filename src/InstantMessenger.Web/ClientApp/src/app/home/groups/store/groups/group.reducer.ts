@@ -1,4 +1,4 @@
-import {createReducer, on} from "@ngrx/store";
+import {createReducer, on} from '@ngrx/store';
 import {
   createGroupSuccessAction,
   getGroupsAction,
@@ -7,11 +7,10 @@ import {
   leaveGroupSuccessAction,
   loadCurrentGroupSuccessAction,
   removeGroupSuccessAction,
-  renameGroupSuccessAction
-} from "./groups/actions";
-import {createEntityAdapter, EntityState} from "@ngrx/entity";
-import {GroupId, UserId} from "./types";
-
+  renameGroupSuccessAction,
+} from 'src/app/home/groups/store/groups/actions';
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {GroupId, UserId} from 'src/app/home/groups/store/types';
 
 export interface Group {
   id: GroupId;
@@ -19,10 +18,12 @@ export interface Group {
   createdAt: string;
   ownerId: UserId;
 }
+
 export const groupAdapter = createEntityAdapter<Group>({
   selectId: (x) => x.id,
   sortComparer: (x, y) => x.name.localeCompare(y.name),
 });
+
 export interface GroupsState extends EntityState<Group> {
   isLoading: boolean;
   currentGroup: GroupId;

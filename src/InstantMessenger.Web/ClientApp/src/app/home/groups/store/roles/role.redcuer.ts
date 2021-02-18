@@ -10,9 +10,9 @@ import {
   moveUpRoleSuccessAction,
   removeRoleSuccessAction,
   renameRoleSuccessAction,
-} from './roles/actions';
+} from 'src/app/home/groups/store/roles/actions';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {GroupId, RoleId} from './types';
+import {GroupId, RoleId} from 'src/app/home/groups/store/types';
 
 export interface Role {
   groupId: GroupId;

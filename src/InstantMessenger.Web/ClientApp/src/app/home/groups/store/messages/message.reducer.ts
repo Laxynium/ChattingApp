@@ -1,7 +1,11 @@
-import {ChannelId, GroupId, UserId} from "./types";
-import {createEntityAdapter, EntityState} from "@ngrx/entity";
-import {createReducer, on} from "@ngrx/store";
-import {getMessagesAction, getMessagesSuccessAction, sendMessageSuccessAction} from "./messages/actions";
+import {ChannelId, GroupId, UserId} from 'src/app/home/groups/store/types';
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {createReducer, on} from '@ngrx/store';
+import {
+  getMessagesAction,
+  getMessagesSuccessAction,
+  sendMessageSuccessAction,
+} from 'src/app/home/groups/store/messages/actions';
 
 export type MessageId = string;
 
@@ -10,6 +14,8 @@ export interface Message {
   groupId: GroupId;
   channelId: ChannelId;
   senderId: UserId;
+  senderName: string;
+  senderAvatar: string;
   content: string;
   createdAt: Date;
 }
@@ -37,6 +43,8 @@ export const messageReducer = createReducer(
         createdAt: new Date(m.createdAt),
         senderId: m.senderId,
         content: m.content,
+        senderAvatar: m.senderAvatar,
+        senderName: m.senderName,
       })),
       s
     ),
@@ -50,6 +58,8 @@ export const messageReducer = createReducer(
         senderId: message.senderId,
         content: message.content,
         createdAt: new Date(message.createdAt),
+        senderName: message.senderName,
+        senderAvatar: message.senderAvatar,
       },
       s
     ),

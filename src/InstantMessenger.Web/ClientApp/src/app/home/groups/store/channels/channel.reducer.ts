@@ -1,12 +1,12 @@
 import {createEntityAdapter, EntityState} from "@ngrx/entity";
-import {ChannelId, GroupId} from "./types";
+import {ChannelId, GroupId} from "src/app/home/groups/store/types";
 import {createReducer, on} from "@ngrx/store";
 import {
   createChannelSuccessAction,
   getChannelsAction,
   getChannelsFailureAction,
   getChannelsSuccessAction, loadCurrentChannelSuccessAction, removeChannelSuccessAction, renameChannelSuccessAction
-} from "./channels/actions";
+} from "src/app/home/groups/store/channels/actions";
 
 export interface Channel {
   id: ChannelId;

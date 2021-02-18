@@ -1,11 +1,11 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {InvitationDto} from './types/invitation';
+import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {createReducer, on} from '@ngrx/store';
 import {
   generateInvitationAction, generateInvitationFailureAction, generateInvitationSuccessAction,
   getInvitationsSuccessAction,
   revokeInvitationSuccessAction,
-} from './invitations/actions';
+} from 'src/app/home/groups/store/invitations/actions';
 
 export interface GeneratedInvitation {
   groupId: string;

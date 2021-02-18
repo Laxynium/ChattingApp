@@ -1,435 +1,58 @@
-import {Action, createReducer, on} from '@ngrx/store';
-import {Map} from 'immutable';
+import {ActionReducerMap} from '@ngrx/store';
+import {groupReducer, GroupsState} from 'src/app/home/groups/store/groups/group.reducer';
+import {channelReducer, ChannelsState} from 'src/app/home/groups/store/channels/channel.reducer';
+import {messageReducer, MessagesState} from 'src/app/home/groups/store/messages/message.reducer';
 import {
-  ChannelDto,
-  GroupDto,
-} from 'src/app/home/groups/services/responses/group.dto';
+  invitationReducer,
+  InvitationsState,
+} from "src/app/home/groups/store/invitations/invitation.reducer";
 import {
-  createGroupSuccessAction,
-  getGroupsAction,
-  getGroupsFailureAction,
-  getGroupsSuccessAction,
-  joinGroupAction,
-  joinGroupFailureAction,
-  joinGroupSuccessAction,
-  leaveGroupSuccessAction,
-  loadCurrentGroupSuccessAction,
-  removeGroupSuccessAction,
-  renameGroupSuccessAction,
-} from 'src/app/home/groups/store/groups/actions';
+  reducer as roleOverrideReducer,
+  RolePermissionOverridesState,
+} from 'src/app/home/groups/store/channels/channel.override.role.reducer';
 import {
-  addRoleToMemberSuccessAction,
-  getMemberRolesAction,
-  getMemberRolesFailureAction,
-  getMemberRolesSuccessAction,
-  getMembersAction,
-  getMembersFailureAction,
-  getMembersSuccessAction,
-  kickMemberAction,
-  kickMemberFailureAction,
-  kickMemberSuccessAction,
-  removeRoleFromMemberAction,
-} from 'src/app/home/groups/store/members/actions';
+  reducer as memberOverrideReducer,
+  MemberPermissionOverridesState,
+} from 'src/app/home/groups/store/channels/channel.override.member.reducer';
+import {roleReducer, RolesState} from 'src/app/home/groups/store/roles/role.redcuer';
 import {
-  createRoleAction,
-  createRoleFailureAction,
-  createRoleSuccessAction,
-  getRolePermissionsAction,
-  getRolePermissionsFailureAction,
-  getRolePermissionsSuccessAction,
-  getRolesSuccessAction,
-  moveDownRoleSuccessAction,
-  moveUpRoleSuccessAction,
-  removeRoleSuccessAction,
-  renameRoleSuccessAction,
-} from 'src/app/home/groups/store/roles/actions';
-import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
-import {MemberDto} from 'src/app/home/groups/store/types/member';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {MessageDto} from './types/message';
-import {getMessagesFailureAction} from './messages/actions';
+  rolePermissionReducer,
+  RolePermissionsState,
+} from 'src/app/home/groups/store/roles/role.permission.reducer';
+import {membersReducer, MembersState} from 'src/app/home/groups/store/members/member.reducer';
 import {
-  getMessagesAction,
-  getMessagesSuccessAction,
-  sendMessageSuccessAction,
-} from './messages/actions';
-import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
-import {getAllowedActionsSuccessAction} from 'src/app/home/groups/store/access-control/actions';
-import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
+  memberRolesReducer,
+  MemberRolesState,
+} from 'src/app/home/groups/store/members/member.role.reducer';
 import {
-  createChannelSuccessAction,
-  getChannelMemberPermissionOverridesAction,
-  getChannelMemberPermissionOverridesFailureAction,
-  getChannelMemberPermissionOverridesSuccessAction,
-  getChannelRolePermissionOverridesAction,
-  getChannelRolePermissionOverridesFailureAction,
-  getChannelRolePermissionOverridesSuccessAction,
-  getChannelsAction,
-  getChannelsSuccessAction,
-  loadCurrentChannelSuccessAction,
-  removeChannelSuccessAction,
-  renameChannelSuccessAction,
-  updateChannelMemberPermissionOverridesSuccessAction,
-  updateChannelRolePermissionOverridesSuccessAction,
-} from 'src/app/home/groups/store/channels/actions';
-import {
-  revokeInvitationSuccessAction,
-  generateInvitationAction,
-  generateInvitationFailureAction,
-  generateInvitationSuccessAction,
-  getInvitationsSuccessAction,
-} from 'src/app/home/groups/store/invitations/actions';
+  allowedActionsReducer,
+  AllowedActionsState,
+} from 'src/app/home/groups/store/access-control/reducer';
 
-export interface GroupsStateInterface {
-  groups: GroupDto[];
-  groupsLoading: boolean;
-  currentGroup: GroupDto | null;
-  channels: Map<string, ChannelDto>;
-  generatedInvitation: {
-    groupId: string;
-    invitationId: string;
-    code: string;
-    isBeingGenerated: boolean;
-  };
-  invitations: InvitationDto[];
-  roles: Map<string, RoleDto>;
-  creatingRole: boolean;
-  rolePermissions: PermissionDto[];
-  rolePermissionsLoading: boolean;
-  members: MemberDto[];
-  membersLoading: boolean;
-  memberRoles: RoleDto[];
-  currentChannelMessages: Map<string, MessageDto>;
-  allowedActions: Map<string, AllowedAction>;
-  currentChannel: ChannelDto | null;
-  overrides: PermissionOverrideDto[];
-  overridesLoading: boolean;
+export interface GroupsModuleState {
+  groups: GroupsState;
+  channels: ChannelsState;
+  messages: MessagesState;
+  invitations: InvitationsState;
+  roles: RolesState;
+  rolePermissions: RolePermissionsState;
+  members: MembersState;
+  memberRoles: MemberRolesState;
+  roleOverrides: RolePermissionOverridesState;
+  memberOverrides: MemberPermissionOverridesState;
+  allowedActions: AllowedActionsState;
 }
 
-const initialState: GroupsStateInterface = {
-  groups: [],
-  groupsLoading: false,
-  currentGroup: null,
-  channels: Map(),
-  generatedInvitation: {
-    groupId: null,
-    invitationId: null,
-    code: null,
-    isBeingGenerated: false,
-  },
-  invitations: [],
-  roles: Map(),
-  creatingRole: false,
-  rolePermissions: [],
-  rolePermissionsLoading: false,
-  members: [],
-  membersLoading: false,
-  memberRoles: [],
-  currentChannelMessages: Map(),
-  allowedActions: Map(),
-  currentChannel: null,
-  overrides: [],
-  overridesLoading: false,
+export const reducers: ActionReducerMap<GroupsModuleState> = {
+  groups: groupReducer,
+  channels: channelReducer,
+  invitations: invitationReducer,
+  messages: messageReducer,
+  roles: roleReducer,
+  rolePermissions: rolePermissionReducer,
+  members: membersReducer,
+  memberRoles: memberRolesReducer,
+  roleOverrides: roleOverrideReducer,
+  memberOverrides: memberOverrideReducer,
+  allowedActions: allowedActionsReducer,
 };
-
-const groupsReducer = createReducer(
-  initialState,
-  on(getGroupsAction, (s) => ({
-    ...s,
-    groupsLoading: true,
-  })),
-  on(getGroupsSuccessAction, (s, a) => ({
-    ...s,
-    groups: a.groups,
-    groupsLoading: false,
-  })),
-  on(getGroupsFailureAction, (s) => ({
-    ...s,
-    groupsLoading: false,
-  })),
-
-  on(getChannelsAction, (s) => ({
-    ...s,
-  })),
-  on(getChannelsSuccessAction, (s, a) => ({
-    ...s,
-    channels: s.channels
-      .clear()
-      .concat(a.channels.map((c) => [c.channelId, c])),
-    currentChannelMessages:
-      a.channels.length == 0
-        ? Map<string, MessageDto>()
-        : s.currentChannelMessages,
-  })),
-  on(createGroupSuccessAction, (s, a) => ({
-    ...s,
-    groups: [...s.groups, a.group],
-  })),
-  on(removeGroupSuccessAction, (s, a) => ({
-    ...s,
-    groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
-  })),
-  on(leaveGroupSuccessAction, (s, a) => ({
-    ...s,
-    groups: [...s.groups.filter((g) => g.groupId != a.groupId)],
-  })),
-  on(renameGroupSuccessAction, (s, a) => ({
-    ...s,
-    currentGroup: {...s.currentGroup, name: a.group.name},
-  })),
-
-  on(generateInvitationAction, (s) => ({
-    ...s,
-    generatedInvitation: {
-      ...s.generatedInvitation,
-      isBeingGenerated: true,
-    },
-  })),
-  on(generateInvitationSuccessAction, (s, a) => ({
-    ...s,
-    generatedInvitation: {
-      ...s.generatedInvitation,
-      isBeingGenerated: false,
-      code: a.code,
-      groupId: a.groupId,
-      invitationId: a.invitationId,
-    },
-  })),
-  on(generateInvitationFailureAction, (s) => ({
-    ...s,
-    generatedInvitation: {
-      ...s.generatedInvitation,
-      isBeingGenerated: false,
-      code: null,
-      groupId: null,
-      invitationId: null,
-    },
-  })),
-  on(revokeInvitationSuccessAction, (s, a) => ({
-    ...s,
-    invitations: [
-      ...s.invitations.filter((i) => i.invitationId != a.invitationId),
-    ],
-  })),
-  on(getInvitationsSuccessAction, (s, a) => ({
-    ...s,
-    invitations: [...a.invitations],
-  })),
-  on(joinGroupAction, (s) => ({
-    ...s,
-  })),
-  on(joinGroupSuccessAction, (s) => ({
-    ...s,
-  })),
-  on(joinGroupFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(loadCurrentGroupSuccessAction, (s, a) => ({
-    ...s,
-    currentGroup: a.group,
-  })),
-
-  on(createChannelSuccessAction, (s, a) => ({
-    ...s,
-    channels: s.channels.set(a.channel.channelId, a.channel),
-    allowedActions: s.allowedActions.has('all')
-      ? s.allowedActions
-      : s.allowedActions.has('manage_channels')
-      ? s.allowedActions.set('manage_channels', {
-          ...s.allowedActions.get('manage_channels'),
-          channels: s.allowedActions
-            .get('manage_channels')
-            .channels.add(a.channel.channelId),
-        })
-      : s.allowedActions,
-  })),
-  on(removeChannelSuccessAction, (s, a) => ({
-    ...s,
-    channels: s.channels.remove(a.channelId),
-  })),
-
-  on(renameChannelSuccessAction, (s, a) => ({
-    ...s,
-    channels: s.channels.set(a.channel.channelId, {
-      ...s.channels.get(a.channel.channelId),
-      channelName: a.channel.channelName,
-    }),
-  })),
-
-  on(loadCurrentChannelSuccessAction, (s, a) => ({
-    ...s,
-    currentChannel: s.channels.get(a.channelId),
-  })),
-
-  on(getRolesSuccessAction, (s, a) => ({
-    ...s,
-    roles: Map(a.roles.map((r) => [r.roleId, r])),
-  })),
-  on(createRoleAction, (s) => ({
-    ...s,
-    creatingRole: true,
-  })),
-  on(createRoleSuccessAction, (s, a) => ({
-    ...s,
-    roles: s.roles.set(a.role.roleId, a.role),
-    creatingRole: false,
-  })),
-  on(createRoleFailureAction, (s) => ({
-    ...s,
-    creatingRole: false,
-  })),
-  on(removeRoleSuccessAction, (s, a) => ({
-    ...s,
-    roles: s.roles.remove(a.roleId),
-  })),
-  on(renameRoleSuccessAction, (s, a) => ({
-    ...s,
-    roles: s.roles.set(a.role.roleId, {
-      ...s.roles.get(a.role.roleId),
-      name: a.role.name,
-    }),
-  })),
-  on(moveUpRoleSuccessAction, (s, a) => ({
-    ...s,
-    roles: Map(a.roles.map((r) => [r.roleId, r])),
-  })),
-  on(moveDownRoleSuccessAction, (s, a) => ({
-    ...s,
-    roles: Map(a.roles.map((r) => [r.roleId, r])),
-  })),
-
-  on(getRolePermissionsAction, (s) => ({
-    ...s,
-    rolePermissionsLoading: true,
-  })),
-  on(getRolePermissionsSuccessAction, (s, a) => ({
-    ...s,
-    rolePermissionsLoading: false,
-    rolePermissions: [...a.roles],
-  })),
-  on(getRolePermissionsFailureAction, (s) => ({
-    ...s,
-    rolePermissionsLoading: false,
-  })),
-
-  on(getMembersAction, (s) => ({
-    ...s,
-    membersLoading: true,
-  })),
-  on(getMembersSuccessAction, (s, a) => ({
-    ...s,
-    members: [...a.members],
-    membersLoading: false,
-  })),
-  on(getMembersFailureAction, (s) => ({
-    ...s,
-    membersLoading: false,
-  })),
-
-  on(kickMemberAction, (s) => ({
-    ...s,
-  })),
-  on(kickMemberSuccessAction, (s, a) => ({
-    ...s,
-    members: [
-      ...s.members.filter(
-        (m) => m.userId != a.userId || m.groupId != a.groupId
-      ),
-    ],
-  })),
-  on(kickMemberFailureAction, (s) => ({
-    ...s,
-    membersLoading: false,
-  })),
-
-  on(getMemberRolesAction, (s) => ({
-    ...s,
-  })),
-  on(getMemberRolesSuccessAction, (s, a) => ({
-    ...s,
-    memberRoles: [...a.roles],
-  })),
-  on(getMemberRolesFailureAction, (s) => ({
-    ...s,
-  })),
-
-  on(addRoleToMemberSuccessAction, (s, a) => ({
-    ...s,
-    memberRoles:
-      s.memberRoles.findIndex((x) => x.roleId == a.memberRole.role.roleId) == -1
-        ? [...s.memberRoles, a.memberRole.role]
-        : [...s.memberRoles],
-  })),
-
-  on(removeRoleFromMemberAction, (s, a) => ({
-    ...s,
-    memberRoles: [
-      ...s.memberRoles.filter((r) => r.roleId != a.memberRole.role.roleId),
-    ],
-  })),
-
-  on(getMessagesAction, (s) => ({
-    ...s,
-  })),
-  on(getMessagesSuccessAction, (s, a) => ({
-    ...s,
-    currentChannelMessages: Map(a.messages.map((m) => [m.messageId, m])),
-  })),
-  on(getMessagesFailureAction, (s) => ({
-    ...s,
-  })),
-  on(sendMessageSuccessAction, (s, a) => ({
-    ...s,
-    currentChannelMessages:
-      s.currentChannel && s.currentChannel.channelId == a.message.channelId
-        ? s.currentChannelMessages.set(a.message.messageId, a.message)
-        : s.currentChannelMessages,
-  })),
-
-  on(getAllowedActionsSuccessAction, (s, a) => ({
-    ...s,
-    allowedActions: Map(a.allowedActions.map((a) => [a.name, a])),
-  })),
-
-  on(getChannelRolePermissionOverridesAction, (s) => ({
-    ...s,
-    overridesLoading: true,
-  })),
-  on(getChannelRolePermissionOverridesSuccessAction, (s, a) => ({
-    ...s,
-    overridesLoading: false,
-    overrides: a.overrides,
-  })),
-  on(getChannelRolePermissionOverridesFailureAction, (s) => ({
-    ...s,
-    overridesLoading: false,
-  })),
-  on(updateChannelRolePermissionOverridesSuccessAction, (s, a) => ({
-    ...s,
-    overrides: a.overrides,
-  })),
-
-  on(getChannelMemberPermissionOverridesAction, (s) => ({
-    ...s,
-    overridesLoading: true,
-  })),
-  on(getChannelMemberPermissionOverridesSuccessAction, (s, a) => ({
-    ...s,
-    overridesLoading: false,
-    overrides: a.overrides,
-  })),
-  on(getChannelMemberPermissionOverridesFailureAction, (s) => ({
-    ...s,
-    overridesLoading: false,
-  })),
-  on(updateChannelMemberPermissionOverridesSuccessAction, (s, a) => ({
-    ...s,
-    overrides: a.overrides,
-  }))
-);
-
-export function reducers(state: GroupsStateInterface, action: Action) {
-  return groupsReducer(state, action);
-}

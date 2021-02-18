@@ -1,4 +1,4 @@
-import {GroupId, MemberId, RoleId, UserId} from './types';
+import {GroupId, MemberId, RoleId, UserId} from 'src/app/home/groups/store/types';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createReducer, on} from '@ngrx/store';
 import {
@@ -7,7 +7,7 @@ import {
   getMemberRolesFailureAction,
   getMemberRolesSuccessAction,
   removeRoleFromMemberSuccessAction,
-} from './members/actions';
+} from 'src/app/home/groups/store/members/actions';
 
 export interface MemberRole {
   id: string;

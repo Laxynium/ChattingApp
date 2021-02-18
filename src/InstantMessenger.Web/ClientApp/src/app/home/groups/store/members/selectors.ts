@@ -2,8 +2,8 @@ import {createSelector} from '@ngrx/store';
 import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {memberRolesStateSelector, membersStateSelector} from '../selectors';
-import {memberAdapter, MembersState} from '../member.reducer';
-import {memberRoleAdapter, MemberRolesState} from '../member.role.reducer';
+import {memberAdapter, MembersState} from 'src/app/home/groups/store/members/member.reducer';
+import {memberRoleAdapter, MemberRolesState} from 'src/app/home/groups/store/members/member.role.reducer';
 
 const membersSelectors = memberAdapter.getSelectors();
 export const membersSelector = createSelector(
