@@ -1,17 +1,18 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, zip} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {
   addRoleToMemberAction,
   getMemberRolesAction,
   removeRoleFromMemberAction,
 } from 'src/app/home/groups/store/members/actions';
-import {memberRolesSelector} from 'src/app/home/groups/store/members/selectors';
+import {
+  availableRolesSelector,
+  memberRolesSelector,
+} from 'src/app/home/groups/store/members/selectors';
 import {getRolesAction} from 'src/app/home/groups/store/roles/actions';
-import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
 import {Member} from 'src/app/home/groups/store/members/member.reducer';
-import {Role} from "src/app/home/groups/store/roles/role.redcuer";
+import {Role} from 'src/app/home/groups/store/roles/role.redcuer';
 
 @Component({
   selector: 'app-manage-member-roles',
@@ -26,19 +27,7 @@ export class ManageMemberRolesComponent implements OnInit {
 
   constructor(private store: Store) {
     this.$memberRoles = this.store.pipe(select(memberRolesSelector));
-    this.$rolesToPick = zip(
-      this.store.pipe(
-        select(rolesSelector),
-        map((rs) => rs.filter((r) => r.priority != -1))
-      ),
-      this.$memberRoles
-    ).pipe(
-      map(([roles, memberRoles]) => {
-        return roles.filter(
-          (r) => !memberRoles.some((mr) => mr.roleId == r.roleId)
-        );
-      })
-    );
+    this.$rolesToPick = this.store.pipe(select(availableRolesSelector));
   }
 
   ngOnInit(): void {
@@ -71,7 +60,7 @@ export class ManageMemberRolesComponent implements OnInit {
         groupId: this.member.groupId,
         memberId: this.member.memberId,
         userId: this.member.userId,
-        roleId: role.roleId
+        roleId: role.roleId,
       })
     );
   }

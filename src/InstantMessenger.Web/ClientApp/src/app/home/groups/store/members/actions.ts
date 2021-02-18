@@ -1,6 +1,5 @@
 import {createAction, props} from '@ngrx/store';
 import {Member} from "src/app/home/groups/store/members/member.reducer";
-import {MemberRole} from "src/app/home/groups/store/members/member.role.reducer";
 import {GroupId, MemberId, RoleId, UserId} from "src/app/home/groups/store/types";
 import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
@@ -22,8 +21,8 @@ export enum ActionTypes {
   REMOVE_ROLE_FROM_MEMBER_FAILURE = '[Groups] Remove role from member failure',
 
   GET_MEMBER_ROLES = '[Groups] Get member roles',
-  GET_MEMBER_ROLES_SUCCESS = '[Groups] Get member rolessuccess',
-  GET_MEMBER_ROLES_FAILURE = '[Groups] Get member rolesfailure',
+  GET_MEMBER_ROLES_SUCCESS = '[Groups] Get member roles success',
+  GET_MEMBER_ROLES_FAILURE = '[Groups] Get member roles failure',
 }
 
 export const getMembersAction = createAction(

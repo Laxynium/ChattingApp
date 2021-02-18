@@ -1,4 +1,9 @@
-import {GroupId, MemberId, RoleId, UserId} from 'src/app/home/groups/store/types';
+import {
+  GroupId,
+  MemberId,
+  RoleId,
+  UserId,
+} from 'src/app/home/groups/store/types';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createReducer, on} from '@ngrx/store';
 import {
@@ -10,7 +15,6 @@ import {
 } from 'src/app/home/groups/store/members/actions';
 
 export interface MemberRole {
-  id: string;
   memberId: MemberId;
   groupId: GroupId;
   userId: UserId;
@@ -18,7 +22,7 @@ export interface MemberRole {
 }
 
 export const memberRoleAdapter = createEntityAdapter<MemberRole>({
-  selectId: (x) => x.id,
+  selectId: (x) => `${x.roleId}_${x.memberId}`,
 });
 
 export interface MemberRolesState extends EntityState<MemberRole> {
@@ -31,7 +35,7 @@ export const memberRolesReducer = createReducer(
   on(getMemberRolesSuccessAction, (s, a) => ({
     ...memberRoleAdapter.setAll(
       a.roles.map((r) => ({
-        id: `${r.name}_${r.roleId}_${a.memberId}`,
+        id: `${r.roleId}_${a.memberId}`,
         userId: a.userId,
         memberId: a.memberId,
         groupId: r.groupId,
@@ -47,7 +51,6 @@ export const memberRolesReducer = createReducer(
   on(addRoleToMemberSuccessAction, (s, a) => ({
     ...memberRoleAdapter.upsertOne(
       {
-        id: `${a.roleId}_${a.memberId}`,
         memberId: a.memberId,
         groupId: a.groupId,
         userId: a.userId,
@@ -57,9 +60,6 @@ export const memberRolesReducer = createReducer(
     ),
   })),
   on(removeRoleFromMemberSuccessAction, (s, a) => ({
-    ...memberRoleAdapter.removeOne(
-      `${a.roleId}_${a.memberId}`,
-      s
-    ),
+    ...memberRoleAdapter.removeOne(`${a.roleId}_${a.memberId}`, s),
   }))
 );

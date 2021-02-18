@@ -52,8 +52,8 @@ export const roleReducer = createReducer(
   })),
   on(getRolesFailureAction, (s) => ({...s, isLoading: false})),
   on(createRoleAction, (s) => ({...s, isBeingCreated: true})),
-  on(createRoleSuccessAction, (s, {role}) =>
-    roleAdapter.addOne(
+  on(createRoleSuccessAction, (s, {role}) => ({
+    ...roleAdapter.addOne(
       {
         roleId: role.roleId,
         groupId: role.groupId,
@@ -61,8 +61,9 @@ export const roleReducer = createReducer(
         priority: role.priority,
       },
       s
-    )
-  ),
+    ),
+    isBeingCreated: false,
+  })),
   on(createRoleFailureAction, (s) => ({...s, isBeingCreated: false})),
   on(removeRoleSuccessAction, (s, a) => roleAdapter.removeOne(a.roleId, s)),
   on(renameRoleSuccessAction, (s, {role}) =>

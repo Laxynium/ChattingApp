@@ -4,7 +4,6 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {MembersService} from 'src/app/home/groups/services/members.service';
-import {RolesService} from 'src/app/home/groups/services/roles.service';
 import {
   addRoleToMemberAction,
   addRoleToMemberFailureAction,

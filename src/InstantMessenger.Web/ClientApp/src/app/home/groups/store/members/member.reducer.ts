@@ -32,7 +32,7 @@ export const membersReducer = createReducer(
   on(getMembersSuccessAction, (s, {members}) => ({
     ...memberAdapter.setAll(
       members.map((m) => ({
-        memberId: `${m.groupId}_${m.userId}`,
+        memberId: m.memberId,
         groupId: m.groupId,
         userId: m.userId,
         avatar: m.avatar,
