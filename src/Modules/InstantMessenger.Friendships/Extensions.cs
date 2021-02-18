@@ -13,6 +13,7 @@ using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
+using InstantMessenger.Shared.Mvc;
 using InstantMessenger.Shared.Outbox;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -37,13 +38,9 @@ namespace InstantMessenger.Friendships
                 .AddIntegrationEventDispatcher()
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
-                .AddDbContext<FriendshipsContext>(x =>
-                {
-                    using var provider = services.BuildServiceProvider();
-                    using var scope = provider.CreateScope();
-                    var connectionString = scope.ServiceProvider.GetService<IConfiguration>().GetConnectionString("InstantMessengerDb");
-                    x.UseSqlServer(connectionString, x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Friendships"));
-                })
+                .AddDbContext<FriendshipsContext>((provider, builder) => builder.UseSqlServer(
+                    provider.GetConnectionString("InstantMessengerDb"),
+                    x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Friendships")))
                 .AddSingleton<FriendshipsModuleFacade>()
                 .AddUnitOfWork<FriendshipsContext, DomainEventsMapper>(outbox: true)
                 .AddScoped<IInvitationRepository, InvitationRepository>()

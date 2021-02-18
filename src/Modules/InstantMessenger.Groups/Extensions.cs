@@ -38,13 +38,13 @@ namespace InstantMessenger.Groups
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<GroupsContext>(
-                    o => o.UseSqlServer(
-                        services.GetConnectionString("InstantMessengerDb"),
+                    (provider, o) => o.UseSqlServer(
+                        provider.GetConnectionString("InstantMessengerDb"),
                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Groups")
                     )
                 )
-                .AddDbContext<GroupsViewContext>(o => o.UseSqlServer(
-                        services.GetConnectionString("InstantMessengerDb"),
+                .AddDbContext<GroupsViewContext>((provider,o) => o.UseSqlServer(
+                        provider.GetConnectionString("InstantMessengerDb"),
                         x => x.MigrationsHistoryTable("__EFMigrationsHistory_Views", "Groups")
                     )
                 )

@@ -10,6 +10,7 @@ using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Messages.Events;
 using InstantMessenger.Shared.Messages.Queries;
 using InstantMessenger.Shared.Modules;
+using InstantMessenger.Shared.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,19 +34,15 @@ namespace InstantMessenger.PrivateMessages
                 .AddModuleRequests()
                 .AddExceptionMapper<ExceptionMapper>()
                 .AddDbContext<PrivateMessagesContext>(
-                    o =>
+                    (provider, o) =>
                     {
-                        using var provider = services.BuildServiceProvider();
-                        using var scope = provider.CreateScope();
-                        var connectionString = scope.ServiceProvider.GetService<IConfiguration>()
-                            .GetConnectionString("InstantMessengerDb");
                         o.UseSqlServer(
-                            connectionString,
+                            provider.GetConnectionString("InstantMessengerDb"),
                             x => x.MigrationsHistoryTable("__EFMigrationsHistory", "PrivateMessages")
                         );
                     }
                 )
-                .AddUnitOfWork<PrivateMessagesContext,DomainEventMapper>(outbox: true)
+                .AddUnitOfWork<PrivateMessagesContext, DomainEventMapper>(outbox: true)
                 .AddScoped<IConversationRepository, ConversationRepository>()
                 .AddScoped<IMessageRepository, MessageRepository>();
             return services;

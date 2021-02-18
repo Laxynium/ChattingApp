@@ -37,7 +37,7 @@ namespace InstantMessenger.Identity
             var identityOptions = services.GetOptions<IdentityOptions>(nameof(IdentityOptions));
             var hubPaths = services.GetOptions<List<string>>("HubEndpoints");
             services.AddSingleton(identityOptions);
-            
+
             services.AddCors(
                 c =>
                 {
@@ -78,9 +78,9 @@ namespace InstantMessenger.Identity
                             {
                                 hubPaths.Where(hubPath => path.StartsWithSegments(hubPath))
                                     .ToList()
-                                    .ForEach(x=>context.Token = accessToken);
+                                    .ForEach(x => context.Token = accessToken);
                             }
-                            
+
                             return Task.CompletedTask;
                         }
                     };
@@ -101,15 +101,13 @@ namespace InstantMessenger.Identity
                 .AddHttpContextAccessor()
                 .AddMemoryCache()
                 .AddDbContext<IdentityContext>(
-                    o =>
+                    (provider, o) =>
                     {
-                        using var provider = services.BuildServiceProvider();
-                        using var scope = provider.CreateScope();
-                        var connectionString = scope.ServiceProvider.GetService<IConfiguration>().GetConnectionString("InstantMessengerDb");
-                        o.UseSqlServer(connectionString, x=>x.MigrationsHistoryTable("__EFMigrationsHistory", "Identity"));
+                        o.UseSqlServer(provider.GetConnectionString("InstantMessengerDb"),
+                            x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Identity"));
                     }
                 )
-                .AddUnitOfWork<IdentityContext,DomainEventMapper>(outbox: true)
+                .AddUnitOfWork<IdentityContext, DomainEventMapper>(outbox: true)
                 .AddScoped<IUniqueEmailRule, UniqueEmailRule>()
                 .AddScoped<IUniqueNicknameRule, UniqueNicknameRule>()
                 .AddScoped<IUserRepository, UserRepository>()
@@ -127,11 +125,13 @@ namespace InstantMessenger.Identity
         public static IApplicationBuilder UseIdentityModule(this IApplicationBuilder app)
         {
             app.UseCors();
-            app.UseAuthentication(); 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseModuleRequests()
-                .Subscribe<MeQuery>("/identity/me", async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q))
-                .Subscribe<GetUserQuery>("/identity/users", async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q));
+                .Subscribe<MeQuery>("/identity/me",
+                    async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q))
+                .Subscribe<GetUserQuery>("/identity/users",
+                    async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q));
             return app;
         }
     }
