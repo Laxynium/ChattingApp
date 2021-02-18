@@ -7,10 +7,7 @@ import {first} from 'rxjs/operators';
 import {generateInvitationAction} from 'src/app/home/groups/store/invitations/actions';
 import {currentInvitationSelector} from 'src/app/home/groups/store/invitations/selectors';
 import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
-import {
-  ExpirationTimeType,
-  UsageCounterType,
-} from 'src/app/home/groups/store/types/invitation';
+import {ExpirationTimeType, UsageCounterType} from "src/app/home/groups/store/invitations/reducer";
 
 @Component({
   selector: 'app-generate-invitation',

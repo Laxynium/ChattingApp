@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
+import {AllowedAction} from "src/app/home/groups/store/access-control/reducer";
 
 export enum ActionTypes {
   GET_ALLOWED_ACTIONS = '[Groups] Get allowed actions',

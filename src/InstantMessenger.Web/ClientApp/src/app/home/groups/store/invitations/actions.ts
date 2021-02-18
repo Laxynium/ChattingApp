@@ -1,9 +1,6 @@
 import {createAction, props} from '@ngrx/store';
-import {
-  ExpirationTimeType,
-  InvitationDto,
-  UsageCounterType,
-} from 'src/app/home/groups/store/types/invitation';
+import {ExpirationTimeType, Invitation, UsageCounterType} from "src/app/home/groups/store/invitations/reducer";
+
 
 export enum ActionTypes {
   GENERATE_INVITATION = '[Groups] Generate invitation',
@@ -59,7 +56,7 @@ export const getInvitationsAction = createAction(
 );
 export const getInvitationsSuccessAction = createAction(
   ActionTypes.GET_INVITATIONS_SUCCESS,
-  props<{invitations: InvitationDto[]}>()
+  props<{invitations: Invitation[]}>()
 );
 export const getInvitationsFailureAction = createAction(
   ActionTypes.GET_INVITATIONS_FAILURE

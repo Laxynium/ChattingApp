@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {MemberDto} from 'src/app/home/groups/store/types/member';
+import {Member} from "src/app/home/groups/store/members/member.reducer";
 
 @Component({
   selector: 'ngbd-modal-confirm',
@@ -23,7 +23,7 @@ import {MemberDto} from 'src/app/home/groups/store/types/member';
   `,
 })
 export class ManageMemberRolesModal implements OnInit {
-  @Input() member: MemberDto;
+  @Input() member: Member;
   constructor(public modal: NgbActiveModal) {}
   ngOnInit(): void {}
 }

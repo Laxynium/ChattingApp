@@ -5,7 +5,7 @@ import {messageReducer, MessagesState} from 'src/app/home/groups/store/messages/
 import {
   invitationReducer,
   InvitationsState,
-} from "src/app/home/groups/store/invitations/invitation.reducer";
+} from "src/app/home/groups/store/invitations/reducer";
 import {
   reducer as roleOverrideReducer,
   RolePermissionOverridesState,

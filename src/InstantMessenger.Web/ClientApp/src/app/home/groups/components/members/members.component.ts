@@ -13,7 +13,7 @@ import {
   membersSelector,
 } from 'src/app/home/groups/store/members/selectors';
 import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
-import {MemberDto} from 'src/app/home/groups/store/types/member';
+import {Member} from "src/app/home/groups/store/members/member.reducer";
 
 @Component({
   selector: 'app-members',
@@ -21,7 +21,7 @@ import {MemberDto} from 'src/app/home/groups/store/types/member';
   styleUrls: ['./members.component.scss'],
 })
 export class MembersComponent implements OnInit {
-  $members: Observable<MemberDto[]>;
+  $members: Observable<Member[]>;
   $membersLoading: Observable<boolean>;
   constructor(private store: Store, private modal: NgbModal) {
     this.$members = this.store.pipe(select(membersSelector));
@@ -39,12 +39,12 @@ export class MembersComponent implements OnInit {
         this.store.dispatch(getMembersAction({groupId: g.groupId}));
       });
   }
-  kickMember(member: MemberDto) {
+  kickMember(member: Member) {
     this.store.dispatch(
       kickMemberAction({groupId: member.groupId, userId: member.userId, memberId: member.memberId})
     );
   }
-  openManageMemberRoles(member: MemberDto) {
+  openManageMemberRoles(member: Member) {
     const modalRef = this.modal.open(ManageMemberRolesModal);
     modalRef.componentInstance.member = member;
   }

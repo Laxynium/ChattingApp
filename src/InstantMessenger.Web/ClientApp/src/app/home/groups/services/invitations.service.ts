@@ -2,11 +2,11 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {concatMap} from 'rxjs/operators';
-import {
-  GenerateInvitationRequest,
-  InvitationDto,
-} from 'src/app/home/groups/store/types/invitation';
 import {environment} from 'src/environments/environment';
+import {
+  ExpirationTimeType,
+  Invitation, UsageCounterType
+} from "src/app/home/groups/store/invitations/reducer";
 
 @Injectable()
 export class InvitationsService {
@@ -41,9 +41,22 @@ export class InvitationsService {
 
   public getInvitations(request: {
     groupId: string;
-  }): Observable<InvitationDto[]> {
-    return this.http.get<InvitationDto[]>(
+  }): Observable<Invitation[]> {
+    return this.http.get<Invitation[]>(
       `${this.groupApi}/${request.groupId}/invitations`
     );
   }
+}
+
+export interface GenerateInvitationRequest {
+  groupId: string;
+  invitationId: string;
+  expirationTime: {
+    type: ExpirationTimeType;
+    period: string;
+  };
+  usageCounter: {
+    type: UsageCounterType;
+    times: number;
+  };
 }

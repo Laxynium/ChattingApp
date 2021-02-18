@@ -8,11 +8,11 @@ import {
   memberOverridesLoadingSelector,
   memberOverridesSelector,
 } from 'src/app/home/groups/store/channels/selectors';
-import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {
   PermissionOverrideDto,
   PermissionOverrideTypeDto,
 } from 'src/app/home/groups/store/types/role-permission-override';
+import {Member} from "src/app/home/groups/store/members/member.reducer";
 
 @Component({
   selector: 'app-member-permission-overrides',
@@ -21,7 +21,7 @@ import {
 })
 export class MemberPermissionOverridesComponent implements OnInit {
   @Input() channel: ChannelDto;
-  @Input() member: MemberDto;
+  @Input() member: Member;
   @Output() overridesChanged = new EventEmitter<PermissionOverrideDto[]>();
   $overridesLoading: Observable<boolean>;
   $overrides: Observable<PermissionOverrideDto[]>;

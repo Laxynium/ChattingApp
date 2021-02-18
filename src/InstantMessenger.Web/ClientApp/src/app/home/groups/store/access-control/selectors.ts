@@ -1,11 +1,11 @@
 import {createSelector} from '@ngrx/store';
 import {Map} from 'immutable';
-import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
-import {allowedActionsStateSelector} from '../selectors';
+import {allowedActionsStateSelector} from 'src/app/home/groups/store/selectors';
 import {
+  AllowedAction,
   allowedActionAdapter,
   AllowedActionsState,
-} from './reducer';
+} from 'src/app/home/groups/store/access-control/reducer';
 
 const selectors = allowedActionAdapter.getSelectors();
 

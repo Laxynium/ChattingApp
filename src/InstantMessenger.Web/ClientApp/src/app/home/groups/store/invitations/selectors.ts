@@ -1,7 +1,10 @@
 import {createSelector} from '@ngrx/store';
-import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {currentGroupSelector, invitationsStateSelector} from "../selectors";
-import {invitationAdapter, InvitationsState} from 'src/app/home/groups/store/invitations/invitation.reducer';
+import {
+  Invitation,
+  invitationAdapter,
+  InvitationsState
+} from 'src/app/home/groups/store/invitations/reducer';
 import {Group} from "src/app/home/groups/store/groups/group.reducer";
 
 const {selectAll} = invitationAdapter.getSelectors();
@@ -17,7 +20,7 @@ export const currentInvitationSelector = createSelector(
 export const invitationsSelector = createSelector(
   invitationsStateSelector,
   currentGroupSelector,
-  (s: InvitationsState,g: Group): InvitationDto[] => selectAll(s).filter(x=>x.groupId == g.id)
+  (s: InvitationsState,g: Group): Invitation[] => selectAll(s).filter(x=>x.groupId == g.id)
 );
 
 export const isInvitationBeingGeneratedSelector = createSelector(

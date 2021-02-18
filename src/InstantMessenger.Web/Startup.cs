@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +10,7 @@ namespace InstantMessenger.Web
     public class Startup
     {
         private const string ClientAppLocation = "ClientApp";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -22,10 +22,7 @@ namespace InstantMessenger.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = $"{ClientAppLocation}/dist";
-            });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = $"{ClientAppLocation}/dist"; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,10 +41,7 @@ namespace InstantMessenger.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            if (!env.IsDevelopment())
-            {
-                app.UseSpaStaticFiles();
-            }
+            if (!env.IsDevelopment()) app.UseSpaStaticFiles();
 
             app.UseSpa(spa =>
             {
@@ -56,10 +50,7 @@ namespace InstantMessenger.Web
 
                 spa.Options.SourcePath = $"{ClientAppLocation}";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                if (env.IsDevelopment()) spa.UseAngularCliServer("start");
             });
         }
     }

@@ -9,7 +9,7 @@ import {
 } from 'src/app/home/groups/store/members/actions';
 
 export interface Member {
-  id: MemberId;
+  memberId: MemberId;
   groupId: GroupId;
   userId: UserId;
   name: string;
@@ -19,7 +19,7 @@ export interface Member {
 }
 
 export const memberAdapter = createEntityAdapter<Member>({
-  selectId: (x) => x.id,
+  selectId: (x) => x.memberId,
 });
 
 export interface MembersState extends EntityState<Member> {
@@ -32,7 +32,7 @@ export const membersReducer = createReducer(
   on(getMembersSuccessAction, (s, {members}) => ({
     ...memberAdapter.setAll(
       members.map((m) => ({
-        id: `${m.groupId}_${m.userId}`,
+        memberId: `${m.groupId}_${m.userId}`,
         groupId: m.groupId,
         userId: m.userId,
         avatar: m.avatar,

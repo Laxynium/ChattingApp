@@ -4,8 +4,8 @@ import {Set} from 'immutable';
 import {Observable} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
 import {GroupDto} from 'src/app/home/groups/services/responses/group.dto';
-import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
 import {environment} from 'src/environments/environment';
+import {AllowedAction} from "src/app/home/groups/store/access-control/reducer";
 
 @Injectable()
 export class GroupsService {

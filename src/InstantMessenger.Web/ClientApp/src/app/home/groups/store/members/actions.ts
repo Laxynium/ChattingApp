@@ -1,7 +1,7 @@
 import {createAction, props} from '@ngrx/store';
-import {MemberDto} from 'src/app/home/groups/store/types/member';
 import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Member} from "src/app/home/groups/store/members/member.reducer";
 
 export enum ActionTypes {
   GET_MEMBERS = '[Groups] Get members',
@@ -31,7 +31,7 @@ export const getMembersAction = createAction(
 );
 export const getMembersSuccessAction = createAction(
   ActionTypes.GET_MEMBERS_SUCCESS,
-  props<{members: MemberDto[]}>()
+  props<{members: Member[]}>()
 );
 export const getMembersFailureAction = createAction(
   ActionTypes.GET_MEMBERS_FAILURE

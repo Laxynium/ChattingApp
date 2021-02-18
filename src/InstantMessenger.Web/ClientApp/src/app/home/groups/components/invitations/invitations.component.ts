@@ -11,9 +11,9 @@ import {invitationsSelector} from 'src/app/home/groups/store/invitations/selecto
 import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
 import {
   ExpirationTimeType,
-  InvitationDto,
-  UsageCounterType,
-} from 'src/app/home/groups/store/types/invitation';
+  Invitation,
+  UsageCounterType
+} from "src/app/home/groups/store/invitations/reducer";
 
 @Component({
   selector: 'app-invitations',
@@ -23,7 +23,7 @@ import {
 export class InvitationsComponent implements OnInit {
   ExpirationType = ExpirationTimeType;
   CounterType = UsageCounterType;
-  $invitations: Observable<InvitationDto[]>;
+  $invitations: Observable<Invitation[]>;
   constructor(private store: Store) {
     this.$invitations = this.store.pipe(select(invitationsSelector));
   }

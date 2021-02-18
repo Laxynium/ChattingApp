@@ -1,8 +1,9 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {InvitationDto} from 'src/app/home/groups/store/types/invitation';
 import {createReducer, on} from '@ngrx/store';
 import {
-  generateInvitationAction, generateInvitationFailureAction, generateInvitationSuccessAction,
+  generateInvitationAction,
+  generateInvitationFailureAction,
+  generateInvitationSuccessAction,
   getInvitationsSuccessAction,
   revokeInvitationSuccessAction,
 } from 'src/app/home/groups/store/invitations/actions';
@@ -14,12 +15,37 @@ export interface GeneratedInvitation {
   isBeingGenerated: boolean;
 }
 
-export interface InvitationsState extends EntityState<InvitationDto> {
+export enum ExpirationTimeType {
+  INFINITE = 'Infinite',
+  BOUNDED = 'Bounded',
+}
+
+export enum UsageCounterType {
+  INFINITE = 'Infinite',
+  BOUNDED = 'Bounded',
+}
+
+export interface Invitation {
+  groupId: string;
+  invitationId: string;
+  code: string;
+  expirationTime: {
+    type: ExpirationTimeType;
+    start: string;
+    period: string;
+  };
+  usageCounter: {
+    type: UsageCounterType;
+    value: number;
+  };
+}
+
+export interface InvitationsState extends EntityState<Invitation> {
   isLoading: boolean;
   generated: GeneratedInvitation | null;
 }
 
-export const invitationAdapter = createEntityAdapter<InvitationDto>({
+export const invitationAdapter = createEntityAdapter<Invitation>({
   selectId: (x) => x.invitationId,
 });
 export const invitationReducer = createReducer(

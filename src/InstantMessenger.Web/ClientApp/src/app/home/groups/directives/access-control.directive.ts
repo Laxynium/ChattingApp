@@ -10,9 +10,8 @@ import {
 import {Store} from '@ngrx/store';
 import {Map} from 'immutable';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
 import {allowedActionsSelector} from 'src/app/home/groups/store/access-control/selectors';
-import {AllowedAction} from 'src/app/home/groups/store/types/allowed-action';
+import {AllowedAction} from "src/app/home/groups/store/access-control/reducer";
 
 @Directive({
   selector: '[accessControl]',

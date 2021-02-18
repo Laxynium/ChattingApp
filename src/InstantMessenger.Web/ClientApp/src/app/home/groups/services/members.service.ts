@@ -1,12 +1,12 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
-import {MemberDto} from 'src/app/home/groups/store/types/member';
+import {switchMap} from 'rxjs/operators';
 import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
 import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {UserInterface} from 'src/app/shared/types/user.interface';
 import {environment} from 'src/environments/environment';
+import {Member} from "src/app/home/groups/store/members/member.reducer";
 
 @Injectable()
 export class MembersService {
@@ -17,8 +17,8 @@ export class MembersService {
   }
   constructor(private http: HttpClient) {}
 
-  public getMembers(r: {groupId: string}): Observable<MemberDto[]> {
-    return this.http.get<MemberDto[]>(`${this.membersApi(r.groupId)}`).pipe(
+  public getMembers(r: {groupId: string}): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.membersApi(r.groupId)}`).pipe(
       switchMap((members) => {
         if (members.length == 0) return of([]);
 
@@ -28,7 +28,7 @@ export class MembersService {
               .get<UserInterface>(`${this.identityUrl}/users/${m.userId}`)
               .pipe(
                 switchMap((u) =>
-                  of<MemberDto>({
+                  of<Member>({
                     groupId: m.groupId,
                     userId: m.userId,
                     memberId: m.memberId,
