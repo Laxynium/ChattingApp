@@ -1,9 +1,15 @@
 import {createSelector} from '@ngrx/store';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {rolePermissionsStateSelector, rolesStateSelector} from 'src/app/home/groups/store/selectors';
-import {roleAdapter, RolesState} from 'src/app/home/groups/store/roles/role.redcuer';
 import {
+  rolePermissionsStateSelector,
+  rolesStateSelector,
+} from 'src/app/home/groups/store/selectors';
+import {
+  Role,
+  roleAdapter,
+  RolesState,
+} from 'src/app/home/groups/store/roles/role.redcuer';
+import {
+  RolePermission,
   rolePermissionAdapter,
   RolePermissionsState,
 } from '../roles/role.permission.reducer';
@@ -12,7 +18,7 @@ const {selectAll} = roleAdapter.getSelectors();
 const rolePermissionSelectors = rolePermissionAdapter.getSelectors();
 export const rolesSelector = createSelector(
   rolesStateSelector,
-  (s: RolesState): RoleDto[] =>
+  (s: RolesState): Role[] =>
     selectAll(s)
       .slice()
       .sort((a, b) => {
@@ -29,14 +35,8 @@ export const creatingRoleSelector = createSelector(
 
 export const rolePermissionsSelector = createSelector(
   rolePermissionsStateSelector,
-  (s: RolePermissionsState): PermissionDto[] =>
-    rolePermissionSelectors.selectAll(s).map((x) => ({
-      roleId: x.roleId,
-      name: x.name,
-      code: x.code,
-      isOn: x.isOn,
-      groupId: x.groupId,
-    }))
+  (s: RolePermissionsState): RolePermission[] =>
+    rolePermissionSelectors.selectAll(s)
 );
 
 export const rolePermissionsLoadingSelector = createSelector(

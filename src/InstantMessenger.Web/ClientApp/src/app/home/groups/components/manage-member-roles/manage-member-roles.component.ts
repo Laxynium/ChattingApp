@@ -10,8 +10,8 @@ import {
 import {memberRolesSelector} from 'src/app/home/groups/store/members/selectors';
 import {getRolesAction} from 'src/app/home/groups/store/roles/actions';
 import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {Member} from "src/app/home/groups/store/members/member.reducer";
+import {Member} from 'src/app/home/groups/store/members/member.reducer';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 @Component({
   selector: 'app-manage-member-roles',
@@ -19,10 +19,10 @@ import {Member} from "src/app/home/groups/store/members/member.reducer";
   styleUrls: ['./manage-member-roles.component.scss'],
 })
 export class ManageMemberRolesComponent implements OnInit {
-  selectedRole: RoleDto;
+  selectedRole: Role;
   @Input() member: Member;
-  $memberRoles: Observable<RoleDto[]>;
-  $rolesToPick: Observable<RoleDto[]>;
+  $memberRoles: Observable<Role[]>;
+  $rolesToPick: Observable<Role[]>;
 
   constructor(private store: Store) {
     this.$memberRoles = this.store.pipe(select(memberRolesSelector));
@@ -56,26 +56,22 @@ export class ManageMemberRolesComponent implements OnInit {
     if (!this.selectedRole) return;
     this.store.dispatch(
       addRoleToMemberAction({
-        memberRole: {
-          memberId: this.member.memberId,
-          userId: this.member.userId,
-          groupId: this.member.groupId,
-          role: this.selectedRole,
-        },
+        userId: this.member.userId,
+        groupId: this.member.groupId,
+        memberId: this.member.memberId,
+        roleId: this.selectedRole.roleId,
       })
     );
     this.selectedRole = null;
   }
 
-  removeRoleFromMember(role: RoleDto) {
+  removeRoleFromMember(role: Role) {
     this.store.dispatch(
       removeRoleFromMemberAction({
-        memberRole: {
-          memberId: this.member.memberId,
-          userId: this.member.userId,
-          groupId: this.member.groupId,
-          role: role,
-        },
+        groupId: this.member.groupId,
+        memberId: this.member.memberId,
+        userId: this.member.userId,
+        roleId: role.roleId
       })
     );
   }

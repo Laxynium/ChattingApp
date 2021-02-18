@@ -7,8 +7,8 @@ import {
   rolePermissionsLoadingSelector,
   rolePermissionsSelector,
 } from 'src/app/home/groups/store/roles/selectors';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
+import {RolePermission} from "src/app/home/groups/store/roles/role.permission.reducer";
 
 @Component({
   selector: 'app-manage-role-permissions',
@@ -16,10 +16,10 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
   styleUrls: ['./manage-role-permissions.component.scss'],
 })
 export class ManageRolePermissionsComponent implements OnInit {
-  @Input() role: RoleDto;
-  @Output() rolePermissionsChanged = new EventEmitter<PermissionDto[]>();
-  $permissions: Observable<PermissionDto[]>;
-  updatedPermissions: PermissionDto[] = [];
+  @Input() role: Role;
+  @Output() rolePermissionsChanged = new EventEmitter<RolePermission[]>();
+  $permissions: Observable<RolePermission[]>;
+  updatedPermissions: RolePermission[] = [];
   $permissionsLoading: Observable<boolean>;
   constructor(private store: Store) {
     this.$permissions = this.store.pipe(select(rolePermissionsSelector));
@@ -37,7 +37,7 @@ export class ManageRolePermissionsComponent implements OnInit {
     );
   }
 
-  onPermissionChange(event: boolean, permission: PermissionDto) {
+  onPermissionChange(event: boolean, permission: RolePermission) {
     console.log(event, permission);
     this.$permissions.pipe(first()).subscribe(() => {
       const permIdx = this.updatedPermissions.findIndex(

@@ -3,10 +3,8 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
 import {updateChannelRolePermissionOverridesAction} from 'src/app/home/groups/store/channels/actions';
-import {updateRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
+import {RolePermissionOverride} from "src/app/home/groups/store/channels/channel.override.role.reducer";
 
 @Component({
   selector: 'ngbd-manage-role-permissions-modal',
@@ -50,8 +48,8 @@ import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permis
   `,
 })
 export class RolePermissionOverridesModal implements OnInit {
-  private changedOverrides: PermissionOverrideDto[] = [];
-  @Input() role: RoleDto;
+  private changedOverrides: RolePermissionOverride[] = [];
+  @Input() role: Role;
   @Input() channel: ChannelDto;
   constructor(public modal: NgbActiveModal, private store: Store) {}
   ngOnInit(): void {}

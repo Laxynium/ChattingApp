@@ -15,22 +15,6 @@ export interface MemberRole {
   groupId: GroupId;
   userId: UserId;
   roleId: RoleId;
-  name: string;
-  priority: number;
-}
-
-class MemberRoleBase implements MemberRole {
-  id: string;
-  userId: UserId;
-  memberId: MemberId;
-  groupId: GroupId;
-  roleId: RoleId;
-  name: string;
-  priority: number;
-
-  constructor() {
-    this.id = `${this.name}_${this.roleId}_${this.memberId}`;
-  }
 }
 
 export const memberRoleAdapter = createEntityAdapter<MemberRole>({
@@ -63,20 +47,18 @@ export const memberRolesReducer = createReducer(
   on(addRoleToMemberSuccessAction, (s, a) => ({
     ...memberRoleAdapter.upsertOne(
       {
-        id: `${a.memberRole.role.name}_${a.memberRole.role.roleId}_${a.memberRole.memberId}`,
-        memberId: a.memberRole.memberId,
-        groupId: a.memberRole.groupId,
-        roleId: a.memberRole.role.roleId,
-        priority: a.memberRole.role.priority,
-        name: a.memberRole.role.name,
-        userId: a.memberRole.userId,
+        id: `${a.roleId}_${a.memberId}`,
+        memberId: a.memberId,
+        groupId: a.groupId,
+        userId: a.userId,
+        roleId: a.roleId,
       },
       s
     ),
   })),
   on(removeRoleFromMemberSuccessAction, (s, a) => ({
     ...memberRoleAdapter.removeOne(
-      `${a.memberRole.role.name}_${a.memberRole.role.roleId}_${a.memberRole.memberId}`,
+      `${a.roleId}_${a.memberId}`,
       s
     ),
   }))

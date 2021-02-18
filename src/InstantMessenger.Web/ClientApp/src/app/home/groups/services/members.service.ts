@@ -2,11 +2,11 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {UserInterface} from 'src/app/shared/types/user.interface';
 import {environment} from 'src/environments/environment';
 import {Member} from "src/app/home/groups/store/members/member.reducer";
+import {GroupId, RoleId, UserId} from "src/app/home/groups/store/types";
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 @Injectable()
 export class MembersService {
@@ -49,25 +49,25 @@ export class MembersService {
     return this.http.delete(`${this.membersApi(r.groupId)}/${r.userId}/kick`);
   }
 
-  public addRoleToMember(r: MemberRoleDto): Observable<Object> {
+  public addRoleToMember(r: {groupId: GroupId, userId: UserId,roleId: RoleId}): Observable<Object> {
     return this.http.post(`${this.membersApi(r.groupId)}/${r.userId}/roles`, {
       groupId: r.groupId,
       memberUserId: r.userId,
-      roleId: r.role.roleId,
+      roleId: r.roleId,
     });
   }
 
-  public removeRoleFromMember(r: MemberRoleDto): Observable<Object> {
+  public removeRoleFromMember(r: {groupId: GroupId, userId: UserId, roleId: RoleId}): Observable<Object> {
     return this.http.delete(
-      `${this.membersApi(r.groupId)}/${r.userId}/roles/${r.role.roleId}`
+      `${this.membersApi(r.groupId)}/${r.userId}/roles/${r.roleId}`
     );
   }
 
   public getMemberRoles(r: {
     groupId: string;
     userId: string;
-  }): Observable<RoleDto[]> {
-    return this.http.get<RoleDto[]>(
+  }): Observable<Role[]> {
+    return this.http.get<Role[]>(
       `${this.membersApi(r.groupId)}/${r.userId}/roles`
     );
   }

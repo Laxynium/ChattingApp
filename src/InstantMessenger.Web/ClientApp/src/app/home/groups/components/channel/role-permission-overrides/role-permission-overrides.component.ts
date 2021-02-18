@@ -8,11 +8,9 @@ import {
   roleOverridesLoadingSelector,
   roleOverridesSelector,
 } from 'src/app/home/groups/store/channels/selectors';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {
-  PermissionOverrideDto,
-  PermissionOverrideTypeDto,
-} from 'src/app/home/groups/store/types/role-permission-override';
+import {Role} from 'src/app/home/groups/store/roles/role.redcuer';
+import {RolePermissionOverride} from 'src/app/home/groups/store/channels/channel.override.role.reducer';
+import {PermissionOverrideType} from 'src/app/home/groups/store/types';
 
 @Component({
   selector: 'app-role-permission-overrides',
@@ -21,14 +19,14 @@ import {
 })
 export class RolePermissionOverridesComponent implements OnInit {
   @Input() channel: ChannelDto;
-  @Input() role: RoleDto;
-  @Output() overridesChanged = new EventEmitter<PermissionOverrideDto[]>();
+  @Input() role: Role;
+  @Output() overridesChanged = new EventEmitter<RolePermissionOverride[]>();
   $overridesLoading: Observable<boolean>;
-  $overrides: Observable<PermissionOverrideDto[]>;
+  $overrides: Observable<RolePermissionOverride[]>;
 
-  OverrideType = PermissionOverrideTypeDto;
+  OverrideType = PermissionOverrideType;
 
-  updateOverrides: PermissionOverrideDto[] = [];
+  updateOverrides: RolePermissionOverride[] = [];
 
   constructor(private store: Store) {
     this.$overrides = this.store.pipe(select(roleOverridesSelector));
@@ -49,15 +47,25 @@ export class RolePermissionOverridesComponent implements OnInit {
 
   onOverrideChange(event) {
     const name = event.target.name;
-    const value: PermissionOverrideTypeDto = event.target.value;
+    const value: PermissionOverrideType = event.target.value;
     this.$overrides.pipe(first()).subscribe((os) => {
       const permIdx = this.updateOverrides.findIndex(
         (x) => x.permission == name
       );
       if (permIdx == -1) {
-        this.updateOverrides.push({permission: name, type: value});
+        this.updateOverrides.push({
+          permission: name,
+          type: value,
+          roleId: this.role.roleId,
+          channelId: this.channel.channelId,
+        });
       } else {
-        this.updateOverrides[permIdx] = {permission: name, type: value};
+        this.updateOverrides[permIdx] = {
+          permission: name,
+          type: value,
+          roleId: this.role.roleId,
+          channelId: this.channel.channelId,
+        };
       }
       const original = os.find((o) => o.permission == name);
       if (original.type == value) {
@@ -69,15 +77,4 @@ export class RolePermissionOverridesComponent implements OnInit {
       this.overridesChanged.emit(this.updateOverrides);
     });
   }
-}
-
-interface OverrideDto {
-  permissionName: string;
-  state: OverrideState;
-}
-
-enum OverrideState {
-  Deny,
-  Neutral,
-  Allow,
 }

@@ -13,7 +13,7 @@ import {
 } from 'src/app/home/groups/store/roles/actions';
 import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
 import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 @Component({
   selector: 'app-roles',
@@ -21,7 +21,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
   styleUrls: ['./roles.component.scss'],
 })
 export class RolesComponent implements OnInit {
-  $roles: Observable<RoleDto[]>;
+  $roles: Observable<Role[]>;
   constructor(private store: Store, private modal: NgbModal) {
     this.$roles = this.store.pipe(select(rolesSelector));
   }
@@ -38,7 +38,7 @@ export class RolesComponent implements OnInit {
       });
   }
 
-  goToRolePermissions(role: RoleDto) {
+  goToRolePermissions(role: Role) {
     const modalRef = this.modal.open(ManageRolePermissionsModal, {
       scrollable: true,
       beforeDismiss: () => {
@@ -48,24 +48,24 @@ export class RolesComponent implements OnInit {
     modalRef.componentInstance.role = role;
   }
 
-  moveUp(role: RoleDto) {
+  moveUp(role: Role) {
     this.store.dispatch(
       moveUpRoleAction({groupId: role.groupId, roleId: role.roleId})
     );
   }
 
-  moveDown(role: RoleDto) {
+  moveDown(role: Role) {
     this.store.dispatch(
       moveDownRoleAction({groupId: role.groupId, roleId: role.roleId})
     );
   }
 
-  removeRole(role: RoleDto) {
+  removeRole(role: Role) {
     this.store.dispatch(
       removeRoleAction({groupId: role.groupId, roleId: role.roleId})
     );
   }
-  openRenameRoleModal(role: RoleDto) {
+  openRenameRoleModal(role: Role) {
     const modal = this.modal.open(RenameRoleModal);
     modal.componentInstance.role = role;
   }

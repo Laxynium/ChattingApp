@@ -3,7 +3,7 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {renameRoleAction} from 'src/app/home/groups/store/roles/actions';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 @Component({
   selector: 'app-rename-role',
@@ -11,7 +11,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
   styleUrls: ['./rename-role.component.scss'],
 })
 export class RenameRoleComponent implements OnInit {
-  @Input() role: RoleDto;
+  @Input() role: Role;
 
   form: FormGroup;
   $renamingRole: Observable<boolean>;

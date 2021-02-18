@@ -1,4 +1,3 @@
-import {MessageDto} from '../store/types/message';
 import {removeGroupSuccessAction} from 'src/app/home/groups/store/groups/actions';
 import {
   Hub,
@@ -9,9 +8,9 @@ import {sendMessageSuccessAction} from 'src/app/home/groups/store/messages/actio
 import {getMemberRolesAction} from 'src/app/home/groups/store/members/actions';
 import {getRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
 import {getAllowedActionsAction} from 'src/app/home/groups/store/access-control/actions';
-import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
 import {getInvitationsAction} from 'src/app/home/groups/store/invitations/actions';
 import {getChannelsAction} from 'src/app/home/groups/store/channels/actions';
+import {Message} from "src/app/home/groups/store/messages/message.reducer";
 
 interface GroupDto {
   groupId: string;
@@ -54,6 +53,16 @@ interface MemberRoleDto {
   role: RoleDto;
 }
 
+enum PermissionOverrideType {
+  Allow = 'Allow',
+  Deny = 'Deny',
+  Neutral = 'Neutral',
+}
+interface PermissionOverrideDto {
+  permission: string;
+  type: PermissionOverrideType;
+}
+
 interface RolePermissionOverridesDto {
   groupId: string;
   channelId: string;
@@ -87,7 +96,7 @@ const onChannelCreated: HubMethod<ChannelDto> = (store, data) => {
 const onChannelRemoved: HubMethod<ChannelDto> = (store, data) => {
   store.dispatch(getChannelsAction({groupId: data.groupId}));
 };
-const onMessageCreated: HubMethod<MessageDto> = (store, data) => {
+const onMessageCreated: HubMethod<Message> = (store, data) => {
   store.dispatch(sendMessageSuccessAction({message: data}));
 };
 

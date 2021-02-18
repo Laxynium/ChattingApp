@@ -8,11 +8,9 @@ import {
   memberOverridesLoadingSelector,
   memberOverridesSelector,
 } from 'src/app/home/groups/store/channels/selectors';
-import {
-  PermissionOverrideDto,
-  PermissionOverrideTypeDto,
-} from 'src/app/home/groups/store/types/role-permission-override';
-import {Member} from "src/app/home/groups/store/members/member.reducer";
+import {Member} from 'src/app/home/groups/store/members/member.reducer';
+import {MemberPermissionOverride} from 'src/app/home/groups/store/channels/channel.override.member.reducer';
+import {PermissionOverrideType} from 'src/app/home/groups/store/types';
 
 @Component({
   selector: 'app-member-permission-overrides',
@@ -22,13 +20,13 @@ import {Member} from "src/app/home/groups/store/members/member.reducer";
 export class MemberPermissionOverridesComponent implements OnInit {
   @Input() channel: ChannelDto;
   @Input() member: Member;
-  @Output() overridesChanged = new EventEmitter<PermissionOverrideDto[]>();
+  @Output() overridesChanged = new EventEmitter<MemberPermissionOverride[]>();
   $overridesLoading: Observable<boolean>;
-  $overrides: Observable<PermissionOverrideDto[]>;
+  $overrides: Observable<MemberPermissionOverride[]>;
 
-  OverrideType = PermissionOverrideTypeDto;
+  OverrideType = PermissionOverrideType;
 
-  updateOverrides: PermissionOverrideDto[] = [];
+  updateOverrides: MemberPermissionOverride[] = [];
 
   constructor(private store: Store) {
     this.$overrides = this.store.pipe(select(memberOverridesSelector));
@@ -49,15 +47,25 @@ export class MemberPermissionOverridesComponent implements OnInit {
 
   onOverrideChange(event) {
     const name = event.target.name;
-    const value: PermissionOverrideTypeDto = event.target.value;
+    const value: PermissionOverrideType = event.target.value;
     this.$overrides.pipe(first()).subscribe((os) => {
       const permIdx = this.updateOverrides.findIndex(
         (x) => x.permission == name
       );
       if (permIdx == -1) {
-        this.updateOverrides.push({permission: name, type: value});
+        this.updateOverrides.push({
+          permission: name,
+          type: value,
+          memberUserId: this.member.userId,
+          channelId: this.channel.channelId,
+        });
       } else {
-        this.updateOverrides[permIdx] = {permission: name, type: value};
+        this.updateOverrides[permIdx] = {
+          permission: name,
+          type: value,
+          memberUserId: this.member.userId,
+          channelId: this.channel.channelId,
+        };
       }
       const original = os.find((o) => o.permission == name);
       if (original.type == value) {

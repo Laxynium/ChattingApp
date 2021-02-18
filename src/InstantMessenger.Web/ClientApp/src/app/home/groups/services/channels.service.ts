@@ -3,18 +3,19 @@ import {Injectable} from '@angular/core';
 import {Observable, zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
-import {
-  PermissionOverrideDto,
-  PermissionOverrideTypeDto,
-} from 'src/app/home/groups/store/types/role-permission-override';
 import {environment} from 'src/environments/environment';
+import {RolePermissionOverride} from 'src/app/home/groups/store/channels/channel.override.role.reducer';
+import {MemberPermissionOverride} from 'src/app/home/groups/store/channels/channel.override.member.reducer';
+import {PermissionOverrideType} from 'src/app/home/groups/store/types';
 
 @Injectable()
 export class ChannelsService {
   private groupApi = `${environment.apiUrl}/groups`;
+
   private channelsApi(groupId) {
     return `${this.groupApi}/${groupId}/channels`;
   }
+
   constructor(private http: HttpClient) {}
 
   public createChannel(request: {
@@ -56,7 +57,7 @@ export class ChannelsService {
     groupId: string;
     channelId: string;
     roleId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: RolePermissionOverride[];
   }): Observable<Object> {
     return this.http.put(
       `${this.channelsApi(r.groupId)}/${r.channelId}/permission-overrides/role`,
@@ -68,7 +69,7 @@ export class ChannelsService {
     groupId: string;
     channelId: string;
     memberUserId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: MemberPermissionOverride[];
   }): Observable<Object> {
     return this.http.put(
       `${this.channelsApi(r.groupId)}/${
@@ -82,9 +83,9 @@ export class ChannelsService {
     groupId: string;
     channelId: string;
     roleId: string;
-  }): Observable<PermissionOverrideDto[]> {
+  }): Observable<RolePermissionOverride[]> {
     return zip(
-      this.http.get<PermissionOverrideDto[]>(
+      this.http.get<RolePermissionOverride[]>(
         `${this.channelsApi(r.groupId)}/${
           r.channelId
         }/permission-overrides/role/${r.roleId}`
@@ -95,14 +96,14 @@ export class ChannelsService {
     ).pipe(
       map(([os, ps]) => {
         return ps.reduce(
-          (agg: PermissionOverrideDto[], cur: PermissionResponseDto) => {
+          (agg: RolePermissionOverride[], cur: PermissionResponseDto) => {
             return [
               ...agg,
-              <PermissionOverrideDto>{
+              <RolePermissionOverride>{
                 permission: cur.name,
                 type: os.some((o) => o.permission == cur.name)
                   ? os.find((o) => o.permission == cur.name).type
-                  : PermissionOverrideTypeDto.Neutral,
+                  : PermissionOverrideType.Neutral,
               },
             ];
           },
@@ -116,9 +117,9 @@ export class ChannelsService {
     groupId: string;
     channelId: string;
     memberUserId: string;
-  }): Observable<PermissionOverrideDto[]> {
+  }): Observable<MemberPermissionOverride[]> {
     return zip(
-      this.http.get<PermissionOverrideDto[]>(
+      this.http.get<MemberPermissionOverride[]>(
         `${this.channelsApi(r.groupId)}/${
           r.channelId
         }/permission-overrides/member/${r.memberUserId}`
@@ -129,14 +130,14 @@ export class ChannelsService {
     ).pipe(
       map(([os, ps]) => {
         return ps.reduce(
-          (agg: PermissionOverrideDto[], cur: PermissionResponseDto) => {
+          (agg: MemberPermissionOverride[], cur: PermissionResponseDto) => {
             return [
               ...agg,
-              <PermissionOverrideDto>{
+              <MemberPermissionOverride>{
                 permission: cur.name,
                 type: os.some((o) => o.permission == cur.name)
                   ? os.find((o) => o.permission == cur.name).type
-                  : PermissionOverrideTypeDto.Neutral,
+                  : PermissionOverrideType.Neutral,
               },
             ];
           },
@@ -146,6 +147,7 @@ export class ChannelsService {
     );
   }
 }
+
 interface PermissionResponseDto {
   name: string;
   code: string;

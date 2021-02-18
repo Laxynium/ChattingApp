@@ -1,6 +1,7 @@
 import {createAction, props} from '@ngrx/store';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
-import {PermissionOverrideDto} from 'src/app/home/groups/store/types/role-permission-override';
+import {RolePermissionOverride} from "src/app/home/groups/store/channels/channel.override.role.reducer";
+import {MemberPermissionOverride} from "src/app/home/groups/store/channels/channel.override.member.reducer";
 
 export enum ActionTypes {
   GET_CHANNELS = '[Groups] Get channels',
@@ -103,7 +104,7 @@ export const updateChannelRolePermissionOverridesAction = createAction(
     groupId: string;
     channelId: string;
     roleId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: RolePermissionOverride[];
   }>()
 );
 export const updateChannelRolePermissionOverridesSuccessAction = createAction(
@@ -112,7 +113,7 @@ export const updateChannelRolePermissionOverridesSuccessAction = createAction(
     groupId: string;
     channelId: string;
     roleId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: RolePermissionOverride[];
   }>()
 );
 export const updateChannelRolePermissionOverridesFailureAction = createAction(
@@ -133,7 +134,7 @@ export const getChannelRolePermissionOverridesSuccessAction = createAction(
     groupId: string;
     channelId: string;
     roleId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: RolePermissionOverride[];
   }>()
 );
 export const getChannelRolePermissionOverridesFailureAction = createAction(
@@ -146,7 +147,7 @@ export const updateChannelMemberPermissionOverridesAction = createAction(
     groupId: string;
     channelId: string;
     memberUserId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: MemberPermissionOverride[];
   }>()
 );
 export const updateChannelMemberPermissionOverridesSuccessAction = createAction(
@@ -155,7 +156,7 @@ export const updateChannelMemberPermissionOverridesSuccessAction = createAction(
     groupId: string;
     channelId: string;
     memberUserId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: MemberPermissionOverride[];
   }>()
 );
 export const updateChannelMemberPermissionOverridesFailureAction = createAction(
@@ -176,7 +177,7 @@ export const getChannelMemberPermissionOverridesSuccessAction = createAction(
     groupId: string;
     channelId: string;
     memberUserId: string;
-    overrides: PermissionOverrideDto[];
+    overrides: MemberPermissionOverride[];
   }>()
 );
 export const getChannelMemberPermissionOverridesFailureAction = createAction(

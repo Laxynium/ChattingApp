@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {updateRolePermissionsAction} from 'src/app/home/groups/store/roles/actions';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
+import {RolePermission} from "src/app/home/groups/store/roles/role.permission.reducer";
 
 @Component({
   selector: 'ngbd-manage-role-permissions-modal',
@@ -46,9 +46,9 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
   `,
 })
 export class ManageRolePermissionsModal implements OnInit {
-  private changedRolePermissions: PermissionDto[] = [];
+  private changedRolePermissions: RolePermission[] = [];
   @Input()
-  public role: RoleDto;
+  public role: Role;
   constructor(public modal: NgbActiveModal, private store: Store) {}
   ngOnInit(): void {}
   onPermissionsChanged(event) {

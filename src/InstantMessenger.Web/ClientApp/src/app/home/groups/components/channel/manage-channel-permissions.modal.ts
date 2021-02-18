@@ -11,8 +11,8 @@ import {membersSelector} from 'src/app/home/groups/store/members/selectors';
 import {getRolesAction} from 'src/app/home/groups/store/roles/actions';
 import {rolesSelector} from 'src/app/home/groups/store/roles/selectors';
 import {currentGroupSelector} from 'src/app/home/groups/store/groups/selectors';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {Member} from "src/app/home/groups/store/members/member.reducer";
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 @Component({
   selector: 'ngbd-modal-confirm',
@@ -98,7 +98,7 @@ import {Member} from "src/app/home/groups/store/members/member.reducer";
 export class ManageChannelPermissionsModal implements OnInit {
   @Input() channel: ChannelDto;
   active = 1;
-  $roles: Observable<RoleDto[]>;
+  $roles: Observable<Role[]>;
   $members: Observable<Member[]>;
   constructor(
     public modal: NgbActiveModal,
@@ -128,7 +128,7 @@ export class ManageChannelPermissionsModal implements OnInit {
     modal.componentInstance.member = member;
     modal.componentInstance.channel = this.channel;
   }
-  openManageRolesPermissions(role: RoleDto) {
+  openManageRolesPermissions(role: Role) {
     const modal = this.modalService.open(RolePermissionOverridesModal, {
       scrollable: true,
       beforeDismiss: () => false,

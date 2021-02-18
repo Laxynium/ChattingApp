@@ -1,6 +1,6 @@
 import {createAction, props} from '@ngrx/store';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
+import {RolePermission} from "src/app/home/groups/store/roles/role.permission.reducer";
 
 export enum ActionTypes {
   GET_ROLES = '[Groups] Get roles',
@@ -50,7 +50,7 @@ export const getRolesAction = createAction(
 );
 export const getRolesSuccessAction = createAction(
   ActionTypes.GET_ROLES_SUCCESS,
-  props<{roles: RoleDto[]}>()
+  props<{roles: Role[]}>()
 );
 export const getRolesFailureAction = createAction(
   ActionTypes.GET_ROLES_FAILURE
@@ -62,7 +62,7 @@ export const getRolePermissionsAction = createAction(
 );
 export const getRolePermissionsSuccessAction = createAction(
   ActionTypes.GET_ROLE_PERMISSIONS_SUCCESS,
-  props<{roles: PermissionDto[]}>()
+  props<{roles: RolePermission[]}>()
 );
 export const getRolePermissionsFailureAction = createAction(
   ActionTypes.GET_ROLE_PERMISSIONS_FAILURE
@@ -74,7 +74,7 @@ export const createRoleAction = createAction(
 );
 export const createRoleSuccessAction = createAction(
   ActionTypes.CREATE_ROLE_SUCCESS,
-  props<{role: RoleDto}>()
+  props<{role: Role}>()
 );
 export const createRoleFailureAction = createAction(
   ActionTypes.CREATE_ROLE_FAILURE
@@ -85,7 +85,7 @@ export const updateRolePermissionsAction = createAction(
   props<{
     groupId: string;
     roleId: string;
-    permissions: PermissionDto[];
+    permissions: RolePermission[];
   }>()
 );
 export const updateRolePermissionsSuccessAction = createAction(
@@ -93,7 +93,7 @@ export const updateRolePermissionsSuccessAction = createAction(
   props<{
     groupId: string;
     roleId: string;
-    permissions: PermissionDto[];
+    permissions: RolePermission[];
   }>()
 );
 export const updateRolePermissionsFailureAction = createAction(
@@ -114,11 +114,11 @@ export const removeRoleFailureAction = createAction(
 
 export const renameRoleAction = createAction(
   ActionTypes.RENAME_ROLE,
-  props<{role: RoleDto}>()
+  props<{role: Role}>()
 );
 export const renameRoleSuccessAction = createAction(
   ActionTypes.RENAME_ROLE_SUCCESS,
-  props<{role: RoleDto}>()
+  props<{role: Role}>()
 );
 export const renameRoleFailureAction = createAction(
   ActionTypes.RENAME_ROLE_FAILURE
@@ -152,7 +152,7 @@ export const moveUpRoleAction = createAction(
 );
 export const moveUpRoleSuccessAction = createAction(
   ActionTypes.MOVE_UP_ROLE_SUCCESS,
-  props<{roles: RoleDto[]}>()
+  props<{roles: Role[]}>()
 );
 export const moveUpRoleFailureAction = createAction(
   ActionTypes.MOVE_UP_ROLE_FAILURE
@@ -164,7 +164,7 @@ export const moveDownRoleAction = createAction(
 );
 export const moveDownRoleSuccessAction = createAction(
   ActionTypes.MOVE_DOWN_ROLE_SUCCESS,
-  props<{roles: RoleDto[]}>()
+  props<{roles: Role[]}>()
 );
 export const moveDownRoleFailureAction = createAction(
   ActionTypes.MOVE_DOWN_ROLE_FAILURE

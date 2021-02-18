@@ -1,8 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {MessageDto} from 'src/app/home/groups/store/types/message';
 import {environment} from 'src/environments/environment';
+import {Message} from "src/app/home/groups/store/messages/message.reducer";
 
 @Injectable()
 export class MesssagesService {
@@ -14,8 +14,8 @@ export class MesssagesService {
   public getMessages(r: {
     groupId: string;
     channelId: string;
-  }): Observable<MessageDto[]> {
-    return this.http.get<MessageDto[]>(
+  }): Observable<Message[]> {
+    return this.http.get<Message[]>(
       this.messagesApi(r.groupId, r.channelId)
     );
   }
@@ -24,8 +24,8 @@ export class MesssagesService {
     channelId: string;
     messageId: string;
     content: string;
-  }): Observable<MessageDto> {
-    return this.http.post<MessageDto>(
+  }): Observable<Message> {
+    return this.http.post<Message>(
       `${this.messagesApi(r.groupId, r.channelId)}`,
       r
     );

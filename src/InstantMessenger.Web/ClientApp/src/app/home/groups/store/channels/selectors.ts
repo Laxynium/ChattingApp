@@ -1,10 +1,10 @@
 import {createSelector} from '@ngrx/store';
-import {
-  PermissionOverrideDto,
-  PermissionOverrideTypeDto,
-} from 'src/app/home/groups/store/types/role-permission-override';
 import {ChannelDto} from 'src/app/home/groups/services/responses/group.dto';
-import {Channel, channelAdapter, ChannelsState} from 'src/app/home/groups/store/channels/channel.reducer';
+import {
+  Channel,
+  channelAdapter,
+  ChannelsState,
+} from 'src/app/home/groups/store/channels/channel.reducer';
 import {
   channelsStateSelector,
   currentGroupSelector,
@@ -14,10 +14,12 @@ import {
 import {Group} from 'src/app/home/groups/store/groups/group.reducer';
 import {
   adapter as roleOverridesAdapter,
+  RolePermissionOverride,
   RolePermissionOverridesState,
 } from 'src/app/home/groups/store/channels/channel.override.role.reducer';
 import {
   adapter as memberOverridesAdapter,
+  MemberPermissionOverride,
   MemberPermissionOverridesState,
 } from 'src/app/home/groups/store/channels/channel.override.member.reducer';
 
@@ -25,14 +27,8 @@ const roleOverridesSelectors = roleOverridesAdapter.getSelectors();
 
 export const roleOverridesSelector = createSelector(
   roleOverridesStateSelector,
-  (s: RolePermissionOverridesState): PermissionOverrideDto[] =>
-    roleOverridesSelectors.selectAll(s).map(
-      (x) =>
-        <PermissionOverrideDto>{
-          permission: x.permission,
-          type: <PermissionOverrideTypeDto>(<unknown>x.type),
-        }
-    )
+  (s: RolePermissionOverridesState): RolePermissionOverride[] =>
+    roleOverridesSelectors.selectAll(s)
 );
 export const roleOverridesLoadingSelector = createSelector(
   roleOverridesStateSelector,
@@ -43,14 +39,8 @@ const memberOverridesSelectors = memberOverridesAdapter.getSelectors();
 
 export const memberOverridesSelector = createSelector(
   memberOverridesStateSelector,
-  (s: MemberPermissionOverridesState): PermissionOverrideDto[] =>
-    memberOverridesSelectors.selectAll(s).map(
-      (x) =>
-        <PermissionOverrideDto>{
-          permission: x.permission,
-          type: <PermissionOverrideTypeDto>(<unknown>x.type),
-        }
-    )
+  (s: MemberPermissionOverridesState): MemberPermissionOverride[] =>
+    memberOverridesSelectors.selectAll(s)
 );
 
 export const memberOverridesLoadingSelector = createSelector(

@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {MessageDto} from '../types/message';
+import {Message} from "src/app/home/groups/store/messages/message.reducer";
 export enum ActionTypes {
   GET_MESSAGES = '[Groups] Get messages',
   GET_MESSAGES_SUCCESS = '[Groups] Get messages success',
@@ -16,7 +16,7 @@ export const getMessagesAction = createAction(
 );
 export const getMessagesSuccessAction = createAction(
   ActionTypes.GET_MESSAGES_SUCCESS,
-  props<{messages: MessageDto[]}>()
+  props<{messages: Message[]}>()
 );
 export const getMessagesFailureAction = createAction(
   ActionTypes.GET_MESSAGES_FAILURE
@@ -36,7 +36,7 @@ export const sendMessageAction = createAction(
 export const sendMessageSuccessAction = createAction(
   ActionTypes.SEND_MESSAGE_SUCCESS,
   props<{
-    message: MessageDto;
+    message: Message;
   }>()
 );
 export const sendMessageFailureAction = createAction(

@@ -1,17 +1,16 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Observable, zip} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Store, select} from '@ngrx/store';
 import {messagesSelector} from 'src/app/home/groups/store/messages/selectors';
-import {MessageDto} from 'src/app/home/groups/store/types/message';
 import {
   getMessagesAction,
   sendMessageAction,
-} from '../../store/messages/actions';
-import {currentUserSelector} from '../../../../identity/store/selectors';
+} from 'src/app/home/groups/store/messages/actions';
+import {currentUserSelector} from 'src/app/identity/store/selectors';
 import {first, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {ChannelDto} from '../../services/responses/group.dto';
 import {v4 as guid} from 'uuid';
 import {ScrollToBottomDirective} from 'src/app/shared/directives/scroll-to-bottom.directive';
+import {Message} from "src/app/home/groups/store/messages/message.reducer";
 
 @Component({
   selector: 'app-messages',
@@ -25,7 +24,7 @@ export class MessagesComponent implements OnInit {
   @Input() $channelId: Observable<string>;
 
   messageContent: string = '';
-  $messages: Observable<(MessageDto & {isMine: boolean})[]>;
+  $messages: Observable<(Message & {isMine: boolean})[]>;
 
   constructor(private store: Store) {
     this.$messages = this.store.pipe(

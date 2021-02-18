@@ -1,6 +1,5 @@
 import {createSelector} from '@ngrx/store';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
-import {memberRolesStateSelector, membersStateSelector} from '../selectors';
+import {memberRolesStateSelector, membersStateSelector, rolesStateSelector} from '../selectors';
 import {
   Member,
   memberAdapter,
@@ -10,6 +9,7 @@ import {
   memberRoleAdapter,
   MemberRolesState,
 } from 'src/app/home/groups/store/members/member.role.reducer';
+import {Role, RolesState} from "src/app/home/groups/store/roles/role.redcuer";
 
 const membersSelectors = memberAdapter.getSelectors();
 export const membersSelector = createSelector(
@@ -30,6 +30,7 @@ export const membersLoadingSelector = createSelector(
 const memberRolesSelectors = memberRoleAdapter.getSelectors();
 export const memberRolesSelector = createSelector(
   memberRolesStateSelector,
-  (s: MemberRolesState): RoleDto[] =>
-    memberRolesSelectors.selectAll(s).filter((r) => r.priority != -1)
+  rolesStateSelector,
+  (s: MemberRolesState, roles: RolesState): Role[] =>
+    memberRolesSelectors.selectAll(s).map(m=>roles[m.roleId]).filter((r) => r.priority != -1)
 );

@@ -10,7 +10,7 @@ import {
 export type MessageId = string;
 
 export interface Message {
-  id: MessageId;
+  messageId: MessageId;
   groupId: GroupId;
   channelId: ChannelId;
   senderId: UserId;
@@ -25,7 +25,7 @@ export interface MessagesState extends EntityState<Message> {
 }
 
 export const messagesAdapter = createEntityAdapter<Message>({
-  selectId: (x) => x.id,
+  selectId: (x) => x.messageId,
 });
 
 export const messageReducer = createReducer(
@@ -37,7 +37,7 @@ export const messageReducer = createReducer(
   on(getMessagesSuccessAction, (s, {messages}) => ({
     ...messagesAdapter.setAll(
       messages.map((m) => ({
-        id: m.messageId,
+        messageId: m.messageId,
         channelId: m.channelId,
         groupId: m.groupId,
         createdAt: new Date(m.createdAt),
@@ -52,7 +52,7 @@ export const messageReducer = createReducer(
   on(sendMessageSuccessAction, (s, {message}) => ({
     ...messagesAdapter.addOne(
       {
-        id: message.messageId,
+        messageId: message.messageId,
         groupId: message.groupId,
         channelId: message.channelId,
         senderId: message.senderId,

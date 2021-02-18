@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 @Component({
   selector: 'ngbd-modal-confirm',
@@ -32,7 +32,7 @@ import {RoleDto} from 'src/app/home/groups/store/types/role';
   `,
 })
 export class RenameRoleModal implements OnInit {
-  @Input() role: RoleDto;
+  @Input() role: Role;
   constructor(public modal: NgbActiveModal, private store: Store) {}
   ngOnInit(): void {}
 }

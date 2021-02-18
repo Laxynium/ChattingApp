@@ -1,7 +1,8 @@
 import {createAction, props} from '@ngrx/store';
-import {MemberRoleDto} from 'src/app/home/groups/store/types/member-role';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {Member} from "src/app/home/groups/store/members/member.reducer";
+import {MemberRole} from "src/app/home/groups/store/members/member.role.reducer";
+import {GroupId, MemberId, RoleId, UserId} from "src/app/home/groups/store/types";
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
 
 export enum ActionTypes {
   GET_MEMBERS = '[Groups] Get members',
@@ -55,7 +56,7 @@ export const getMemberRolesAction = createAction(
 );
 export const getMemberRolesSuccessAction = createAction(
   ActionTypes.GET_MEMBER_ROLES_SUCCESS,
-  props<{userId: string, memberId:string,roles: RoleDto[]}>()
+  props<{userId: string, memberId:string,roles: Role[]}>()
 );
 export const getMemberRolesFailureAction = createAction(
   ActionTypes.GET_MEMBER_ROLES_FAILURE
@@ -63,11 +64,11 @@ export const getMemberRolesFailureAction = createAction(
 
 export const addRoleToMemberAction = createAction(
   ActionTypes.ADD_ROLE_TO_MEMBER,
-  props<{memberRole: MemberRoleDto}>()
+  props<{groupId: GroupId, userId: UserId, memberId: MemberId, roleId: RoleId}>()
 );
 export const addRoleToMemberSuccessAction = createAction(
   ActionTypes.ADD_ROLE_TO_MEMBER_SUCCESS,
-  props<{memberRole: MemberRoleDto}>()
+  props<{roleId: RoleId, memberId: MemberId, groupId: GroupId, userId: UserId}>()
 );
 export const addRoleToMemberFailureAction = createAction(
   ActionTypes.ADD_ROLE_TO_MEMBER_FAILURE
@@ -75,11 +76,11 @@ export const addRoleToMemberFailureAction = createAction(
 
 export const removeRoleFromMemberAction = createAction(
   ActionTypes.REMOVE_ROLE_FROM_MEMBER,
-  props<{memberRole: MemberRoleDto}>()
+  props<{groupId: GroupId, userId: UserId, memberId: MemberId, roleId: RoleId}>()
 );
 export const removeRoleFromMemberSuccessAction = createAction(
   ActionTypes.REMOVE_ROLE_FROM_MEMBER_SUCCESS,
-  props<{memberRole: MemberRoleDto}>()
+  props<{roleId: RoleId, memberId: MemberId}>()
 );
 export const removeRoleFromMemberFailureAction = createAction(
   ActionTypes.REMOVE_ROLE_FROM_MEMBER_FAILURE

@@ -102,15 +102,28 @@ export class MembersEffects {
     this.actions$.pipe(
       ofType(addRoleToMemberAction),
       switchMap((request) => {
-        return this.membersService.addRoleToMember(request.memberRole).pipe(
-          map((_) => addRoleToMemberSuccessAction(request)),
-          catchError((response) =>
-            of(
-              addRoleToMemberFailureAction(),
-              requestFailedAction({error: mapToError(response)})
+        return this.membersService
+          .addRoleToMember({
+            groupId: request.groupId,
+            roleId: request.roleId,
+            userId: request.userId,
+          })
+          .pipe(
+            map((_) =>
+              addRoleToMemberSuccessAction({
+                memberId: request.memberId,
+                roleId: request.roleId,
+                userId: request.userId,
+                groupId: request.groupId,
+              })
+            ),
+            catchError((response) =>
+              of(
+                addRoleToMemberFailureAction(),
+                requestFailedAction({error: mapToError(response)})
+              )
             )
-          )
-        );
+          );
       })
     )
   );
@@ -131,9 +144,18 @@ export class MembersEffects {
       ofType(removeRoleFromMemberAction),
       switchMap((request) => {
         return this.membersService
-          .removeRoleFromMember(request.memberRole)
+          .removeRoleFromMember({
+            userId: request.userId,
+            groupId: request.groupId,
+            roleId: request.roleId,
+          })
           .pipe(
-            map((_) => removeRoleFromMemberSuccessAction(request)),
+            map((_) =>
+              removeRoleFromMemberSuccessAction({
+                roleId: request.roleId,
+                memberId: request.memberId,
+              })
+            ),
             catchError((response) =>
               of(
                 removeRoleFromMemberFailureAction(),

@@ -2,9 +2,9 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable, zip} from 'rxjs';
 import {concatMap, map} from 'rxjs/operators';
-import {PermissionDto} from 'src/app/home/groups/store/types/permission';
-import {RoleDto} from 'src/app/home/groups/store/types/role';
 import {environment} from 'src/environments/environment';
+import {Role} from "src/app/home/groups/store/roles/role.redcuer";
+import {RolePermission} from "src/app/home/groups/store/roles/role.permission.reducer";
 
 @Injectable()
 export class RolesService {
@@ -14,14 +14,14 @@ export class RolesService {
   }
   constructor(private http: HttpClient) {}
 
-  public getRoles(r: {groupId: string}): Observable<RoleDto[]> {
-    return this.http.get<RoleDto[]>(`${this.rolesApi(r.groupId)}`);
+  public getRoles(r: {groupId: string}): Observable<Role[]> {
+    return this.http.get<Role[]>(`${this.rolesApi(r.groupId)}`);
   }
 
   public getRolePermissions(r: {
     groupId: string;
     roleId: string;
-  }): Observable<PermissionDto[]> {
+  }): Observable<RolePermission[]> {
     return zip(
       this.http.get<PermissionResponseDto[]>(
         `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions`
@@ -32,9 +32,9 @@ export class RolesService {
     ).pipe(
       map(([rolePermissions, allPermissions]) =>
         allPermissions.reduce(
-          (agg: PermissionDto[], cur: PermissionResponseDto) => [
+          (agg: RolePermission[], cur: PermissionResponseDto) => [
             ...agg,
-            <PermissionDto>{
+            <RolePermission>{
               groupId: r.groupId,
               roleId: r.roleId,
               name: cur.name,
@@ -51,7 +51,7 @@ export class RolesService {
   public updateRolePermissions(r: {
     groupId: string;
     roleId: string;
-    permissions: PermissionDto[];
+    permissions: RolePermission[];
   }): Observable<Object> {
     return this.http.put(
       `${this.groupApi}/${r.groupId}/roles/${r.roleId}/permissions`,
@@ -70,12 +70,12 @@ export class RolesService {
     groupId: string;
     roleId: string;
     name: string;
-  }): Observable<RoleDto> {
+  }): Observable<Role> {
     return this.http
       .post(`${this.rolesApi(r.groupId)}`, r)
       .pipe(
         concatMap((_) =>
-          this.http.get<RoleDto>(`${this.rolesApi(r.groupId)}/${r.roleId}`)
+          this.http.get<Role>(`${this.rolesApi(r.groupId)}/${r.roleId}`)
         )
       );
   }
@@ -84,7 +84,7 @@ export class RolesService {
     return this.http.delete(`${this.rolesApi(r.groupId)}/${r.roleId}`);
   }
 
-  public renameRole(r: RoleDto): Observable<Object> {
+  public renameRole(r: Role): Observable<Object> {
     return this.http.put(`${this.rolesApi(r.groupId)}/${r.roleId}`, r);
   }
 
@@ -112,7 +112,7 @@ export class RolesService {
   public moveUpRole(r: {
     groupId: string;
     roleId: string;
-  }): Observable<RoleDto[]> {
+  }): Observable<Role[]> {
     return this.http
       .put(`${this.rolesApi(r.groupId)}/move-up`, r)
       .pipe(concatMap((_) => this.getRoles({groupId: r.groupId})));
