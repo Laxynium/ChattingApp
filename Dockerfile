@@ -1,4 +1,4 @@
-FROM cr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
 COPY . .
 RUN dotnet publish src/InstantMessenger.Api -c release -o out
