@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {select, Store} from '@ngrx/store';

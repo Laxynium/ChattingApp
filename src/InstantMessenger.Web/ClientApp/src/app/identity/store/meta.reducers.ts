@@ -1,9 +1,6 @@
-import {Action, ActionReducer, INIT, MetaReducer} from '@ngrx/store';
-import {mergeDeepRight, mergeRight, pick} from 'ramda';
+import {Action, ActionReducer, MetaReducer} from '@ngrx/store';
+import {mergeDeepRight} from 'ramda';
 import {PersistanceService} from 'src/app/shared/services/persistance.service';
-import {currentUserSelector} from './selectors';
-import {CurrentUserInterface} from '../../shared/types/currentUser.interface';
-import {AppStateInterface} from '../../shared/types/appState.interface';
 
 export function storageMetaReducer<S, A extends Action = Action>(
   storageService: PersistanceService
