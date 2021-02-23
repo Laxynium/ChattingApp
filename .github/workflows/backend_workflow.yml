@@ -13,20 +13,6 @@ env:
   AZURE_DATABASE: instantmessengerdb
   #################################################
 jobs:
-  build: 
-    runs-on: ubuntu-latest    
-    steps:
-    -
-      uses:   actions/checkout@v1
-      name:   Setup .NET core
-    -
-      uses:   actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.3
-    - 
-      name:  Build with dotnet
-      run:  dotnet build --configuration Release
-      
   publish_image:
     name: Publish Image
     runs-on: ubuntu-latest
