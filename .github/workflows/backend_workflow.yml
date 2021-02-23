@@ -22,7 +22,7 @@ jobs:
     -
       uses:   actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.300
+        dotnet-version: 5.0.3
     - 
       name:  Build with dotnet
       run:  dotnet build --configuration Release
@@ -93,7 +93,7 @@ jobs:
           az sql server firewall-rule create --resource-group ${{env.AZURE_RESOURCE_GROUP}} --server ${{env.AZURE_DATABASE_SERVER}} --name allow_github_action --subscription ${{secrets.AZURE_SUBSCRIPTION_ID}} --start-ip-address ${{ steps.ip.outputs.ipv4}} --end-ip-address ${{ steps.ip.outputs.ipv4}}      
       - name: Install dotnet tools
         run: |
-          dotnet tool install --global dotnet-ef --version 3.1.9
+          dotnet tool install --global dotnet-ef --version 5.0.3
           dotnet ef dbcontext list --project src/InstantMessenger.Api     
       - name: Update database
         shell: pwsh
