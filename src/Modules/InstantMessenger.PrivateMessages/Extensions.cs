@@ -53,7 +53,6 @@ namespace InstantMessenger.PrivateMessages
             app.UseEndpoints(
                 x => x.MapHub<PrivateMessagesHub>("/api/privateMessages/hub")
             );
-            app.UseModuleRegistry();
             return app;
         }
     }

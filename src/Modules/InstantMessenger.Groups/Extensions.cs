@@ -60,7 +60,6 @@ namespace InstantMessenger.Groups
             app.UseEndpoints(
                 x => { x.MapHub<GroupsHub>("/api/groups/hub"); }
             );
-            app.UseModuleRegistry();
             return app;
         }
     }

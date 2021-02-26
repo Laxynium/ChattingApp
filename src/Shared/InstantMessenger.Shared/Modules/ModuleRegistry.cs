@@ -12,7 +12,7 @@ namespace InstantMessenger.Shared.Modules
         private readonly IDictionary<string, ModuleRequestRegistration> _requestActions;
         private readonly IList<ModuleBroadcastRegistration> _broadcastActions;
 
-        public ModuleRegistry(ILogger<IModuleRegistry> logger)
+        public ModuleRegistry(ILogger<ModuleRegistry> logger)
         {
             _logger = logger;
             _requestActions = new Dictionary<string, ModuleRequestRegistration>();

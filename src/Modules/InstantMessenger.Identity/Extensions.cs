@@ -132,7 +132,6 @@ namespace InstantMessenger.Identity
                     async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q))
                 .Subscribe<GetUserQuery>("/identity/users",
                     async (sp, q) => await sp.GetRequiredService<IQueryDispatcher>().QueryAsync(q));
-            app.UseModuleRegistry();
             return app;
         }
     }
