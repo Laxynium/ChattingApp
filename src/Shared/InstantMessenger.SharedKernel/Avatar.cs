@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace InstantMessenger.SharedKernel
         public static readonly AvatarError SizeTooBig = new AvatarError(nameof(SizeTooBig), "Avatar size is too big.");
         public static readonly AvatarError InvalidFormat = new AvatarError(nameof(InvalidFormat), "Image format is not supported.");
 
+        public static readonly AvatarError InvalidBase64Format = new AvatarError(nameof(InvalidBase64Format),
+            "Base64 string is in invalid format. Expected format is: 'data:{mime-type};base64,{data}'"); 
         private AvatarError(string name, string message):base(name,name)
         {
             Message = message;
@@ -33,6 +36,17 @@ namespace InstantMessenger.SharedKernel
         {
         }
 
+        public static async Task<Result<Avatar, AvatarError>> FromBase64String(string base64)
+        {
+            var parsed = Cimpress.DataUri.DataUri.Parse(base64);
+            if (!parsed.Base64)
+                return Result.Failure<Avatar, AvatarError>(AvatarError.InvalidBase64Format);
+            if (parsed.MediaType.MimeType != PngFormat.Instance.DefaultMimeType)
+                return Result.Failure<Avatar, AvatarError>(AvatarError.InvalidFormat);
+            var base64Bytes = Convert.FromBase64String(parsed.Data);
+            return await Create(base64Bytes);
+        }
+        
         public static async Task<Result<Avatar, AvatarError>> Create(byte[] data)
         {
             if(data.Length > MB(5))

@@ -5,6 +5,7 @@ using InstantMessenger.Groups.Domain.Repositories;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Messages.Commands;
 using InstantMessenger.Shared.Modules;
+using InstantMessenger.SharedKernel;
 using NodaTime;
 
 namespace InstantMessenger.Groups.Application.Features.Group.Create
@@ -29,9 +30,20 @@ namespace InstantMessenger.Groups.Application.Features.Group.Create
                 throw new GroupAlreadyExistsException(groupId);
 
             var me = await _client.GetAsync<UserDto>("/identity/me", new MeQuery(command.UserId));
-            var group = Domain.Entities.Group.Create(groupId, GroupName.Create(command.GroupName), UserId.From(command.UserId), MemberName.Create(me.Nickname), _clock);
+            var avatar = await GetAvatar(me.Avatar);
+            var group = Domain.Entities.Group.Create(groupId, GroupName.Create(command.GroupName), UserId.From(command.UserId), MemberName.Create(me.Nickname), avatar, _clock);
 
             await _groupRepository.AddAsync(group);
+        }
+
+        private async Task<Avatar?> GetAvatar(string base64String)
+        {
+            if (string.IsNullOrWhiteSpace(base64String))
+                return null;
+            var avatar = await Avatar.FromBase64String(base64String);
+            if (avatar.IsFailure)
+                throw new InvalidAvatarException(avatar.Error);
+            return avatar.Value;
         }
     }
 }

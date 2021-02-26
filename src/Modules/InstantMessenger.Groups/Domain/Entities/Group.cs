@@ -9,6 +9,7 @@ using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.Rules;
 using InstantMessenger.Groups.Domain.ValueObjects;
+using InstantMessenger.SharedKernel;
 using NodaTime;
 using Action = InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Actions.Action;
 
@@ -32,12 +33,12 @@ namespace InstantMessenger.Groups.Domain.Entities
             CreatedAt = createdAt;
         }
 
-        public static Group Create(GroupId id, GroupName name, UserId userId, MemberName ownerName, IClock clock)
+        public static Group Create(GroupId id, GroupName name, UserId userId, MemberName ownerName, Avatar? avatar, IClock clock)
         {
             var group = new Group(id, name, clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
             var everyoneRole = Role.CreateEveryone();
             group.WithRoles(everyoneRole);
-            var owner = Member.CreateOwner(userId, ownerName, everyoneRole, clock);
+            var owner = Member.CreateOwner(userId, ownerName, avatar, everyoneRole, clock);
             group.WithOwner(owner);
             return group;
         }
@@ -115,13 +116,13 @@ namespace InstantMessenger.Groups.Domain.Entities
                 Apply(new RoleRenamedEvent());
             });
 
-        public void AddMember(UserId userIdOfMember, MemberName memberName, IClock clock)
+        public void AddMember(UserId userIdOfMember, MemberName memberName, Avatar? avatar,IClock clock)
         {
             if(Exists(userIdOfMember))
                 throw new MemberAlreadyExistsException(userIdOfMember);
 
             var everyoneRole = GetEveryoneRole();
-            var newMember = Member.Create(userIdOfMember, memberName, everyoneRole, clock);
+            var newMember = Member.Create(userIdOfMember, memberName, avatar, everyoneRole, clock);
             _members.Add(newMember);
             Apply(new MemberAddedToGroupEvent());
         }

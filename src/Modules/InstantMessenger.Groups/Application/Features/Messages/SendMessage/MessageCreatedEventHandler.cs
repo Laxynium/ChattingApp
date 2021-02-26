@@ -15,14 +15,12 @@ namespace InstantMessenger.Groups.Application.Features.Messages.SendMessage
     public class MessageCreatedEventHandler : IIntegrationEventHandler<MessageCreatedEvent>
     {
         private readonly IHubContext<GroupsHub, IGroupsHubContract> _hubContext;
-        private readonly GroupsViewContext _viewContext;
         private readonly GroupsContext _context;
 
-        public MessageCreatedEventHandler(IHubContext<GroupsHub, IGroupsHubContract> hubContext, GroupsViewContext viewContext,
+        public MessageCreatedEventHandler(IHubContext<GroupsHub, IGroupsHubContract> hubContext,
             GroupsContext context)
         {
             _hubContext = hubContext;
-            _viewContext = viewContext;
             _context = context;
         }
         public async Task HandleAsync(MessageCreatedEvent @event)
@@ -33,7 +31,7 @@ namespace InstantMessenger.Groups.Application.Features.Messages.SendMessage
             var channel = await _context.Channels.AsNoTracking()
                 .Where(c => c.GroupId == GroupId.From(@event.GroupId) && c.Id == ChannelId.From(@event.ChannelId))
                 .FirstOrDefaultAsync();
-            var message = await _viewContext.GroupMessages
+            var message = await _context.GroupMessages
                 .AsNoTracking()
                 .Where(x => x.GroupId == GroupId.From(@event.GroupId))
                 .Where(x => x.ChannelId == @event.ChannelId)

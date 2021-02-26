@@ -24,18 +24,16 @@ namespace InstantMessenger.Groups.Application.Queries
     }
     public class GetMessageQueryHandler : IQueryHandler<GetMessageQuery, GroupMessageView>
     {
-        private readonly GroupsViewContext _viewContext;
         private readonly GroupsContext _groupsContext;
 
-        public GetMessageQueryHandler(GroupsViewContext viewContext, GroupsContext groupsContext)
-        {
-            _viewContext = viewContext;
+        public GetMessageQueryHandler(GroupsContext groupsContext)
+        { 
             _groupsContext = groupsContext;
         }
 
         public async Task<GroupMessageView> HandleAsync(GetMessageQuery query)
         {
-            var groupMessageDtos = await _viewContext.GroupMessages
+            var groupMessageDtos = await _groupsContext.GroupMessages
                 .Where(m => m.GroupId == query.GroupId
                             && m.ChannelId == query.ChannelId)
                 .Where(m=>m.MessageId == query.MessageId)

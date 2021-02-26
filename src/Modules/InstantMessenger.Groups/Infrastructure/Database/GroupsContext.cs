@@ -10,24 +10,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InstantMessenger.Groups.Infrastructure.Database
 {
-    public interface IQueryGroupContext
-    {
-        IQueryable<Group> GroupsQuery { get; }
-        IQueryable<Invitation> InvitationsQuery { get; }
-        IQueryable<Channel> ChannelsQuery { get; }
-        IQueryable<Message> MessagesQuery { get; }
-    }
     public class GroupsContext : DbContext
     {
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Invitation> Invitations { get; set; }
         public virtual DbSet<Channel> Channels { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
-
-        public IQueryable<Group> GroupsQuery => Groups.AsNoTracking();
-        public IQueryable<Invitation> InvitationsQuery => Invitations.AsNoTracking();
-        public IQueryable<Channel> ChannelsQuery => Channels.AsNoTracking();
-        public IQueryable<Message> MessagesQuery => Messages.AsNoTracking();
+        public virtual DbSet<GroupMessageView> GroupMessages { get; set; }
 
         public GroupsContext(DbContextOptions<GroupsContext>options):base(options)
         {
@@ -39,6 +28,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             modelBuilder.Entity<Invitation>(Build);
             modelBuilder.Entity<Channel>(Build);
             modelBuilder.Entity<Message>(Build);
+            modelBuilder.Entity<GroupMessageView>(Build);
             modelBuilder.ApplyConfiguration(new OutboxEntityConfiguration());
         }
 
@@ -134,6 +124,13 @@ namespace InstantMessenger.Groups.Infrastructure.Database
                     m.Property(x => x.Name)
                         .HasConversion(x => x.Value, x => MemberName.Create(x))
                         .IsRequired();
+                    m.OwnsOne(
+                        u => u.Avatar,
+                        b =>
+                        {
+                            b.Property(x => x!.Value).IsRequired().HasColumnName("Avatar");
+                        }
+                    );
                     m.Property(x => x.CreatedAt).IsRequired();
                     m.OwnsMany(
                         x => x.Roles,
@@ -278,6 +275,12 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             message.Property(x => x.Content)
                 .HasConversion(x=>x.Value,x=>MessageContent.From(x))
                 .IsRequired();
+        }
+
+        private static void Build(EntityTypeBuilder<GroupMessageView> messageView)
+        {
+            messageView.HasNoKey();
+            messageView.ToView("vw_GroupMessages", "Groups");
         }
     }
 }

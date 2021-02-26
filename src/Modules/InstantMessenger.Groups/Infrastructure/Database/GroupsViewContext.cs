@@ -36,7 +36,7 @@ namespace InstantMessenger.Groups.Infrastructure.Database
     public class GroupsViewContext : DbContext
     {
         public DbSet<GroupMessageView> GroupMessages { get; set; }
-
+    
         public GroupsViewContext(DbContextOptions<GroupsViewContext>options):base(options)
         {
             
