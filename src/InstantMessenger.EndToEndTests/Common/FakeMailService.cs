@@ -7,7 +7,7 @@ namespace InstantMessenger.EndToEndTests.Common
 {
     public class FakeMailService : IMailService
     {
-        private readonly List<MimeMessage> _messages = new List<MimeMessage>();
+        private readonly List<MimeMessage> _messages = new();
         public IReadOnlyList<MimeMessage> Messages => _messages.AsReadOnly();
         public Task SendAsync(MimeMessage message)
         {

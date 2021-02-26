@@ -9,8 +9,8 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         private InvitationId(Guid value) : base(value)
         {
         }
-        public static InvitationId Create() => new InvitationId(Guid.NewGuid());
-        public static InvitationId From(Guid id) => new InvitationId(id);
+        public static InvitationId Create() => new(Guid.NewGuid());
+        public static InvitationId From(Guid id) => new(id);
 
     }
 }

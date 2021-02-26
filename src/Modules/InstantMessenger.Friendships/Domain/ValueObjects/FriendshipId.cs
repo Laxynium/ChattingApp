@@ -8,6 +8,6 @@ namespace InstantMessenger.Friendships.Domain.ValueObjects
         public FriendshipId(Guid value) : base(value)
         {
         }
-        public new static FriendshipId Create() => new FriendshipId(Guid.NewGuid());
+        public new static FriendshipId Create() => new(Guid.NewGuid());
     }
 }

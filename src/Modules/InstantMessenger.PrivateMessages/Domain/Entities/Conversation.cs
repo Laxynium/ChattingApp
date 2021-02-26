@@ -19,7 +19,7 @@ namespace InstantMessenger.PrivateMessages.Domain.Entities
         }
 
         public static Conversation Create(ConversationId conversationId, Participant firstParticipant, Participant secondParticipant) 
-            => new Conversation(conversationId, firstParticipant,secondParticipant);
+            => new(conversationId, firstParticipant,secondParticipant);
 
         public Message Send(MessageId messageId, MessageBody message, Participant from, IClock clock)
         {

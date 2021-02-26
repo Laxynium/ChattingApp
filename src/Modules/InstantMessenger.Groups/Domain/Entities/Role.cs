@@ -15,11 +15,11 @@ namespace InstantMessenger.Groups.Domain.Entities
             Priority = priority;
             Permissions = permissions;
         }
-        public static Role CreateEveryone()=>new Role(RoleId.Create(), RoleName.EveryOneRole, RolePriority.Lowest, Permissions.Empty());
+        public static Role CreateEveryone()=>new(RoleId.Create(), RoleName.EveryOneRole, RolePriority.Lowest, Permissions.Empty());
 
         public static Role Create(RoleId id, RoleName name, RolePriority priority)
         {
-            return new Role(id, name, priority, Permissions.Empty());
+            return new(id, name, priority, Permissions.Empty());
         }
 
         public void AddPermission(Permission permission)

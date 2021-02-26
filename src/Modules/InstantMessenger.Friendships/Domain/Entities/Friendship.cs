@@ -24,7 +24,7 @@ namespace InstantMessenger.Friendships.Domain.Entities
 
         public static Friendship Create(PersonId firstPerson, PersonId secondPerson, IClock clock)
         {
-            return new Friendship(FriendshipId.Create(), firstPerson, secondPerson,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+            return new(FriendshipId.Create(), firstPerson, secondPerson,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
         }
 
         public void Remove(PersonId personId)

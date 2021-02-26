@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using InstantMessenger.SharedKernel;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace InstantMessenger.Groups.Infrastructure.Database
+namespace InstantMessenger.Groups.Application.Queries.ViewModels
 {
     public class GroupMessageView
     {
@@ -32,24 +31,5 @@ namespace InstantMessenger.Groups.Infrastructure.Database
             CreatedAt = createdAt;
         }
 
-    }
-    public class GroupsViewContext : DbContext
-    {
-        public DbSet<GroupMessageView> GroupMessages { get; set; }
-    
-        public GroupsViewContext(DbContextOptions<GroupsViewContext>options):base(options)
-        {
-            
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<GroupMessageView>(
-                gm =>
-                {
-                    gm.HasNoKey();
-                    gm.ToView("View_GroupMessages","Groups");
-                }
-            );
-        }
     }
 }

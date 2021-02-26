@@ -1,13 +1,11 @@
-﻿using System;
-using CSharpFunctionalExtensions;
-using InstantMessenger.Groups.Domain.Entities;
+﻿using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.Exceptions;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
     public class RoleName : SimpleValueObject<string>
     {
-        public static readonly RoleName EveryOneRole = new RoleName("@everyone");
+        public static readonly RoleName EveryOneRole = new("@everyone");
         private RoleName():base(default){}
         private RoleName(string value) : base(value)
         {

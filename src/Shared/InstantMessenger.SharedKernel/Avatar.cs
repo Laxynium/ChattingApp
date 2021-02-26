@@ -15,10 +15,10 @@ namespace InstantMessenger.SharedKernel
     public class AvatarError : SmartEnum<AvatarError,string>
     {
         public string Message { get; }
-        public static readonly AvatarError SizeTooBig = new AvatarError(nameof(SizeTooBig), "Avatar size is too big.");
-        public static readonly AvatarError InvalidFormat = new AvatarError(nameof(InvalidFormat), "Image format is not supported.");
+        public static readonly AvatarError SizeTooBig = new(nameof(SizeTooBig), "Avatar size is too big.");
+        public static readonly AvatarError InvalidFormat = new(nameof(InvalidFormat), "Image format is not supported.");
 
-        public static readonly AvatarError InvalidBase64Format = new AvatarError(nameof(InvalidBase64Format),
+        public static readonly AvatarError InvalidBase64Format = new(nameof(InvalidBase64Format),
             "Base64 string is in invalid format. Expected format is: 'data:{mime-type};base64,{data}'"); 
         private AvatarError(string name, string message):base(name,name)
         {

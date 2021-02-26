@@ -9,7 +9,7 @@ namespace InstantMessenger.Groups.Domain.Entities
         private ChannelId(Guid value) : base(value)
         {
         }
-        public static ChannelId Create() => new ChannelId(Guid.NewGuid());
-        public static ChannelId From(Guid id) => new ChannelId(id);
+        public static ChannelId Create() => new(Guid.NewGuid());
+        public static ChannelId From(Guid id) => new(id);
     }
 }

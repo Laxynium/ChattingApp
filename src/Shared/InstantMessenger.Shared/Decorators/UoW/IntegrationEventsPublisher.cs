@@ -8,7 +8,7 @@ namespace InstantMessenger.Shared.Decorators.UoW
     internal sealed class InMemoryIntegrationEventsPublisher<TDbContext> : IIntegrationEventsPublisher<TDbContext>
     {
         private readonly IMessageBroker _messageBroker;
-        private readonly List<IIntegrationEvent> _events = new List<IIntegrationEvent>();
+        private readonly List<IIntegrationEvent> _events = new();
 
         public InMemoryIntegrationEventsPublisher(IMessageBroker messageBroker)
         {

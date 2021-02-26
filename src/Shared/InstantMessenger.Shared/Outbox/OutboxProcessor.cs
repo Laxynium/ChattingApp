@@ -17,7 +17,7 @@ namespace InstantMessenger.Shared.Outbox
 {
     public class OutboxProcessor<TDbContext> : BackgroundService where TDbContext : DbContext
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings SerializerSettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,
             ContractResolver = new CamelCasePropertyNamesContractResolver()

@@ -9,6 +9,6 @@ namespace InstantMessenger.PrivateMessages.Domain.ValueObjects
         public ConversationId(Guid value) : base(value)
         {
         }
-        public new static ConversationId Create() => new ConversationId(Guid.NewGuid());
+        public new static ConversationId Create() => new(Guid.NewGuid());
     }
 }

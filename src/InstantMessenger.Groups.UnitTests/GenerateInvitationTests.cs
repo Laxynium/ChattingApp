@@ -16,7 +16,7 @@ namespace InstantMessenger.Groups.UnitTests
 {
     public class GenerateInvitationTests : GroupsModuleUnitTestBase
     {
-        private readonly DateTimeOffset _date = new DateTimeOffset(new DateTime(2020,1,1));
+        private readonly DateTimeOffset _date = new(new DateTime(2020,1,1));
         private readonly FakeClock _clock;
         public GenerateInvitationTests()
         {

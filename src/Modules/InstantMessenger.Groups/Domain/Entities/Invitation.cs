@@ -19,14 +19,14 @@ namespace InstantMessenger.Groups.Domain.Entities
 
         public InvitationCode InvitationCode { get; }
 
-        private ExpirationTimeContainer _expirationTime = new ExpirationTimeContainer();
+        private ExpirationTimeContainer _expirationTime = new();
         public ExpirationTime ExpirationTime 
         { 
             get => _expirationTime.ExpirationTime; 
             set => _expirationTime.ExpirationTime = value;
         }
 
-        private UsageCounterContainer _usageCounter = new UsageCounterContainer();
+        private UsageCounterContainer _usageCounter = new();
         public UsageCounter UsageCounter 
         { 
             get => _usageCounter.UsageCounter;

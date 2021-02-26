@@ -10,7 +10,7 @@ namespace InstantMessenger.Groups.Domain.Entities
 {
     public class Member : Entity<MemberId>
     {
-        private readonly HashSet<RoleId> _roles = new HashSet<RoleId>();
+        private readonly HashSet<RoleId> _roles = new();
         public IEnumerable<RoleId> Roles => _roles.ToList();
         public UserId UserId { get; }//required in order to map user to member in particular group
         public MemberName Name { get; }
@@ -30,10 +30,10 @@ namespace InstantMessenger.Groups.Domain.Entities
         }
 
         public static Member CreateOwner(UserId userId, MemberName name, Avatar? avatar, Role everyoneRole, IClock clock) 
-            => new Member(userId, MemberId.Create(),name, avatar,true, everyoneRole.Id,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+            => new(userId, MemberId.Create(),name, avatar,true, everyoneRole.Id,clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
 
         public static Member Create(UserId userId, MemberName name, Avatar? avatar, Role everyoneRole, IClock clock) 
-            => new Member(userId,MemberId.Create(),name, avatar,false, everyoneRole.Id, clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
+            => new(userId,MemberId.Create(),name, avatar,false, everyoneRole.Id, clock.GetCurrentInstant().InUtc().ToDateTimeOffset());
 
         public void AddRole(Role role)
         {

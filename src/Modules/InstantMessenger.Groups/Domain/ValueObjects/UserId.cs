@@ -9,8 +9,8 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         private UserId(Guid value) : base(value)
         {
         }
-        public static UserId Create() => new UserId(Guid.NewGuid());
-        public static UserId From(Guid id) => new UserId(id);
+        public static UserId Create() => new(Guid.NewGuid());
+        public static UserId From(Guid id) => new(id);
 
     }
 }

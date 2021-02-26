@@ -9,8 +9,8 @@ namespace InstantMessenger.Groups.Domain.Messages.ValueObjects
         private MessageId(Guid value) : base(value)
         {
         }
-        public static MessageId Create() => new MessageId(Guid.NewGuid());
-        public static MessageId From(Guid id) => new MessageId(id);
+        public static MessageId Create() => new(Guid.NewGuid());
+        public static MessageId From(Guid id) => new(id);
 
     }
 }

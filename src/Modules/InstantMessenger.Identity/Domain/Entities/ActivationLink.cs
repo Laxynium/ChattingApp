@@ -9,7 +9,7 @@ namespace InstantMessenger.Identity.Domain.Entities
         public ActivationLinkId(Guid value) : base(value)
         {
         }
-        public static ActivationLinkId Create()=>new ActivationLinkId(Guid.NewGuid());
+        public static ActivationLinkId Create()=>new(Guid.NewGuid());
     }
     public class ActivationLink : Entity<ActivationLinkId>
     {
@@ -31,7 +31,7 @@ namespace InstantMessenger.Identity.Domain.Entities
 
         public static ActivationLink Create(UserId userId, string token)
         {
-            return new ActivationLink(ActivationLinkId.Create(), token, userId, DateTimeOffset.UtcNow);
+            return new(ActivationLinkId.Create(), token, userId, DateTimeOffset.UtcNow);
         }
 
         public bool Verify(string token) 

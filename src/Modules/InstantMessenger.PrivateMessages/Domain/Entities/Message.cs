@@ -35,7 +35,7 @@ namespace InstantMessenger.PrivateMessages.Domain.Entities
         }
 
         public static Message Create(MessageId messageId, MessageBody body, ConversationId conversationId, Participant @from, Participant to, IClock clock) =>
-            new Message(messageId, 
+            new(messageId, 
                 body,
                 conversationId,
                 @from,

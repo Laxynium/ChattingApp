@@ -6,7 +6,7 @@ namespace InstantMessenger.Shared.BuildingBlocks
 {
     public abstract class Entity<TId>: CSharpFunctionalExtensions.Entity<TId>, IEntity where TId: EntityId
     {
-        private readonly List<IDomainEvent> _events = new List<IDomainEvent>();
+        private readonly List<IDomainEvent> _events = new();
         public IEnumerable<IDomainEvent> DomainEvents => _events.ToList();
         protected void Apply(IDomainEvent @event) => _events.Add(@event);
         public void ClearDomainEvents() => _events.Clear();

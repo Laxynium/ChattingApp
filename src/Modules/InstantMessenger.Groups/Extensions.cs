@@ -43,11 +43,6 @@ namespace InstantMessenger.Groups
                         x => x.MigrationsHistoryTable("__EFMigrationsHistory", "Groups")
                     )
                 )
-                .AddDbContext<GroupsViewContext>((provider,o) => o.UseSqlServer(
-                        provider.GetConnectionString("InstantMessengerDb"),
-                        x => x.MigrationsHistoryTable("__EFMigrationsHistory_Views", "Groups")
-                    )
-                )
                 .AddUnitOfWork<GroupsContext, DomainEventsMapper>(outbox:true)
                 .AddTransient<GroupsModuleFacade>()
                 .AddScoped<IGroupRepository, GroupRepository>()

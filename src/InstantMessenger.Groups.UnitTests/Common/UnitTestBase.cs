@@ -6,7 +6,7 @@ namespace InstantMessenger.Groups.UnitTests.Common
 {
     public abstract class UnitTestBase<TModuleFacade>
     {
-        private readonly ServiceCollection _services = new ServiceCollection();
+        private readonly ServiceCollection _services = new();
 
         protected void Configure(Action<ServiceCollection> config)
         {

@@ -9,8 +9,8 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         private RoleId(Guid value) : base(value)
         {
         }
-        public static RoleId Create() => new RoleId(Guid.NewGuid());
-        public static RoleId From(Guid id) => new RoleId(id);
+        public static RoleId Create() => new(Guid.NewGuid());
+        public static RoleId From(Guid id) => new(id);
 
     }
 }

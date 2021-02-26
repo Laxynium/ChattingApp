@@ -14,7 +14,7 @@ namespace InstantMessenger.Groups.UnitTests
 {
     public class AddMemberTests : GroupsModuleUnitTestBase
     {
-        private readonly Dictionary<Guid,string> _userIdToNickname = new Dictionary<Guid, string>();
+        private readonly Dictionary<Guid,string> _userIdToNickname = new();
         public AddMemberTests() => Configure(
             sc => sc
                 .Remove<IModuleClient>()

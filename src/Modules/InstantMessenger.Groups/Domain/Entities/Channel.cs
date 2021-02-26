@@ -8,10 +8,10 @@ namespace InstantMessenger.Groups.Domain.Entities
 {
     public class Channel : Entity<ChannelId>
     {
-        private readonly HashSet<RolePermissionOverride> _rolePermissionOverrides = new HashSet<RolePermissionOverride>();
+        private readonly HashSet<RolePermissionOverride> _rolePermissionOverrides = new();
         public IEnumerable<RolePermissionOverride> RolePermissionOverrides => _rolePermissionOverrides.ToList();
 
-        private readonly HashSet<MemberPermissionOverride> _memberPermissionOverrides = new HashSet<MemberPermissionOverride>();
+        private readonly HashSet<MemberPermissionOverride> _memberPermissionOverrides = new();
         public IEnumerable<MemberPermissionOverride> MemberPermissionOverrides => _memberPermissionOverrides.ToList();
 
         public GroupId GroupId { get; }

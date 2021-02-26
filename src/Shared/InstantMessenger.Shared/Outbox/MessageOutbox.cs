@@ -8,7 +8,7 @@ namespace InstantMessenger.Shared.Outbox
 {
     public class MessageOutbox<TDbContext> : IMessageOutbox where TDbContext : DbContext
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings SerializerSettings = new()
         {
             TypeNameHandling = TypeNameHandling.All,
             ContractResolver = new CamelCasePropertyNamesContractResolver()

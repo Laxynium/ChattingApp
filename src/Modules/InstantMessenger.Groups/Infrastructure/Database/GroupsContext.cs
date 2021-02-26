@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using InstantMessenger.Groups.Application.Queries.ViewModels;
 using InstantMessenger.Groups.Domain.Entities;
 using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;

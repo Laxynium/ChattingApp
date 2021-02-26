@@ -16,7 +16,7 @@ namespace InstantMessenger.Identity.Domain.Entities
         {
         }
 
-        public static UserId Create() => new UserId(Guid.NewGuid());
+        public static UserId Create() => new(Guid.NewGuid());
     }
 
     public sealed class User : Entity<UserId>

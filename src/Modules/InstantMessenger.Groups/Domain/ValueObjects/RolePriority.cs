@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using InstantMessenger.Groups.Domain.Exceptions;
 
 namespace InstantMessenger.Groups.Domain.ValueObjects
 {
     public class RolePriority : SimpleValueObject<int>
     {
-        public static readonly RolePriority Lowest = new RolePriority(-1);
+        public static readonly RolePriority Lowest = new(-1);
 
         private RolePriority(int value) : base(value)
         {

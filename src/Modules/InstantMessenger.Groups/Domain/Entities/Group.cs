@@ -17,10 +17,10 @@ namespace InstantMessenger.Groups.Domain.Entities
 {
     public class Group : Shared.BuildingBlocks.Entity<GroupId>
     {
-        private readonly HashSet<Member> _members = new HashSet<Member>();
+        private readonly HashSet<Member> _members = new();
         public IEnumerable<Member> Members => _members.ToList();
 
-        private readonly HashSet<Role> _roles = new HashSet<Role>();
+        private readonly HashSet<Role> _roles = new();
         public IEnumerable<Role> Roles => _roles.ToList();
         public GroupName Name { get; private set; }
         public DateTimeOffset CreatedAt { get; }

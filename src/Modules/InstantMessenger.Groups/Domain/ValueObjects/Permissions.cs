@@ -13,27 +13,27 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
             Value = value;
         }
 
-        public static Permissions From(int value)=>new Permissions(value);
+        public static Permissions From(int value)=>new(value);
 
-        public static Permissions Empty()=>new Permissions(0x0);
+        public static Permissions Empty()=>new(0x0);
 
         public Permissions Add(Permission permission)
         {
-            return new Permissions(Value | permission.Value);
+            return new(Value | permission.Value);
         }
 
         public Permissions Remove(Permission permission)
         {
-            return new Permissions(Value & ~permission.Value);
+            return new(Value & ~permission.Value);
         }        
         public Permissions Add(Permissions permissions)
         {
-            return new Permissions(Value | permissions.Value);
+            return new(Value | permissions.Value);
         }
 
         public Permissions Remove(Permissions permissions)
         {
-            return new Permissions(Value & ~permissions.Value);
+            return new(Value & ~permissions.Value);
         }
 
         public bool Has(params Permission[] permissions) 

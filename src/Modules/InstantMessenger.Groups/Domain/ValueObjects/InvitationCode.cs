@@ -24,6 +24,6 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         }
 
         public static InvitationCode Create(RandomStringGenerator generator) =>
-            new InvitationCode(generator.Generate(Length, ValidCharacters));
+            new(generator.Generate(Length, ValidCharacters));
     }
 }

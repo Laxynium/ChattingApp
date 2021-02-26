@@ -14,7 +14,7 @@ namespace InstantMessenger.Groups.Domain.Messages.ValueObjects
         }
 
         public static MessageContent From(string value) 
-            => new MessageContent(value);
+            => new(value);
 
         public static MessageContent Create(string value)
         {

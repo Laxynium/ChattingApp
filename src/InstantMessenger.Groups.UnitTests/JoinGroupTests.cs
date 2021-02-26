@@ -19,7 +19,7 @@ namespace InstantMessenger.Groups.UnitTests
     public class JoinGroupTests : GroupsModuleUnitTestBase
     {
         private readonly FakeClock _clock;
-        private readonly Dictionary<Guid, string> _userIdToNickname = new Dictionary<Guid, string>();
+        private readonly Dictionary<Guid, string> _userIdToNickname = new();
         public JoinGroupTests()
         {
             _clock = new FakeClock(Instant.FromDateTimeOffset(new DateTimeOffset(new DateTime(2020,01,01,12,00,00))));

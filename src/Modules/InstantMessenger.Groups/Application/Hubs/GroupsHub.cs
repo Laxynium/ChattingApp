@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InstantMessenger.Groups.Application.IntegrationEvents;
 using InstantMessenger.Groups.Application.Queries;
+using InstantMessenger.Groups.Application.Queries.ViewModels;
 using InstantMessenger.Groups.Application.ResponseDtos;
 using InstantMessenger.Groups.Infrastructure.Database;
 using Microsoft.AspNetCore.Authorization;

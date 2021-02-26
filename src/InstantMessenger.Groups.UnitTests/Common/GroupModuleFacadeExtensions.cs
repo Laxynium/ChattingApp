@@ -21,13 +21,13 @@ namespace InstantMessenger.Groups.UnitTests.Common
     {
         private readonly GroupsModuleFacade _facade;
         private GroupDto _group;
-        private readonly List<Func<Task>> _buildActions = new List<Func<Task>>();
+        private readonly List<Func<Task>> _buildActions = new();
         public GroupBuilder(GroupsModuleFacade facade)
         {
             _facade = facade;
         }
 
-        public static GroupBuilder For(GroupsModuleFacade facade) => new GroupBuilder(facade);
+        public static GroupBuilder For(GroupsModuleFacade facade) => new(facade);
 
         public GroupBuilder CreateGroup(string groupName)
         {
@@ -36,9 +36,9 @@ namespace InstantMessenger.Groups.UnitTests.Common
             return this;
         }
 
-        public AsUserBuilder AsOwner() => new AsUserBuilder(this,_group.OwnerId);
+        public AsUserBuilder AsOwner() => new(this,_group.OwnerId);
 
-        public AsUserBuilder AsMember(int memberNumber) => new AsUserBuilder(this, _group.Member(memberNumber).UserId);
+        public AsUserBuilder AsMember(int memberNumber) => new(this, _group.Member(memberNumber).UserId);
 
         public async Task<GroupDto> Build()
         {
@@ -220,10 +220,10 @@ namespace InstantMessenger.Groups.UnitTests.Common
 
         internal class GroupDto
         {
-            private readonly List<RoleDto> _roles = new List<RoleDto>();
-            private readonly List<MemberDto> _members = new List<MemberDto>();
-            private readonly List<InvitationDto> _invitations = new List<InvitationDto>();
-            private readonly List<ChannelDto> _channels = new List<ChannelDto>();
+            private readonly List<RoleDto> _roles = new();
+            private readonly List<MemberDto> _members = new();
+            private readonly List<InvitationDto> _invitations = new();
+            private readonly List<ChannelDto> _channels = new();
             internal Guid OwnerId { get; }
             internal Guid GroupId { get; }
             internal string GroupName { get; }
