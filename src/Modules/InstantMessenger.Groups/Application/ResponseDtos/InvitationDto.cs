@@ -63,12 +63,14 @@ namespace InstantMessenger.Groups.Application.ResponseDtos
         {
             InfiniteExpirationTime x=>new ExpirationTimeDto(ExpirationTimeTypeDto.Infinite, x.Start, null),
             BoundedExpirationTime x=>new ExpirationTimeDto(ExpirationTimeTypeDto.Bounded, x.Start, x.Period),
-        };
+            _ => throw new ArgumentOutOfRangeException(nameof(expirationTime), expirationTime, null)
+            };
         public static UsageCounterDto ToDto(this UsageCounter usageCounter) =>
             usageCounter switch
         {
             InfiniteUsageCounter x=> new UsageCounterDto(UsageCounterTypeDto.Infinite, null),
             BoundedUsageCounter x=> new UsageCounterDto(UsageCounterTypeDto.Bounded, x.Value),
-        };
+            _ => throw new ArgumentOutOfRangeException(nameof(usageCounter), usageCounter, null)
+            };
     }
 }

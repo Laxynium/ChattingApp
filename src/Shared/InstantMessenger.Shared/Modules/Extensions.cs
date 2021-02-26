@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using InstantMessenger.Shared.IntegrationEvents;
 using Microsoft.AspNetCore.Builder;
@@ -28,35 +29,36 @@ namespace InstantMessenger.Shared.Modules
         }
         public static IModuleSubscriber UseModuleRequests(this IApplicationBuilder app)
             => app.ApplicationServices.GetRequiredService<IModuleSubscriber>();
-        private static void AddModuleRegistry(this IServiceCollection services)
+        public static IApplicationBuilder UseModuleRegistry(this IApplicationBuilder app)
         {
-            var eventTypes = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Where(a => a.FullName.Contains(AppName))
-                .SelectMany(a => a.GetTypes())
+            var moduleRegistry =app.ApplicationServices.GetRequiredService<IModuleRegistry>();
+            var eventTypes = Assembly.GetCallingAssembly()
+                .GetTypes()
                 .Where(t => t.IsClass && typeof(IIntegrationEvent).IsAssignableFrom(t))
                 .ToList();
+            foreach (var eventType in eventTypes)
+            {
+                moduleRegistry.AddBroadcastAction(
+                    eventType,
+                    (sp, @event) =>
+                    {
+                        var dispatcher = sp.GetService<IIntegrationEventDispatcher>();
+                        return (Task)dispatcher.GetType()
+                            .GetMethod(nameof(dispatcher.PublishAsync))
+                            .MakeGenericMethod(eventType)
+                            .Invoke(dispatcher, new[] { @event });
+                    }
+                );
+            }
+            return app;
+        }
+        private static void AddModuleRegistry(this IServiceCollection services)
+        {
             services.AddSingleton<IModuleRegistry>(
                 provider =>
                 {
-                    var logger = provider.GetService<ILogger<IModuleRegistry>>();
+                    var logger = provider.GetRequiredService<ILogger<IModuleRegistry>>();
                     var registry = new ModuleRegistry(logger);
-
-                    foreach (var eventType in eventTypes)
-                    {
-                        registry.AddBroadcastAction(
-                            eventType,
-                            (sp, @event) =>
-                            {
-                                var dispatcher = sp.GetService<IIntegrationEventDispatcher>();
-                                return (Task)dispatcher.GetType()
-                                    .GetMethod(nameof(dispatcher.PublishAsync))
-                                    .MakeGenericMethod(eventType)
-                                    .Invoke(dispatcher, new[] { @event });
-                            }
-                        );
-                    }
-
                     return registry;
                 }
             );
