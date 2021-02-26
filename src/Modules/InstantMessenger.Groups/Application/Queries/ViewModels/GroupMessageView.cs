@@ -12,7 +12,7 @@ namespace InstantMessenger.Groups.Application.Queries.ViewModels
         public Guid SenderId { get; private set; }
         public string SenderName { get; private set; }
         [JsonIgnore]
-        public byte[] SenderAvatar { get; private set; }
+        public byte[]? SenderAvatar { get; private set; }
         [JsonProperty("senderAvatar")]
         public string SenderAvatarBase64 => SenderAvatar is null ? null : Avatar.ToBase64String(SenderAvatar);
         public string Content { get; private set; }
