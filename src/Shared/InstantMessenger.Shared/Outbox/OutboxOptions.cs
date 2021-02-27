@@ -1,6 +1,6 @@
 ﻿namespace InstantMessenger.Shared.Outbox
 {
-    public class OutboxOptions
+    internal sealed class OutboxOptions
     {
         public bool Enabled { get; set; }
         public int ExpiryHours { get; set; }

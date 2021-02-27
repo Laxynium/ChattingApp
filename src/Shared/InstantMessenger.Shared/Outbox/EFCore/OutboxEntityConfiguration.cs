@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InstantMessenger.Shared.Outbox
+namespace InstantMessenger.Shared.Outbox.EFCore
 {
     public class OutboxEntityConfiguration : IEntityTypeConfiguration<OutboxMessage>
     {

@@ -6,6 +6,7 @@ using InstantMessenger.Groups.Domain.Messages.Entities;
 using InstantMessenger.Groups.Domain.Messages.ValueObjects;
 using InstantMessenger.Groups.Domain.ValueObjects;
 using InstantMessenger.Shared.Outbox;
+using InstantMessenger.Shared.Outbox.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

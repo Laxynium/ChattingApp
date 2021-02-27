@@ -16,12 +16,12 @@ using InstantMessenger.Groups.Application.Queries;
 
 namespace InstantMessenger.Groups.UnitTests.Common
 {
-
     internal class GroupBuilder
     {
         private readonly GroupsModuleFacade _facade;
         private GroupDto _group;
         private readonly List<Func<Task>> _buildActions = new();
+
         public GroupBuilder(GroupsModuleFacade facade)
         {
             _facade = facade;
@@ -32,17 +32,17 @@ namespace InstantMessenger.Groups.UnitTests.Common
         public GroupBuilder CreateGroup(string groupName)
         {
             _group = new GroupDto(groupName);
-            _buildActions.Add(async ()=>await _facade.CreateGroup(_group.OwnerId, _group.GroupId, _group.GroupName));
+            _buildActions.Add(async () => await _facade.CreateGroup(_group.OwnerId, _group.GroupId, _group.GroupName));
             return this;
         }
 
-        public AsUserBuilder AsOwner() => new(this,_group.OwnerId);
+        public AsUserBuilder AsOwner() => new(this, _group.OwnerId);
 
         public AsUserBuilder AsMember(int memberNumber) => new(this, _group.Member(memberNumber).UserId);
 
         public async Task<GroupDto> Build()
         {
-            foreach (var buildAction in _buildActions) 
+            foreach (var buildAction in _buildActions)
                 await buildAction.Invoke();
             return _group;
         }
@@ -73,18 +73,21 @@ namespace InstantMessenger.Groups.UnitTests.Common
             {
                 var role = new RoleDto(roleName);
                 _builder.AddRole(role);
-                _builder.AddBuildAction(async () => await _facade.AddRole(_userIdContext, _group.GroupId, role.RoleId, role.Name));
+                _builder.AddBuildAction(async () =>
+                    await _facade.AddRole(_userIdContext, _group.GroupId, role.RoleId, role.Name));
                 return new RoleBuilder(this, role);
             }
-            public MemberBuilder CreateMember()
+
+            public MemberBuilder CreateMember(Guid? userId = null)
             {
-                var member = new MemberDto();
+                var member = new MemberDto().WithId(userId ?? Guid.NewGuid());
                 _builder.AddMember(member);
                 _builder.AddBuildAction(async () => await _facade.AddMember(_group.GroupId, member.UserId));
-                return new MemberBuilder(this,member);
+                return new MemberBuilder(this, member);
             }
 
-            public AsUserBuilder CreateInvitation(ExpirationTimeCommandItem expirationTime, UsageCounterCommandItem usageCounter)
+            public AsUserBuilder CreateInvitation(ExpirationTimeCommandItem expirationTime,
+                UsageCounterCommandItem usageCounter)
             {
                 var invitation = new InvitationDto(Guid.NewGuid());
                 _builder.AddInvitation(invitation);
@@ -92,9 +95,11 @@ namespace InstantMessenger.Groups.UnitTests.Common
                     async () =>
                     {
                         await _facade.SendAsync(
-                            new GenerateInvitationCommand(_userIdContext, _group.GroupId, invitation.InvitationId, expirationTime, usageCounter)
+                            new GenerateInvitationCommand(_userIdContext, _group.GroupId, invitation.InvitationId,
+                                expirationTime, usageCounter)
                         );
-                        var invitationDto = await _facade.QueryAsync(new GetInvitationQuery(_userIdContext, _group.GroupId,invitation.InvitationId));
+                        var invitationDto = await _facade.QueryAsync(new GetInvitationQuery(_userIdContext,
+                            _group.GroupId, invitation.InvitationId));
                         invitation.Code = invitationDto.Code;
                     });
 
@@ -106,9 +111,10 @@ namespace InstantMessenger.Groups.UnitTests.Common
                 var channel = new ChannelDto(Guid.NewGuid());
                 _builder.AddChannel(channel);
                 _builder.AddBuildAction(
-                    async () => await _facade.SendAsync(new CreateChannelCommand(_userIdContext, _group.GroupId, channel.ChannelId, channelName))
+                    async () => await _facade.SendAsync(new CreateChannelCommand(_userIdContext, _group.GroupId,
+                        channel.ChannelId, channelName))
                 );
-                return new ChannelBuilder(this,channel);
+                return new ChannelBuilder(this, channel);
             }
 
             public GroupBuilder Build() => _builder;
@@ -132,7 +138,9 @@ namespace InstantMessenger.Groups.UnitTests.Common
 
                 public RoleBuilder AddPermission(string name)
                 {
-                    _builder.AddBuildAction(async () => await _groupsModuleFacade.AddPermission(_builder._userIdContext, _group.GroupId, _role.RoleId, name));
+                    _builder.AddBuildAction(async () =>
+                        await _groupsModuleFacade.AddPermission(_builder._userIdContext, _group.GroupId, _role.RoleId,
+                            name));
                     return this;
                 }
 
@@ -142,6 +150,7 @@ namespace InstantMessenger.Groups.UnitTests.Common
                     {
                         AddPermission(name);
                     }
+
                     return this;
                 }
 
@@ -162,10 +171,12 @@ namespace InstantMessenger.Groups.UnitTests.Common
                     _facade = _builder._facade;
                     _group = _builder._builder._group;
                 }
+
                 public MemberBuilder AssignRole(int roleNumber)
                 {
                     var role = _group.Role(roleNumber);
-                    _builder.AddBuildAction(async () => await _facade.AssignRole(_builder._userIdContext, _group.GroupId, _memberContext.UserId, role.RoleId));
+                    _builder.AddBuildAction(async () => await _facade.AssignRole(_builder._userIdContext,
+                        _group.GroupId, _memberContext.UserId, role.RoleId));
                     return this;
                 }
 
@@ -190,20 +201,27 @@ namespace InstantMessenger.Groups.UnitTests.Common
                 public ChannelBuilder AllowPermissionForRole(int roleNumber, string permission)
                 {
                     var role = _group.Role(roleNumber);
-                    _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new AllowPermissionForRoleCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
+                    _builder.AddBuildAction(async () =>
+                        await _groupsModuleFacade.SendAsync(new AllowPermissionForRoleCommand(_builder._userIdContext,
+                            _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
                     return this;
                 }
+
                 public ChannelBuilder AllowPermissionForMember(int memberNumber, string permission)
                 {
                     var member = _group.Member(memberNumber);
-                    _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new AllowPermissionForMemberCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, member.UserId, permission)));
+                    _builder.AddBuildAction(async () =>
+                        await _groupsModuleFacade.SendAsync(new AllowPermissionForMemberCommand(_builder._userIdContext,
+                            _group.GroupId, _channel.ChannelId, member.UserId, permission)));
                     return this;
                 }
 
                 public ChannelBuilder DenyPermissionForRole(int roleNumber, string permission)
                 {
                     var role = _group.Role(roleNumber);
-                    _builder.AddBuildAction(async () => await _groupsModuleFacade.SendAsync(new DenyPermissionForRoleCommand(_builder._userIdContext, _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
+                    _builder.AddBuildAction(async () =>
+                        await _groupsModuleFacade.SendAsync(new DenyPermissionForRoleCommand(_builder._userIdContext,
+                            _group.GroupId, _channel.ChannelId, role.RoleId, permission)));
                     return this;
                 }
                 //public ChannelBuilder AllowPermissionForMember(string permission, Guid userIfOfMember)
@@ -214,7 +232,6 @@ namespace InstantMessenger.Groups.UnitTests.Common
 
                 public AsUserBuilder Build() => _builder;
             }
-
         }
 
 
@@ -235,15 +252,17 @@ namespace InstantMessenger.Groups.UnitTests.Common
                 GroupName = groupName;
             }
 
-            internal RoleDto Role(int i) => _roles[i-1];
-            internal MemberDto Member(int i) => _members[i-1];
-            internal InvitationDto Invitation(int i) => _invitations[i-1];
-            internal ChannelDto Channel(int i) => _channels[i-1];
+            internal RoleDto Role(int i) => _roles[i - 1];
+            internal MemberDto Member(int i) => _members[i - 1];
+            internal InvitationDto Invitation(int i) => _invitations[i - 1];
+            internal ChannelDto Channel(int i) => _channels[i - 1];
+
             internal GroupDto AddRole(RoleDto role)
             {
                 _roles.Add(role);
                 return this;
             }
+
             internal GroupDto AddMember(MemberDto member)
             {
                 _members.Add(member);
@@ -255,6 +274,7 @@ namespace InstantMessenger.Groups.UnitTests.Common
                 _invitations.Add(invitation);
                 return this;
             }
+
             internal GroupDto AddChannel(ChannelDto invitation)
             {
                 _channels.Add(invitation);
@@ -267,15 +287,23 @@ namespace InstantMessenger.Groups.UnitTests.Common
         {
             internal Guid RoleId { get; }
             internal string Name { get; }
+
             internal RoleDto(string name)
             {
                 RoleId = Guid.NewGuid();
                 Name = name;
             }
         }
+
         internal class MemberDto
         {
-            internal Guid UserId { get; }
+            internal Guid UserId { get; private set; }
+
+            internal MemberDto WithId(Guid userId)
+            {
+                UserId = userId;
+                return new MemberDto {UserId = userId};
+            }
 
             internal MemberDto()
             {
@@ -287,15 +315,18 @@ namespace InstantMessenger.Groups.UnitTests.Common
         {
             internal Guid InvitationId { get; }
             internal string Code { get; set; }
+
             public InvitationDto(Guid invitationId)
             {
                 InvitationId = invitationId;
             }
         }
+
         internal class ChannelDto
         {
             internal Guid ChannelId { get; }
             internal string Code { get; set; }
+
             public ChannelDto(Guid channelId)
             {
                 ChannelId = channelId;
@@ -305,18 +336,18 @@ namespace InstantMessenger.Groups.UnitTests.Common
 
     internal static class GroupModuleFacadeExtensions
     {
-        internal static async Task CreateGroup(this GroupsModuleFacade facade, 
-            Guid userId, 
-            Guid groupId, 
+        internal static async Task CreateGroup(this GroupsModuleFacade facade,
+            Guid userId,
+            Guid groupId,
             string groupName)
             => await facade.SendAsync(new CreateGroupCommand(userId, groupId, groupName));
 
-        internal static async Task AddRole(this GroupsModuleFacade facade, 
-            Guid userId, 
+        internal static async Task AddRole(this GroupsModuleFacade facade,
+            Guid userId,
             Guid groupId,
             Guid roleId,
             string roleName
-            )
+        )
             => await facade.SendAsync(new AddRoleCommand(userId, groupId, roleId, roleName));
 
         internal static async Task AddMember(this GroupsModuleFacade facade,
@@ -332,6 +363,7 @@ namespace InstantMessenger.Groups.UnitTests.Common
             Guid roleId
         )
             => await facade.SendAsync(new AssignRoleToMemberCommand(userId, groupId, userIdOfMember, roleId));
+
         internal static async Task RemoveRoleFromMember(this GroupsModuleFacade facade,
             Guid userId,
             Guid groupId,

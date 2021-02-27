@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InstantMessenger.Shared.IntegrationEvents;
 using InstantMessenger.Shared.MessageBrokers;
-using Microsoft.EntityFrameworkCore;
+using InstantMessenger.Shared.Modules;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,7 +14,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace InstantMessenger.Shared.Outbox
 {
-    public class OutboxProcessor<TDbContext> : BackgroundService where TDbContext : DbContext
+    internal sealed class OutboxProcessor<TModule> : BackgroundService where TModule : IModule
     {
         private static readonly JsonSerializerSettings SerializerSettings = new()
         {
@@ -24,11 +23,13 @@ namespace InstantMessenger.Shared.Outbox
         };
 
         private readonly IMessageBroker _messageBroker;
-        private readonly ILogger<OutboxProcessor<TDbContext>> _logger;
+        private readonly ILogger<OutboxProcessor<TModule>> _logger;
         private readonly IServiceProvider _scopeFactory;
         private readonly OutboxOptions _options;
         private readonly TimeSpan _interval;
-        public OutboxProcessor(OutboxOptions options, IMessageBroker messageBroker, IServiceProvider scopeFactory, ILogger<OutboxProcessor<TDbContext>> logger)
+
+        public OutboxProcessor(OutboxOptions options, IMessageBroker messageBroker, IServiceProvider scopeFactory,
+            ILogger<OutboxProcessor<TModule>> logger)
         {
             _messageBroker = messageBroker;
             _logger = logger;
@@ -45,6 +46,9 @@ namespace InstantMessenger.Shared.Outbox
                 return;
             }
 
+            using var scope = _scopeFactory.CreateScope();
+            var messageAccessor = scope.ServiceProvider.GetRequiredService<IOutboxMessageAccessor<TModule>>();
+            ;
             _logger.LogInformation("Outbox is enabled");
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -53,10 +57,11 @@ namespace InstantMessenger.Shared.Outbox
                 stopwatch.Start();
                 try
                 {
-                    await SendOutboxMessageAsync();
-                }catch (Exception e)
+                    await SendOutboxMessageAsync(messageAccessor);
+                }
+                catch (Exception e)
                 {
-                    _logger.LogError(e,$"There was an error when processing outbox.");
+                    _logger.LogError(e, $"There was an error when processing outbox.");
                     _logger.LogError(e, e.Message);
                 }
 
@@ -68,58 +73,46 @@ namespace InstantMessenger.Shared.Outbox
             }
         }
 
-        public async Task SendOutboxMessageAsync()
+        public async Task SendOutboxMessageAsync(IOutboxMessageAccessor<TModule> messageAccessor)
         {
-            using var scope = _scopeFactory.CreateScope();
-            using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            var contextName = dbContext.GetType().Name;
-            _logger.LogTrace($"Started processing outbox message [context: {contextName}]...");
-            var outboxMessageSet = dbContext.Set<OutboxMessage>();
-            var messages = await GetUnsent(outboxMessageSet);
+            _logger.LogTrace($"Started processing outbox message [context: {typeof(TModule).Name}]...");
+            var messages = await messageAccessor.GetUnsent();
 
             if (!messages.Any())
             {
-                _logger.LogTrace($"No messages to be processed in outbox [context: {contextName}].");
+                _logger.LogTrace($"No messages to be processed in outbox [context: {typeof(TModule).Name}].");
                 return;
             }
 
-            _logger.LogTrace($"Found {messages.Count} unsent messages in outbox [context: {contextName}].");
+            _logger.LogTrace($"Found {messages.Count} unsent messages in outbox [context: {typeof(TModule).Name}].");
 
             foreach (var message in messages.OrderBy(m => m.OccurredOn))
             {
                 var @event = JsonConvert.DeserializeObject(message.Data, SerializerSettings);
                 await _messageBroker.PublishAsync((IIntegrationEvent) @event);
 
-                message.ProcessedDate = DateTime.UtcNow;
-                outboxMessageSet.Update(message);
-                await dbContext.SaveChangesAsync();
+                await messageAccessor.MarkAsProcessed(message);
             }
-        }
-
-        private async Task<IList<OutboxMessage>> GetUnsent(DbSet<OutboxMessage> outboxMessageSet)
-        {
-            var messages = await outboxMessageSet
-                .Where(x=>x.ProcessedDate == null)
-                .ToListAsync();
-            return messages;
         }
     }
 
-    public class CleanUpOutboxProcessor<TDbContext> : IHostedService where TDbContext : DbContext
+    internal sealed class CleanUpOutboxProcessor<TModule> : IHostedService where TModule : IModule
     {
-
-        private readonly ILogger<CleanUpOutboxProcessor<TDbContext>> _logger;
+        private readonly ILogger<CleanUpOutboxProcessor<TModule>> _logger;
         private readonly IServiceProvider _scopeFactory;
         private readonly OutboxOptions _options;
         private Timer _cleanExpiredMessagesTimer;
         private readonly TimeSpan _interval;
-        public CleanUpOutboxProcessor(OutboxOptions options, IServiceProvider scopeFactory, ILogger<CleanUpOutboxProcessor<TDbContext>> logger)
+
+        public CleanUpOutboxProcessor(OutboxOptions options, IServiceProvider scopeFactory,
+            ILogger<CleanUpOutboxProcessor<TModule>> logger)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
             _options = options;
             _interval = TimeSpan.FromMilliseconds(options.IntervalMilliseconds);
         }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             if (!_options.Enabled)
@@ -127,9 +120,10 @@ namespace InstantMessenger.Shared.Outbox
 
             if (_options.CleanupIntervalHours > 0)
             {
-                _cleanExpiredMessagesTimer = new Timer(CleanOutdatedMessages, null, TimeSpan.Zero, TimeSpan.FromHours(_options.CleanupIntervalHours));
+                _cleanExpiredMessagesTimer = new Timer(CleanOutdatedMessages, null, TimeSpan.Zero,
+                    TimeSpan.FromHours(_options.CleanupIntervalHours));
             }
-            
+
             return Task.CompletedTask;
         }
 
@@ -140,26 +134,26 @@ namespace InstantMessenger.Shared.Outbox
 
             _cleanExpiredMessagesTimer?.Change(Timeout.Infinite, 0);
 
-            return Task.CompletedTask;;
+            return Task.CompletedTask;
+            ;
         }
 
         public void CleanOutdatedMessages(object state)
         {
             _ = CleanExpiredMessagesAsync();
         }
+
         public async Task CleanExpiredMessagesAsync()
         {
             var jobId = Guid.NewGuid().ToString("N");
             try
             {
                 using var scope = _scopeFactory.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
+                var messageAccessor = scope.ServiceProvider.GetRequiredService<IOutboxMessageAccessor<TModule>>();
                 _logger.LogTrace($"Started processing expired outbox messages ... [job id: '{jobId}']");
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
-                var outboxMessageSet = dbContext.Set<OutboxMessage>();
-               
-                var expiredMessages = await GetExpired(outboxMessageSet);
+                var expiredMessages = await messageAccessor.GetExpired();
                 _logger.LogTrace($"Found {expiredMessages.Count} expired messages in outbox [job id: '{jobId}'].");
 
                 if (!expiredMessages.Any())
@@ -168,25 +162,16 @@ namespace InstantMessenger.Shared.Outbox
                     return;
                 }
 
-                outboxMessageSet.RemoveRange(expiredMessages);
-                await dbContext.SaveChangesAsync();
+                await messageAccessor.ClearExpired(expiredMessages);
 
                 stopwatch.Stop();
-                _logger.LogTrace($"Processed {expiredMessages.Count} expired outbox messages in {stopwatch.ElapsedMilliseconds} ms [job id: '{jobId}'].");
+                _logger.LogTrace(
+                    $"Processed {expiredMessages.Count} expired outbox messages in {stopwatch.ElapsedMilliseconds} ms [job id: '{jobId}'].");
             }
             catch (Exception e)
             {
-                _logger.LogError(e,$"Processing outbox message [job id: '{jobId}'] failed.");
+                _logger.LogError(e, $"Processing outbox message [job id: '{jobId}'] failed.");
             }
-
-        }
-        private async Task<IList<OutboxMessage>> GetExpired(DbSet<OutboxMessage> outboxMessageSet)
-        {
-            var now = DateTimeOffset.UtcNow.DateTime.Subtract(TimeSpan.FromHours(_options.ExpiryHours));
-            var messages = await outboxMessageSet
-                .Where(x=>x.ProcessedDate != null && x.ProcessedDate.Value < now)
-                .ToListAsync();
-            return messages;
         }
     }
 }

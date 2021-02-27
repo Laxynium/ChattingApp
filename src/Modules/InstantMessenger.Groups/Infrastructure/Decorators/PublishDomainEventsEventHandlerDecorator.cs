@@ -1,27 +1,18 @@
-﻿using System.Threading.Tasks;
-using InstantMessenger.Groups.Infrastructure.Database;
-using InstantMessenger.Shared.Decorators;
-using InstantMessenger.Shared.Decorators.UoW;
+﻿using InstantMessenger.Shared.Decorators;
 using InstantMessenger.Shared.Messages.Events;
+using InstantMessenger.Shared.UoW;
 
 namespace InstantMessenger.Groups.Infrastructure.Decorators
 {
     [Decorator]
-    public class PublishDomainEventsEventHandlerDecorator<TEvent> : IDomainEventHandler<TEvent>
+    internal sealed class
+        PublishDomainEventsEventHandlerDecorator<TEvent> : PublishDomainEventsEventHandlerDecorator<GroupsModule, TEvent
+        >
         where TEvent : class, IDomainEvent
     {
-        private readonly IDomainEventHandler<TEvent> _innerHandler;
-        private readonly DomainEventPublisher<GroupsContext> _publisher;
-
-        public PublishDomainEventsEventHandlerDecorator(IDomainEventHandler<TEvent> innerHandler, DomainEventPublisher<GroupsContext> publisher)
+        public PublishDomainEventsEventHandlerDecorator(IDomainEventHandler<TEvent> domainEventHandler,
+            IDomainEventPublisher<GroupsModule> domainEventPublisher) : base(domainEventHandler, domainEventPublisher)
         {
-            _innerHandler = innerHandler;
-            _publisher = publisher;
-        }
-        public async Task HandleAsync(TEvent @event)
-        {
-            await _innerHandler.HandleAsync(@event);
-            await _publisher.Publish();
         }
     }
 }
