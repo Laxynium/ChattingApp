@@ -475,11 +475,5 @@ namespace InstantMessenger.Groups.Domain.Entities
         {
             _members.Add(owner);
         }
-
-        public void ChangeMemberNickname(UserId userId, MemberName name)
-        {
-            var member = GetMember(userId);
-            member.ChangeNickname(name);
-        }
     }
 }
