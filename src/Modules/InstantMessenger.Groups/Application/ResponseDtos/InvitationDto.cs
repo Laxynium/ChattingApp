@@ -7,7 +7,7 @@ namespace InstantMessenger.Groups.Application.ResponseDtos
     {
         public Guid GroupId { get; set; }
         public Guid InvitationId { get; set; }
-        public string Code { get; set; }
+        public string? Code { get; set; }
         public ExpirationTimeDto ExpirationTime { get; set; }
         public UsageCounterDto UsageCounter { get; set; }
         public InvitationDto(Guid groupId, Guid invitationId, string code, ExpirationTimeDto expirationTime, UsageCounterDto usageCounter)

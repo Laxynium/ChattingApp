@@ -14,7 +14,7 @@ namespace InstantMessenger.Groups.Domain.Entities.PermissionsVerification.Action
 
         public abstract bool CanExecute();
 
-        public void Execute(System.Action action = null)
+        public void Execute(System.Action? action = null)
         {
             if (CanExecute())
             {

@@ -7,7 +7,7 @@
     }
     public class PermissionOverrideDto
     {
-        public string Permission { get; set; }
+        public string? Permission { get; set; }
         public OverrideTypeDto Type { get; set; }
     }
 }

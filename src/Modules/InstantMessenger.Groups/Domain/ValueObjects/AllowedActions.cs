@@ -21,7 +21,7 @@ namespace InstantMessenger.Groups.Domain.ValueObjects
         public bool IsChannelSpecific { get; } = false;
         public IEnumerable<Guid> Channels { get; }
 
-        public AllowedActions(string name, bool isChannelSpecific = false, IReadOnlyList<Guid> channels = null)
+        public AllowedActions(string name, bool isChannelSpecific = false, IReadOnlyList<Guid>? channels = null)
         {
             Name = name;
             IsChannelSpecific = isChannelSpecific;

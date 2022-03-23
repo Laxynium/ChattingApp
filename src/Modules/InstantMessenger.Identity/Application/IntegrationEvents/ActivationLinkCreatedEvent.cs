@@ -23,9 +23,9 @@ namespace InstantMessenger.Identity.Application.IntegrationEvents
 
     public class ActivationLinkCreatedEventHandler: IIntegrationEventHandler<ActivationLinkCreatedEvent>
     {
-        public async Task HandleAsync(ActivationLinkCreatedEvent @event)
+        public Task HandleAsync(ActivationLinkCreatedEvent @event)
         {
-            
+            return Task.CompletedTask;   
         }
     }
 }

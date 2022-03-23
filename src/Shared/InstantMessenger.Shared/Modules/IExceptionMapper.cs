@@ -15,6 +15,6 @@ namespace InstantMessenger.Shared.Modules
     }
     public interface IExceptionMapper
     {
-        Error Map(Exception exception);
+        Error? Map(Exception exception);
     }
 }

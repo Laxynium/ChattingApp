@@ -83,7 +83,7 @@ namespace InstantMessenger.Identity.Application.Features.SignIn
                 );
                 userId = Guid.Parse(result.Identity.Name ?? string.Empty);
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }
