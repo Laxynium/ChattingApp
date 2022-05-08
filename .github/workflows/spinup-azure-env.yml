@@ -4,7 +4,7 @@ on:
 env:
   AZURE_RESOURCE_GROUP: instantmessenger
   AZURE_APP_PLAN: instantmessenger
-  AZURE_LOCATION: '"germany"'
+  AZURE_LOCATION: '"germanywestcentral"'
   ############## AZURE WEB APP ####################
   AZURE_API_WEBAPP_NAME: api-instantmessenger
   AZURE_WEBAPP_NAME: instantmessenger
