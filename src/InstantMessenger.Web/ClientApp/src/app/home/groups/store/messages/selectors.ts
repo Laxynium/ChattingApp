@@ -24,7 +24,7 @@ export const messagesSelector = createSelector(
             senderId: v.senderId,
             createdAt: v.createdAt,
             senderAvatar: v.senderAvatar ?? 'assets/profile-placeholder.png',
-            senderName: 'test',
+            senderName: v.senderName,
           }
       )
       .toArray() ?? []
